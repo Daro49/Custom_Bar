@@ -1,21 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import MainMenu from '../views/MainMenu.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'main',
+      component: MainMenu,
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/jukebox',
+      name: 'jukebox',
+      component: () => import('../views/Jukebox.vue'),
+    },
+    {
+      path: '/customdrink',
+      name: 'customdrink',
+      component: () => import('../views/CustomDrink.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/Profile.vue'),
+    },
+    {
+      path: '/coupons',
+      name: 'coupons',
+      component: () => import('../views/Coupons.vue'),
+    },
+    {
+      path: '/menu',
+      name: 'menu',
+      component: () => import('../views/Menu.vue'),
+    },
+    {
+      path: '/leaderboard',
+      name: 'leaderboard',
+      component: () => import('../views/Leaderboard.vue'),
+    },
+    {
+      path: '/menu/order',
+      name: 'order',
+      component: () => import('../views/Order.vue'),
     },
   ],
 })

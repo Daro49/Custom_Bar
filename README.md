@@ -1,44 +1,91 @@
-# .
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+## Prerekvizity
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+**VS Code + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar)**
+**Node.js** verzia `>=22.12.0`
+Chuť do života
 
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+## Otváram projekt prvý krát
+uistím sa, že mám aj Node.js aj npm manager
+```
+node -v
+npm -v
 ```
 
-### Compile and Hot-Reload for Development
+naklonujem repo lokálne ako vždy, napr.:
 
-```sh
+```
+git clone https://github.com/Daro49/Custom_Bar.git
+```
+
+a následne doinštalujem všetky potrebné knižnice **npm run install** a môžem spustiť aplikáciu za pomoci **npm run dev**.
+
+```
+cd Custom_Bar
+npm run install
 npm run dev
 ```
 
-### Compile and Minify for Production
+- keď už raz zapnem **npm run install**, nemusím už pri robení projektu tento príkaz spustiť samozrejme.
 
-```sh
-npm run build
-```
+## Popis zloženia projektu
 
-### Lint with [ESLint](https://eslint.org/)
+### src
+where the magic happens
 
-```sh
-npm run lint
-```
+- **assets**
+  všetky obrázky a čo ja viem čo 3rd party budeme používať
+  
+
+- **components**
+  Tu si môžme nadefinovať všetky veľa krát používané komponenty v UI a používať ich na viacerých miestach, tak isto ako fungujú komponenty vo Figme (tlačitka, headere)
+
+
+- **router**
+  nemalo by byť treba až tak zasahovať, ale je tam zapísaná štruktúra jednotlivých stránok, ako majú byť medzi sebou poprepájané. Disclaimer, na všetky stránky okrem Mainu je použitý **lazy-loading**, ktorý načíta stránku až keď bude potrebná
+
+
+- **stores**
+  mal by sa používať na vytváranie .js súborov s funkciami a premennými, ktoré sú zachované po prepnutí stránok. T.j. prejdeš z Profilu do hociktorého iného pohľadu a stále si ten istý user
+
+
+- **views**
+  Samotné stránky
+
+
+- **App.vue**
+  Vstupný UI aplikácie
+
+
+- **main.js**
+  Vstupný script
+
+### package.json
+Knižnice potrebné pre projekt. Budú stiahnuté s **npm run install**
+
+### Pridané knižnice
+- **Router a Pinia**
+  Router pre navigáciu medzi stránkami. Pinia korešponduje so **stores** priečinkom, knižnica pre zachovávanie stavu medzi stránkami.
+
+
+- **Prettier**
+  Formátuje všetky súbory na prednastavnú .editorconfig štýl, t.j. šírka tabu, formátovanie zátvoriek...
+  ```
+  npm run format
+  ```
+  *prečítaním tohto textu prehlasujem, že vždy pred commitom spustím tento príkaz, lebo Daro vie kde bývam a nemám zamknutú schránku*
+
+
+- **ESLint**
+  Niečo ako ta chujovina v IPP, ktora kontrolovala kvalitu PHP kódu. Basically statická analýza Javascript kódu, či je všetko A'Okay
+  ```
+  npm run lint
+  ```
+
+## Inšpirácia
+
+Pri vytváraní priečinku Vue vytvorilo aj example aplikáciu, ktorú som nechal na branchy menom **official-example**, keby náhodou nie je niečo jasné + nejaké užitočné linky s Vue.js a rýchly tutoriál, ktorý sa mi veľmo lúbil
+
+- [Rýchly introduction k Vue.js](https://vuejs.org/tutorial)
+- [Docs k Vue.js](https://vuejs.org/guide)
