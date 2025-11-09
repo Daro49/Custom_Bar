@@ -1,12 +1,8 @@
 <template>
-  <div 
-    class="slide-up-handle-wrapper" 
-    :class="{ expanded: isExpanded }" 
-    @click="toggleExpand"
-  >
+  <div class="slide-up-handle" @click="$emit('toggle')">
     <svg 
       class="chevron-icon" 
-      :class="{ rotated: isExpanded }" 
+      :class="{ rotated: expanded }"
       viewBox="0 0 100 50"
     >
       <path 
@@ -21,34 +17,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
-const isExpanded = ref(false)
-const toggleExpand = () => isExpanded.value = !isExpanded.value
+defineProps({
+  expanded: Boolean
+})
+defineEmits(['toggle'])
 </script>
 
 <style scoped>
-.slide-up-handle-wrapper {
-  bottom: 0;
+.slide-up-handle {
   width: 380px;
   height: 40px;
-  background-color: #794D2C;
+  background-color: #552808;
   border: 2px solid black;
   border-radius: 20px 20px 0 0;
+  border-bottom: none;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.4s ease; /* smooth movement */
-  z-index: 10;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-/* Moves up when expanded */
-.slide-up-handle-wrapper.expanded {
-  transform: translateY(-600px);
-}
-
-/* Chevron arrow rotation */
 .chevron-icon {
   width: 75px;
   height: 20px;
@@ -56,6 +46,6 @@ const toggleExpand = () => isExpanded.value = !isExpanded.value
 }
 
 .chevron-icon.rotated {
-  transform: rotate(180deg); /* arrow points down when moved up */
+  transform: rotate(180deg);
 }
 </style>

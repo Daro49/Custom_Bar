@@ -1,16 +1,21 @@
 <template>
   <div class="header-item">
-    <img :src="backIcon" class="back-img" />
+    <img :src="backIcon" class="back-img" @click="goBack" />
 
     <span class="label">{{ label }}</span>
 
-    <img :src="imageUrl" class="profile-img" />
+    <img :src="imageUrl" class="profile-img" @click="navigateToProfile" />
   </div>
 </template>
 
 <script setup>
 import avatar from '../assets/avatar.png';
 import back from '../assets/Back.png'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+defineEmits(['back'])
 
 // Props with a default image
 defineProps({
@@ -27,6 +32,14 @@ defineProps({
     default: back
   }
 });
+
+const navigateToProfile = () => {
+  router.push('/profile')
+}
+
+const goBack = () => {
+  router.push('/')
+}
 </script>
 
 <style scoped>
@@ -35,10 +48,11 @@ defineProps({
   align-items: center;
   justify-content: space-between;
   width: 412px;
+  box-sizing: border-box;
+  padding: 0 14px;
   height: 76px;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   border: 1px solid #a37d25;
-  /* border-radius: 8px; */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -64,10 +78,22 @@ defineProps({
   height: 60px;
   object-fit: cover;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-img:hover {
+  transform: scale(1.05);
 }
 
 .back-img {
   width: 59px;
   height: 59px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.back-img:hover {
+  transform: scale(1.05);
 }
 </style>

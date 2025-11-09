@@ -1,25 +1,23 @@
 <template>
-  <div class="table-e" @click="toggleActive" :class="{ active: isActive }">
-    <!-- Top horizontal seat -->
-    <div class="seat horizontal top"></div>
+  <div class="table-e" :class="{ active: selected }">
+    <div class="seat horizontal top" @click.stop="$emit('select', label)"></div>
 
-    <!-- Left vertical seats -->
     <div class="side-seats left">
-      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`"></div>
+      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`" @click.stop="$emit('select', label)"></div>
     </div>
 
-    <!-- Main Table with Label -->
-    <div class="main-table">
+    <div class="main-table" @click.stop="$emit('select', label)">
       <span class="table-label">{{ label }}</span>
     </div>
 
-    <!-- Bottom horizontal seat -->
-    <div class="seat horizontal bottom"></div>
+    <div class="seat horizontal bottom" @click.stop="$emit('select', label)"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+
+const emit = defineEmits(['select'])
 
 const props = defineProps({
   label: {
@@ -28,20 +26,19 @@ const props = defineProps({
   },
   tableColor: {
     type: String,
-    default: '#794D2C'
+   default: '#552808'
   },
   seatColor: {
     type: String,
-    default: '#794D2C'
+   default: '#552808'
+  }
+  ,
+  selected: {
+    type: Boolean,
+    default: false
   }
 })
 
-// ✅ Active toggle (turns gray)
-const isActive = ref(false)
-
-function toggleActive() {
-  isActive.value = !isActive.value
-}
 </script>
 
 <style scoped>
@@ -57,11 +54,10 @@ function toggleActive() {
   height: 225px;
   padding: 15px;
   box-sizing: border-box;
-  cursor: pointer;
+  cursor: default;
   transition: filter 0.2s ease, background-color 0.2s ease;
 }
 
-/* --- Layout --- */
 .seat.horizontal.top {
   grid-column: 2;
   grid-row: 1;
@@ -101,7 +97,6 @@ function toggleActive() {
   text-transform: uppercase;
 }
 
-/* --- Seat styling --- */
 .seat {
   background-color: v-bind(seatColor);
   border: 2px solid black;
@@ -118,14 +113,17 @@ function toggleActive() {
   height: 30px;
 }
 
-/* ✅ Active state turns everything gray */
 .table-e.active .main-table,
 .table-e.active .seat {
-  background-color: gray !important;
+  background-color: #513C2C !important;
+}
+.main-table:hover,
+.seat:hover {
+  filter: brightness(1.1);
 }
 
-/* Optional hover effect */
-.table-e:hover {
-  filter: brightness(1.1);
+.main-table,
+.seat {
+  cursor: pointer;
 }
 </style>

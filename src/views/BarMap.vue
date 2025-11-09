@@ -1,83 +1,68 @@
 <template>
   <div class="table-layout-a">
-    <SlideUpTable
-      class="slide-up-table-layout"
-      vectorClassName="slide-up-table-instance"
-    />
-    <div class="out-tables-1">
-      <TableA
-        class="table-a-instance"
-        label="T2"
-      />
-      <TableA
-        class="table-a-instance"
-        label="T3"
-      />
-      <TableA
-        class="table-a-instance"
-        label="T4"
-      />
-      <TableA
-        class="table-a-instance"
-        label="T5"
-      />
-      <TableA
-        class="table-a-instance"
-        label="T6"
-      />
-
-    </div>
-
-    <div class="out-tables-2">
-      <TableE
-        class="table-e-instance"
-        label="T1"
-      />
-      <Plant
-        class="plant-instance"
-        overlapGroupClassName="plant-2"
-        prop="normal"
-      />
-      <Plant
-        class="plant-instance"
-        overlapGroupClassName="plant-2"
-        prop="normal"
-      />
-      <TableE
-        class="table-e-instance"
-        label="T7"
-      />
-    </div>
-
-    <div class="group">
-      <div class="text-wrapper-2">ENTRY</div>
-      <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div>
-
-    <LayoutHeader
-      class="layout-header-instance"
-      label="terrace"
-    />
+  <SlidePanel class="slide-up-table-layout" :currentMap="currentMap" @navigate="switchMap" />
+  <LayoutHeader class="layout-header-instance" label="bar" @back="goToPreviousMap" />
+    <component :is="mapComponents[currentMap]" :selectedTable="selectedTable" @selectTable="selectTable" />
   </div>
 </template>
 
 <script>
-import SlideUpTable from '../../components/SlideUpTable.vue';
-import PropertyDefault from '../../components/PropertyDefault.vue';
-import TableE from '../../components/TableE.vue';
+import SlidePanel from '../../components/SlidePanel.vue';
+import TableE from '../../components/tables/TableE.vue';
 import Plant from '../../components/Plant.vue';
 import LayoutHeader from '../../components/LayoutHeader.vue';
-import TableA from '../../components/TableA.vue'
+import TableA from '../../components/tables/TableA.vue'
+import MapTerrace from '../../components/maps/MapTerrace.vue'
+import MapEntry from '../../components/maps/MapEntry.vue'
+import MapBack from '../../components/maps/MapBack.vue'
+import MapGarden from '../../components/maps/MapGarden.vue'
 
 export default {
   name: "TableLayoutA",
+  data() {
+    return {
+      selectedTable: null,
+      currentMap: 'terrace',
+      previousMap: 'terrace'
+    }
+  },
+  methods: {
+    selectTable(label) {
+      this.selectedTable = this.selectedTable === label ? null : label
+    },
+    switchMap(name) {
+      // expected names: 'terrace','entry','back','garden'
+      if (['terrace', 'entry', 'back', 'garden'].includes(name)) {
+        this.previousMap = this.currentMap
+        this.currentMap = name
+      }
+    },
+    goToPreviousMap() {
+      const temp = this.currentMap
+      this.currentMap = this.previousMap
+      this.previousMap = temp
+    }
+  },
+  computed: {
+    mapComponents() {
+      return {
+        terrace: MapTerrace,
+        entry: MapEntry,
+        back: MapBack,
+        garden: MapGarden
+      }
+    }
+  },
   components: {
-    SlideUpTable,
-    PropertyDefault,
+    SlidePanel,
     TableE,
     Plant,
     LayoutHeader,
-    TableA
+    TableA,
+    MapTerrace,
+    MapEntry,
+    MapBack,
+    MapGarden
   }
 };
 </script>
@@ -98,9 +83,10 @@ export default {
 }
 
 .table-layout-a .slide-up-table-layout {
-  left: 16px !important;
-  position: absolute !important;
-  top: 877px !important;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
 }
 
 .table-layout-a .out-tables-1 {
@@ -128,9 +114,9 @@ export default {
 }
 
 .table-layout-a .table-e-instance {
-  left: unset !important;
-  position: relative !important;
-  top: unset !important;
+  left: unset;
+  position: relative;
+  top: unset;
 }
 
 .table-layout-a .table-a-instance {
@@ -138,13 +124,13 @@ export default {
 }
 
 .table-layout-a .plant-instance {
-  align-items: unset !important;
-  display: unset !important;
-  height: 95.96px !important;
-  left: unset !important;
-  min-width: unset !important;
-  top: unset !important;
-  width: 96.23px !important;
+  align-items: unset;
+  display: unset;
+  height: 95.96px;
+  left: unset;
+  min-width: unset;
+  top: unset;
+  width: 96.23px;
 }
 
 .table-layout-a .group {
@@ -170,8 +156,8 @@ export default {
 }
 
 .table-layout-a .layout-header-instance {
-  left: 0 !important;
-  position: absolute !important;
-  top: 0 !important;
+  left: 0;
+  position: absolute;
+  top: 0;
 }
 </style>

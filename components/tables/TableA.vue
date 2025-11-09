@@ -1,20 +1,22 @@
 <template>
-  <div class="table-a-component" @click="toggleActive" :class="{ active: isActive }">
-    <div class="seat top"></div>
+  <div class="table-a-component" :class="{ active: selected }">
+    <div class="seat top" @click.stop="$emit('select', label)"></div>
 
-    <div class="main-table">
+    <div class="main-table" @click.stop="$emit('select', label)">
       <span class="table-label">{{ label }}</span>
     </div>
 
-    <div class="seat left"></div>
-    <div class="seat right"></div>
+    <div class="seat left" @click.stop="$emit('select', label)"></div>
+    <div class="seat right" @click.stop="$emit('select', label)"></div>
 
-    <div class="seat bottom"></div>
+    <div class="seat bottom" @click.stop="$emit('select', label)"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+
+const emit = defineEmits(['select'])
 
 const props = defineProps({
   label: {
@@ -23,20 +25,19 @@ const props = defineProps({
   },
   tableColor: {
     type: String,
-    default: '#794D2C'
+   default: '#552808'
   },
   seatColor: {
     type: String,
-    default: '#794D2C'
+   default: '#552808'
+  }
+  ,
+  selected: {
+    type: Boolean,
+    default: false
   }
 })
 
-// ✅ Reactive state for gray toggle
-const isActive = ref(false)
-
-function toggleActive() {
-  isActive.value = !isActive.value
-}
 </script>
 
 <style scoped>
@@ -53,14 +54,12 @@ function toggleActive() {
   padding: 10px;
   box-sizing: border-box;
   overflow: visible;
-  cursor: pointer; /* indicate clickability */
+  cursor: default;
   transition: filter 0.2s ease, background-color 0.2s ease;
 }
-
-/* Assign grid areas */
 .seat.top {
-  grid-column: 2; /* Center column */
-  grid-row: 1; /* Top row */
+  grid-column: 2;
+  grid-row: 1;
   width: 43px;
   height: 10px;
 }
@@ -78,20 +77,20 @@ function toggleActive() {
   transition: background-color 0.2s ease;
 }
 .seat.left {
-  grid-column: 1; /* Left column */
-  grid-row: 2; /* Middle row */
+  grid-column: 1;
+  grid-row: 2;
   width: 10px;
   height: 43px;
 }
 .seat.right {
-  grid-column: 3; /* Right column */
-  grid-row: 2; /* Middle row */
+  grid-column: 3;
+  grid-row: 2;
   width: 10px;
   height: 43px;
 }
 .seat.bottom {
-  grid-column: 2; /* Center column */
-  grid-row: 3; /* Bottom row */
+  grid-column: 2;
+  grid-row: 3;
   width: 43px;
   height: 10px;
 }
@@ -103,13 +102,15 @@ function toggleActive() {
   transition: background-color 0.2s ease;
 }
 
-/* 👇 When active, everything turns gray */
-.table-a-component.active .main-table,
-.table-a-component.active .seat {
-  background-color: gray !important;
+.main-table,
+.seat {
+  cursor: pointer;
 }
 
-/* Optional hover effect */
+.table-a-component.active .main-table,
+.table-a-component.active .seat {
+  background-color: #513C2C !important;
+}
 .table-a-component:hover {
   filter: brightness(1.1);
 }

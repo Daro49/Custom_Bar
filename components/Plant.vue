@@ -23,28 +23,26 @@ import { ref, computed } from 'vue';
 const props = defineProps({
   hasFlower: {
     type: Boolean,
-    default: false // By default, no flower
+    default: false
   },
   leafColor: {
     type: String,
-    default: '#4CAF50' // Default green color
+    default: '#4CAF50'
   }
 });
 
-// Generate rotation angles for 8 outer leaves
 const outerLeaves = computed(() => {
   const leaves = [];
   for (let i = 0; i < 8; i++) {
-    leaves.push({ rotate: i * 45, offsetRotate: i * 0 }); // Direct rotation
+    leaves.push({ rotate: i * 45, offsetRotate: i * 0 });
   }
   return leaves;
 });
 
-// Generate rotation angles for inner leaves (slightly offset to fill more)
 const innerLeaves = computed(() => {
   const leaves = [];
   for (let i = 0; i < 8; i++) {
-    leaves.push({ rotate: i * 45 + 22.5, offsetRotate: i * 0 }); // Offset by half the primary rotation
+    leaves.push({ rotate: i * 45 + 22.5, offsetRotate: i * 0 });
   }
   return leaves;
 });
