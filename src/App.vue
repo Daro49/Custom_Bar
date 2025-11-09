@@ -4,6 +4,22 @@ import MainHeader from '@/components/MainHeader.vue'
 </script>
 
 <template>
+  <header>
+    <div class="wrapper">
+      <nav>
+        <RouterLink to="/">Main Menu</RouterLink>
+        <RouterLink to="/profile">Profile</RouterLink>
+        <RouterLink to="/jukebox">Jukebox</RouterLink>
+        <RouterLink to="/coupons">Coupons</RouterLink>
+        <RouterLink to="/menu">Custom Drink</RouterLink>
+        <RouterLink to="/leaderboard">Leaderboard</RouterLink>
+        <RouterLink to="/customdrink">Custom Drink</RouterLink>
+        <RouterLink to="/map">Map</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
   <div class="wrapper">
       <MainHeader />
       <RouterView />
