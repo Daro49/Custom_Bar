@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import SlidePanel from '../../components/SlidePanel.vue';
-import TableE from '../../components/tables/TableE.vue';
-import Plant from '../../components/Plant.vue';
-import LayoutHeader from '../../components/LayoutHeader.vue';
-import TableA from '../../components/tables/TableA.vue'
-import MapTerrace from '../../components/maps/MapTerrace.vue'
-import MapEntry from '../../components/maps/MapEntry.vue'
-import MapBack from '../../components/maps/MapBack.vue'
-import MapGarden from '../../components/maps/MapGarden.vue'
+import SlidePanel from '../components/SlidePanel.vue';
+import TableE from '../components/tables/TableE.vue';
+import Plant from '../components/Plant.vue';
+import LayoutHeader from '../components/LayoutHeader.vue';
+import TableA from '../components/tables/TableA.vue'
+import MapTerrace from '../components/maps/MapTerrace.vue'
+import MapEntry from '../components/maps/MapEntry.vue'
+import MapBack from '../components/maps/MapBack.vue'
+import MapGarden from '../components/maps/MapGarden.vue'
 
 export default {
   name: "TableLayoutA",

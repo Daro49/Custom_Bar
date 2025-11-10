@@ -2,9 +2,9 @@
   <div class="order-container">
     <!-- Header -->
     <div class="header">
-      <img src="../../assets/Back.png" class="header-icon back-icon" @click="goBack" />
+      <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
       <div class="header-center">ORDER</div>
-      <img src="../../assets/Order History.svg" class="header-icon order-history-icon" />
+      <img src="../assets/Order History.svg" class="header-icon order-history-icon" />
     </div>
 
     <!-- Content -->
@@ -24,7 +24,7 @@
           </div>
           <div class="item-right">
             <span class="price">5,20€</span>
-            <img src="../../assets/Info.svg" class="info-icon" />
+            <img src="../assets/Info.svg" class="info-icon" />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
     <div class="layout">
       <!-- Left couch -->
       <div class="couch-wrapper left">
-        <img :src="selected ? '../../../assets/couchActive.svg' : '../../../assets/couch.svg'" alt="couch" class="couch" />
+        <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
       
       <!-- Center table -->
@@ -13,7 +13,7 @@
       
       <!-- Right couch (flipped) -->
       <div class="couch-wrapper right">
-        <img :src="selected ? '../../../assets/couchActive.svg' : '../../../assets/couch.svg'" alt="couch" class="couch" />
+        <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
     </div>
   </div>
@@ -21,6 +21,8 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue'
+import couchSvg from '../../assets/couch.svg'
+import couchActiveSvg from '../../assets/couchActive.svg'
 
 const emit = defineEmits(['select'])
 
