@@ -1,10 +1,10 @@
 <template>
     <header class="header">
         <button
-            v-if="routes.name !=='main'"
+            v-if="showBack"
             class="back-btn"
             @click="goHome"
-        > 
+        >
         <- Main menu
         </button>
         <RouterLink to="/profile" class="profile-link">
