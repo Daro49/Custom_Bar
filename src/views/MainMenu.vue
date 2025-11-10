@@ -13,5 +13,7 @@
     rgba(179, 118, 6, 1) 100%
   );
   --button-font-family: 'Josefin Slab', serif;
+  --wood: #552808;
+  --gold: #D4AF37;
 }
 </style>

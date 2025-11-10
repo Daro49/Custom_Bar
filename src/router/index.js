@@ -44,6 +44,16 @@ const router = createRouter({
       name: 'order',
       component: () => import('../views/Order.vue'),
     },
+    {
+      path: '/cs_views/coupons',
+      name: 'coupons',
+      component: () => import('../views/CSViews/Coupons.vue'),
+    },
+    {
+      path: '/cs_views/packages',
+      name: 'packages',
+      component: () => import('../views/CSViews/Packages.vue'),
+    }
   ],
 })
 

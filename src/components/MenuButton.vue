@@ -1,8 +1,8 @@
 <template>
   <header class = "header">
-    <button class = "button-frame">
-      <p class="button-text">{{txt}}</p>
-    </button>
+  <router-link :to="to" class="button-frame">
+    <p class="button-text">{{ txt }}</p>
+  </router-link>
   </header>
 
 </template>
@@ -11,7 +11,8 @@
 export default{
   name: "MenuButton",
   props: {
-    txt: { type: String, default: null }
+    txt: { type: String, default: null },
+    to: { type: [String, Object], required: true }
   }
 }
 </script>
@@ -25,6 +26,7 @@ export default{
 }
 
 .button-frame {
+  text-decoration: none;
   background: var(--headerv2);
   border-radius: 20px;
   height: 100%;

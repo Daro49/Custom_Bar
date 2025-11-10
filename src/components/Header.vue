@@ -1,13 +1,11 @@
 <template>
   <header class="header">
-    <button class="back-btn" @click="$emit('back')">
-      <ArrowLeftIcon v-if="backButton" class="w-7 h-7" />
+    <button class="back-btn" @click="back" 
+    v-if="backButton" v-html="ArrowLeftSvg">
     </button>
-
+    
     <div class="center-content">
-      <slot name="title">
-        {{ title }}
-      </slot>
+      <slot name="title">{{ title }}</slot>
     </div>
 
     <div class="right-content">
@@ -17,20 +15,30 @@
       </slot>
     </div>
   </header>
+  
 </template>
 
 <script>
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
+import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
+import router from '@/router';
 
 export default {
   name: "Header",
   props: {
-    backButton: { type: Boolean, default: true},
+    backButton: { type: Boolean, default: true },
     title: { type: String, default: "" },
     avatar: { type: String, default: null },
     rightIcon: { type: String, default: null }
+  },
+  setup() {
+    return { ArrowLeftSvg }
+  },
+  methods: {
+    back() {
+      router.back();
+    }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -47,10 +55,15 @@ export default {
 }
 
 .back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   background: none;
   border: none;
-  font-size: 22px;
   cursor: pointer;
+  color: black; 
 }
 
 .center-content {

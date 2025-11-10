@@ -1,14 +1,17 @@
 <template>
   <div class="section-divider">
-    <span class="line left"></span>
-    <span class="circle"></span>
-    <span class="line right"></span>
+    <span class="line left" :style="{ backgroundColor: color }"></span>
+    <span class="circle" :style="{ backgroundColor: color }"></span>
+    <span class="line right" :style="{ backgroundColor: color }"></span>
   </div>
 </template>
 
 <script>
 export default {
   name: "SectionDivider",
+  props:{
+    color: { type: String, default: "white"},
+  }
 };
 </script>
 
