@@ -1,3 +1,3 @@
 <template>
-  <h1>Order View</h1>
+  <h1>Menu View</h1>
 </template>
