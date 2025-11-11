@@ -5,8 +5,8 @@
     >
     <img :src="imageSrc" alt="cover" class="song-cover"/>
     <div class="Song_info">
-        <h2>{{ title }} </h2>
-        <p>{{ artist }} </p>
+        <h2 class="title">{{ title }} </h2>
+        <p class="artist">{{ artist }} </p>
     </div>
     </button>
 </template>
@@ -31,5 +31,19 @@ defineEmits(['click'])
     background: transparent;
     outline: none; 
     border: none;
+}
+.songInfo{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+}
+.title {
+    margin: 0;
+    text-align: left !important;
+}
+
+.artist {
+    margin: 0;
+    text-align: left !important;
 }
 </style>

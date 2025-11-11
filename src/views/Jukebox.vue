@@ -18,7 +18,7 @@
         </div>
       </div>    
     </div>
-    <h1> ----------------------------------------------------------------------------------------------------------------------------------------------</h1>
+    <h1 class="priecka"> ----------------------------------------------------------------------------------------------------------------------------------------------</h1>
     <div class="playlist">
       <SongButton
       v-for="song in nextSongs"
@@ -102,7 +102,7 @@ const progress = ref(0)
 let progressTimer = null
 
 /*TODO: 
-/* -dynamicky progress bar
+/* -pridaj unmotune
 */
 
 function formatTime (duration) {
@@ -309,6 +309,14 @@ function openDetailQueue(song) {
 
 function getCover ()
 {}
+
+onUnmounted(() => {
+  console.log('Unmounting')
+
+  if (refreshTimer) clearInterval(refreshTimer)
+  if (progressTimer) clearInterval(progressTimer)
+})
+
 </script>
 
 <style scoped>
@@ -354,6 +362,7 @@ function getCover ()
     display:flex;
     flex-direction: column;
     gap: 8px;
+    align-items: center;
   }
   .back_btn {
     display: flex;
@@ -394,4 +403,19 @@ function getCover ()
   transition: width 0.2s linear;
 }
 
+.priecka {
+  display: flex;
+  justify-content: center;
+}
+
+.showDetailQueue{
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  background: #D4AF37;
+  display:flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
 </style>
