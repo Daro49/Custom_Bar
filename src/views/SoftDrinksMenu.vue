@@ -1,8 +1,9 @@
 <template>
-  <h1>Soft drinks menu View</h1>
- <button @click="$router.push('/')">to Main Menu</button ><br />
+  <div class="app">
+  <div>
   <button @click="$router.push('/alcoholmenu')"><-</button >
   <button @click="$router.push('/menu')">-></button >
+  </div>
   <div class="drink-card" v-for="drink in data" :key="drink.id">
     <img class="drink-image" :src="imageUrl" :alt="IMG" />
     <div class="drink-info">
@@ -10,6 +11,7 @@
       <div class="drink-price">{{ drink.price }}€</div>
     </div>
     <button class="info-button" @click="goToDrink(drink.name)">Info</button>
+  </div>
   </div>
 </template>
 
@@ -40,6 +42,18 @@ function goToDrink(name) {
 </script>
 
 <style>
+.app {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    height: 917px;
+    overflow-y: auto;
+  }
 .drink-card {
   display: flex;
   align-items: center;

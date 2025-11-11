@@ -1,8 +1,6 @@
 
 <template>
-  <h1>Menu Item: {{ name }}</h1>
-  <button @click="router.push('/')">to Main Menu</button ><br />
-  <button @click="goBackToList()"><-</button >
+  <div class="app">
   <div class="drink-info-card">
   <button class="arrow" @click="goBackToList()">⌄</button>
 
@@ -34,6 +32,7 @@
     <span>ORDER:</span>
   <span class="order-price">{{ data?.price }}€</span>
   </button>
+</div>
 </div>
 </template>
 
@@ -136,6 +135,18 @@ async function rate(value) {
 
 </script>
 <style scoped> 
+.app {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    height: 917px;
+    overflow-y: auto;
+  }
 .drink-info-card {
   width: 360px;
   background: linear-gradient(180deg, #d7a84d 0%, #ab7e2e 100%);
