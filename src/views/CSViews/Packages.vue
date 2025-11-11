@@ -6,7 +6,7 @@ import Img from '@/assets/alpa-francovka.jpg'
 <template>
   <div class="packages">
     <Header :avatar="Profile" />
-    <PointsPresenter pts="45" />
+    <PointsPresenter/>
     <div class="package-list">
       <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
       <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />

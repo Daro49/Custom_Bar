@@ -13,6 +13,8 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { addPoints } from '@/stores/AddPoints.js'
+import { activeUser } from '@/stores/Login';
 
 export default {
   name: 'ActivateButton',
@@ -24,7 +26,18 @@ export default {
     const txt = computed(() =>
       isActive.value ? 'Activated' : `Activate for ${props.activation_points}`,
     )
-    function toggle() {
+    async function toggle() {
+      if (!isActive.value) {
+        if (props.activation_points <= activeUser.value.points){
+          const success = await addPoints(-props.activation_points)
+          if (!success) return
+        } 
+      }
+      else {
+        console.log('deactivating')
+        const success = await addPoints(props.activation_points)
+        if (!success) return
+      }
       isActive.value = !isActive.value
     }
     return { isActive, txt, toggle }

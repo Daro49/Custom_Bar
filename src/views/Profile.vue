@@ -29,8 +29,8 @@ import { activeUser } from '@/stores/Login.js'
       </div>
     </div>
 
-    <button class="profile-button">My Drinks</button>
-    <button class="profile-button">My Checks</button>
+    <button class="profile-button" @click="drinks">My Drinks</button>
+    <button class="profile-button" @click="orders">My Orders</button>
     <button class="profile-button" @click="logout">Logout</button>
   </div>
 </template>
@@ -60,8 +60,13 @@ export default {
       activeUser.value = null
       router.push({ name: 'login' })
     },
-  },
-
+    drinks() {
+      router.push({ name: 'my_drinks' })
+    },
+    orders() {
+      router.push({ name: 'my_orders' })
+    },
+  }
 }
 </script>
 
@@ -80,8 +85,8 @@ export default {
 .picture {
   align-self: center;
   margin: 20px 0;
-  width: 300px;
-  height: 300px;
+  width: 30%;
+  height: 30%;
   border-radius: 50%;
 }
 

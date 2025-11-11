@@ -1,35 +1,28 @@
 <script setup>
 import Profile from '@/assets/user.png'
 import drinksImg from '@/assets/bottles.jpg'
+import { coupons } from '@/stores/Coupons'
+import { onMounted } from 'vue'
+import { getCoupons } from '@/stores/Coupons'
+
+onMounted(() => {
+  getCoupons()
+})
 </script>
 
 <template>
   <div class="coupons">
     <Header :avatar="Profile" />
-    <PointsPresenter :pts="45" />
+    <PointsPresenter/>
     <div class="coupon-list">
       <CouponCard
-        :activationPoints="4"
+        v-for="coupon in coupons"
+        :key="coupon.id"
+        :activationPoints="coupon.discount"
         :image="drinksImg"
         :validUntil="date"
-        description="blablabla"
-        details="more blablabla"
-      />
-
-      <CouponCard
-        :activationPoints="7"
-        :image="drinksImg"
-        :validUntil="date"
-        description="another"
-        details="another description"
-      />
-
-      <CouponCard
-        :activationPoints="9"
-        :image="drinksImg"
-        :validUntil="date"
-        description="another one"
-        details="another description one"
+        :description="coupon.code"
+        details="Detailed description"
       />
     </div>
   </div>

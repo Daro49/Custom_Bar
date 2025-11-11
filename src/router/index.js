@@ -46,22 +46,22 @@ const router = createRouter({
       component: () => import('../views/Order.vue'),
     },
     {
-      path: '/cs_views/coupons',
+      path: '/coupons',
       name: 'coupons',
       component: () => import('../views/CSViews/Coupons.vue'),
     },
     {
-      path: '/cs_views/packages',
+      path: '/packages',
       name: 'packages',
       component: () => import('../views/CSViews/Packages.vue'),
     },
     {
-      path: '/cs_views/milestones',
+      path: '/milestones',
       name: 'milestones',
       component: () => import('../views/CSViews/Milestones.vue'),
     },
     {
-      path: '/cs_views/edit_profile',
+      path: '/edit_profile',
       name: 'edit_profile',
       component: () => import('../views/CSViews/EditProfile.vue'),
     },
@@ -70,6 +70,16 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Login.vue'),
     },
+    {
+      path: '/my_drinks',
+      name: 'my_drinks',
+      component: () => import('../views/CSViews/MyDrinks.vue'),
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: () => import('../views/CSViews/MyOrders.vue'),
+    }
   ],
 })
 
