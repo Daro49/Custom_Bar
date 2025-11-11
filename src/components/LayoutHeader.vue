@@ -4,12 +4,12 @@
 
     <span class="label">{{ label }}</span>
 
-    <img :src="imageUrl" class="profile-img" @click="navigateToProfile" />
+    <img src="../assets/user.png" class="profile-img" @click="navigateToProfile" />
   </div>
 </template>
 
 <script setup>
-import avatar from '../assets/avatar.png';
+import avatar from '../assets/user.png';
 import back from '../assets/Back.png'
 import { useRouter } from 'vue-router'
 

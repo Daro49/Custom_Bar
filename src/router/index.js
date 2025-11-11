@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainMenu from '../views/MainMenuView.vue'
+import MainMenuView from '../views/MainMenuView.vue'
+import { activeUser } from '@/stores/Login.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'main',
-      component: MainMenu,
+      component: MainMenuView,
     },
     {
       path: '/jukebox',
@@ -25,9 +26,9 @@ const router = createRouter({
       component: () => import('../views/Profile.vue'),
     },
     {
-      path: '/coupons',
-      name: 'coupons',
-      component: () => import('../views/Coupons.vue'),
+      path: '/customer_service',
+      name: 'customer_service',
+      component: () => import('../views/CustomerService.vue'),
     },
     {
       path: '/menu',
@@ -93,11 +94,50 @@ const router = createRouter({
       props: true,  
     },
     {
-      path: '/orders', //TODO fix later
+      path: '/orders',
       name: 'orders',
       component: () => import('../views/PastOrder.vue'),
     },
+    {  
+      path: '/coupons',
+      name: 'coupons',
+      component: () => import('../views/CSViews/Coupons.vue'),
+    },
+    {
+      path: '/packages',
+      name: 'packages',
+      component: () => import('../views/CSViews/Packages.vue'),
+    },
+    {
+      path: '/milestones',
+      name: 'milestones',
+      component: () => import('../views/CSViews/Milestones.vue'),
+    },
+    {
+      path: '/edit_profile',
+      name: 'edit_profile',
+      component: () => import('../views/CSViews/EditProfile.vue'),
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue'),
+    },
+    {
+      path: '/my_drinks',
+      name: 'my_drinks',
+      component: () => import('../views/CSViews/MyDrinks.vue'),
+    },
+    
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'login' && activeUser.value.username === '') {
+    next({ name: 'login' }) 
+  } else {
+    next()
+  }
 })
 
 export default router

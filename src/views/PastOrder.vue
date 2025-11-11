@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="header">
       <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/avatar.png" class="header-icon profile-icon" @click="goToProfile" />
+      <img src="../assets/user.png" class="header-icon profile-icon" @click="goToProfile" />
     </div>
 
     <!-- Content -->
