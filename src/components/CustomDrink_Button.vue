@@ -1,8 +1,14 @@
 <template>
   <button>
-  <!-- Placeholder image -->
+    {{ props.category }}
   </button>
 </template>
+
+<script setup>
+    const props = defineProps ({
+        category: String
+    })
+</script>
 
 <style scoped>
     .leftButton {
@@ -15,6 +21,7 @@
 
         border-radius: 0 50px 50px 0;
         background: #552808;
+        color: #D4AF37;
     }
 
     .rightButton {
@@ -27,5 +34,6 @@
 
         border-radius: 50px 0 0 50px;
         background: #552808;
+        color: #D4AF37;
     }
 </style>
