@@ -2,9 +2,9 @@
 <template>
   <div class="app">
   <div class="drink-info-card">
-  <button class="arrow" @click="goBackToList()">⌄</button>
+  <div class="arrow" @click="goBackToList()">⌄</div>
 
-  <!-- <img src="whiskey-old-fashioned.jpg" alt="Whiskey Old Fashioned" class="drink-info-image" /> -->
+  <img v-if="data && data.image" :src=" data.image " alt="Whiskey Old Fashioned" class="drink-info-image"  />
 
   <div class="drink-info-header">
     <h2 class="drink-info-name">{{ data?.name }}</h2>

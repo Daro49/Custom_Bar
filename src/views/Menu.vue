@@ -74,11 +74,15 @@ function goToDrink(name) {
 }
 
 .drink-image {
-  width: 60px;
+   width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain; /* show the full image inside the circle */
+  background-color: #fff; /* optional: fill background */
   border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 2px; /* small inner margin if needed */
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .drink-info {
@@ -158,10 +162,7 @@ function goToDrink(name) {
 }
 
 .drinkImage {
-  width: 90%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .drinkFooter {

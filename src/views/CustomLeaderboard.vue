@@ -5,7 +5,7 @@
   <button @click="$router.push('/leaderboard')">-></button >
   </div>
   <div class="drink-card" v-for="(drink,i) in data" :key="drink.id">
-  <!-- <img src="gabor-secret.jpg" alt="Gabor's Secret" class="drink-image" /> -->
+  <img src={{drink.image}} alt="Gabor's Secret" class="drink-image" />
   
   <div class="drink-info">
     <div class="drink-name">{{ drink.name }}</div>
@@ -88,11 +88,15 @@ onBeforeUnmount(() => {
 }
 
 .drink-image {
-  width: 40px;
-  height: 40px;
+   width: 60px;
+  height: 60px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain; /* show the full image inside the circle */
+  background-color: #fff; /* optional: fill background */
   border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 2px; /* small inner margin if needed */
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .drink-info {
