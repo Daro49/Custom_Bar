@@ -8,11 +8,11 @@
 
 <script>
 export default {
-  name: "SectionDivider",
-  props:{
-    color: { type: String, default: "white"},
-  }
-};
+  name: 'SectionDivider',
+  props: {
+    color: { type: String, default: 'white' },
+  },
+}
 </script>
 
 <style>

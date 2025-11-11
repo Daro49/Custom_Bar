@@ -7,36 +7,32 @@
         <div class="coupon-text">{{ description }}</div>
         <ActivateButton :activation_points="activationPoints" />
       </div>
-      <button class="btns" @click="showDetails" 
-        v-html="Info">
-      </button>
+      <button class="btns" @click="showDetails" v-html="Info"></button>
     </div>
 
     <div v-if="detailsEnabled" class="coupon-details">
       {{ details }}
-      <button class="btns" @click="showDetails" 
-        v-html="Close">
-      </button>
+      <button class="btns" @click="showDetails" v-html="Close"></button>
     </div>
   </div>
 </template>
 
 <script>
-import Info from '@/assets/info.svg?raw';
-import Close from '@/assets/cancel-x.svg?raw';
-import ActivateButton from './ActivateButton.vue';
+import Info from '@/assets/info.svg?raw'
+import Close from '@/assets/cancel-x.svg?raw'
+import ActivateButton from './ActivateButton.vue'
 
 export default {
-  name: "CouponCard",
+  name: 'CouponCard',
   components: {
-    ActivateButton
+    ActivateButton,
   },
   props: {
     image: String,
     validUntil: String,
     description: String,
-    details: {type: String, default: ""},
-    activationPoints: Number
+    details: { type: String, default: '' },
+    activationPoints: Number,
   },
 
   data() {
@@ -45,18 +41,18 @@ export default {
       detailsEnabled: false,
 
       Info,
-      Close
+      Close,
     }
   },
 
   methods: {
     activate() {
-      this.isActive = !this.isActive;
+      this.isActive = !this.isActive
     },
     showDetails() {
-      this.detailsEnabled = !this.detailsEnabled;
-    }
-  }
+      this.detailsEnabled = !this.detailsEnabled
+    },
+  },
 }
 </script>
 
@@ -70,7 +66,7 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  color: black; 
+  color: black;
 }
 
 .coupon-card {
@@ -85,7 +81,7 @@ export default {
 
 .coupon-header {
   display: flex;
-  width:100%;
+  width: 100%;
   box-sizing: border-box;
   gap: 10px;
 }
@@ -125,7 +121,7 @@ export default {
   border-radius: 6px;
   border: none;
   font-weight: bold;
-  background: linear-gradient(180deg, #045209 0%, #03800E 100%);
+  background: linear-gradient(180deg, #045209 0%, #03800e 100%);
   color: white;
 }
 

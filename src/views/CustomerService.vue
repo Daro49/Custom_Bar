@@ -1,23 +1,20 @@
 <script setup>
-import Profile from "@/assets/amir.jpg";
+import Profile from '@/assets/user.png'
 </script>
 
 <template>
   <div class="customer-service">
-    <Header
-      :avatar = "Profile"
-    />
+    <Header :avatar="Profile" />
     <div class="frame">
-      <ShiningHeader class="header-instance" state="default" />
+      <ShiningHeader />
 
       <div class="frame-2">
         <div class="text-wrapper-2">Koniferium Borovička</div>
-        <SectionDivider
-        />
+        <SectionDivider />
         <div class="frame-3">
-          <MenuButton txt = "Coupons" :to="{ name: 'coupons' }"/>
-          <MenuButton txt = "Packages" :to="{ name: 'packages' }"/>
-          <MenuButton txt = "Milestones" :to="{ name: 'milestones' }"/>
+          <MenuButton txt="Coupons" :to="{ name: 'coupons' }" />
+          <MenuButton txt="Packages" :to="{ name: 'packages' }" />
+          <MenuButton txt="Milestones" :to="{ name: 'milestones' }" />
         </div>
       </div>
     </div>
@@ -25,11 +22,10 @@ import Profile from "@/assets/amir.jpg";
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
-import ShiningHeader from "@/components/ShiningHeader.vue";
-import SectionDivider from "@/components/SectionDivider.vue";
-import MenuButton from "@/components/MenuButton.vue";
-import router from "@/router";
+import Header from '@/components/Header.vue'
+import ShiningHeader from '@/components/ShiningHeader.vue'
+import SectionDivider from '@/components/SectionDivider.vue'
+import MenuButton from '@/components/MenuButton.vue'
 
 export default {
   name: 'CustomerService',
@@ -37,9 +33,9 @@ export default {
     Header,
     SectionDivider,
     ShiningHeader,
-    MenuButton
-  }
-};
+    MenuButton,
+  },
+}
 </script>
 
 <style>
@@ -61,20 +57,7 @@ export default {
   height: 814px;
   position: relative;
   width: 384px;
-}
-
-.customer-service .header-instance {
-  align-self: stretch !important;
-  background-color: transparent !important;
-  left: unset !important;
-  top: unset !important;
-  width: 100% !important;
-}
-
-.customer-service .rectangle {
-  height: 215px;
-  position: relative;
-  width: 341px;
+  background: var(--background-green);
 }
 
 .customer-service .frame-2 {
@@ -93,14 +76,7 @@ export default {
   align-self: stretch;
   color: #ffffff;
   display: flex;
-  font-family: var(--interpret-now-playing-font-family);
-  font-size: var(--interpret-now-playing-font-size);
-  font-style: var(--interpret-now-playing-font-style);
-  font-weight: var(--interpret-now-playing-font-weight);
   justify-content: center;
-  letter-spacing: var(--interpret-now-playing-letter-spacing);
-  line-height: var(--interpret-now-playing-line-height);
-  margin-top: -1.00px;
   position: relative;
   text-align: center;
 }

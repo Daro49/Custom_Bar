@@ -1,38 +1,41 @@
+<script setup>
+  import { activeUser } from "@/stores/Login"
+</script>
+
 <template>
   <div class="points">
-      <div class="frame-wrapper">
-        <div class="div">
-          <div class="text-wrapper">Club points:</div>
-          <div class="text-wrapper-2">{{pts}}</div>
-        </div>  
+    <div class="frame-wrapper">
+      <div class="div">
+        <div class="text-wrapper">Club points:</div>
+        <div class="text-wrapper-2">{{ activeUserRef.points }}</div>
       </div>
-      <SectionDivider color="white"/>
+    </div>
+    <SectionDivider color="white" />
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import SectionDivider from "@/components/SectionDivider.vue";
+import { defineComponent } from 'vue'
+import SectionDivider from '@/components/SectionDivider.vue'
 
 export default defineComponent({
-  name: "PointsPresenter",
+  name: 'PointsPresenter',
   components: {
     SectionDivider,
   },
-  props: {
-    pts: {
-      type: Number,
-      required: true,
-    },
+  data() {
+    return {
+      activeUserRef: activeUser, 
+    }
   },
-});
+})
 </script>
 <style>
 .points {
   margin: 10px;
   display: flex;
-  flex-direction: column; 
-  height: auto; 
+  flex-direction: column;
+  height: auto;
   width: auto;
   box-sizing: border-box;
 }
@@ -56,7 +59,7 @@ export default defineComponent({
 
 .points .text-wrapper {
   color: #ffffff;
-  font-family: "Century Schoolbook", Helvetica;
+  font-family: 'Century Schoolbook', Helvetica;
   font-size: 24px;
   text-align: center;
 }
@@ -65,7 +68,7 @@ export default defineComponent({
   background: var(--headerv2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-family: "Century Schoolbook", Helvetica;
+  font-family: 'Century Schoolbook', Helvetica;
   font-size: 24px;
   text-align: center;
 }

@@ -1,6 +1,6 @@
 <script setup>
-import Profile from "@/assets/amir.jpg";
-import Img from "@/assets/alpa-francovka.jpg";
+import Profile from '@/assets/user.png'
+import Img from '@/assets/alpa-francovka.jpg'
 </script>
 
 <template>
@@ -8,26 +8,26 @@ import Img from "@/assets/alpa-francovka.jpg";
     <Header :avatar="Profile" />
     <PointsPresenter pts="45" />
     <div class="package-list">
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
     </div>
   </div>
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
-import PointsPresenter from "@/components/PointsPresenter.vue";
-import PackageCard from "@/components/PackageCard.vue";
+import Header from '@/components/Header.vue'
+import PointsPresenter from '@/components/PointsPresenter.vue'
+import PackageCard from '@/components/PackageCard.vue'
 
 export default {
   name: 'Packages',
   components: {
     Header,
     PointsPresenter,
-    PackageCard
-  }
-};
+    PackageCard,
+  },
+}
 </script>
 
 <style>
@@ -57,11 +57,11 @@ export default {
 .packages .package-list {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   justify-content: flex-start;
   gap: 33px;
   margin-top: 35px;
-  width: 100%; 
+  width: 100%;
 }
 
 .packages .package-instance {

@@ -1,33 +1,32 @@
 <template>
   <div class="frame">
     <div class="milestone-card">
-      <div class = "text">
+      <div class="text">
         {{ text }}
       </div>
       <ProgressBar :progress="progress" />
-    
     </div>
     <div class="milestone-label">
-      <div class = "text">
-        {{reward}}
-      </div>      
+      <div class="text">
+        {{ reward }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProgressBar from './ProgressBar.vue';
+import ProgressBar from './ProgressBar.vue'
 
 export default {
-  name: "MilestonesView",
+  name: 'MilestonesView',
   components: {
-    ProgressBar
+    ProgressBar,
   },
   props: {
     text: { type: String, required: true },
     progress: { type: Number, default: 0 },
-    reward: { type: Number, required:true }
-  }
+    reward: { type: Number, required: true },
+  },
 }
 </script>
 
@@ -69,13 +68,12 @@ export default {
 
 .milestone-card .text {
   color: var(--gold);
-  align-self: flex-start; 
-  margin-left: 20px; 
+  align-self: flex-start;
+  margin-left: 20px;
   margin-bottom: 20px;
 }
 
 .milestone-label .text {
   color: var(--background-green);
 }
-
 </style>

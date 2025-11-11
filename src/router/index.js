@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainMenu from '../views/MainMenu.vue'
+import { activeUser } from '@/stores/Login.js';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,8 +64,21 @@ const router = createRouter({
       path: '/cs_views/edit_profile',
       name: 'edit_profile',
       component: () => import('../views/CSViews/EditProfile.vue'),
-    }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue'),
+    },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'login' && activeUser.value.username === '') {
+    next({ name: 'login' }) 
+  } else {
+    next()
+  }
 })
 
 export default router

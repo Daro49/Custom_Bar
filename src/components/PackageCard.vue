@@ -5,7 +5,7 @@
     </div>
 
     <div class="package-img">
-      <img :src="img"/>
+      <img :src="img" />
     </div>
 
     <div class="package-price">
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "PackageCard",
+  name: 'PackageCard',
   props: {
     name: {
       type: String,
@@ -32,7 +32,7 @@ export default {
       required: true,
     },
   },
-};
+}
 </script>
 
 <style>
@@ -46,7 +46,6 @@ export default {
   gap: 12px;
   margin: 10px;
   width: 280px;
-  
 }
 
 .package-img {
@@ -76,10 +75,10 @@ export default {
 .package-price {
   display: flex;
   justify-content: center;
-  gap: 16px; 
+  gap: 16px;
   font-family: var(--button-font-family);
   font-size: 24px;
-  color:white;
+  color: white;
 }
 
 .price-label {

@@ -1,48 +1,37 @@
 <script setup>
-import Check from '@/assets/check.svg?raw';
-import Header from '@/components/Header.vue';
-const email = "amir@gmail.com";
-const phone = "+45 12345678";
+import Check from '@/assets/check.svg?raw'
+import Header from '@/components/Header.vue'
+import router from '@/router'
+import { activeUser } from '@/stores/Login'
+import { saveProfileChanges } from '@/stores/SaveProfileChanges'
+const before = activeUser.value.username;
+
+function save() {
+  saveProfileChanges(before).then(() => {
+    router.push({ name: 'profile' })
+  })
+}
 </script>
 
 <template>
   <div class="edit-profile">
-    <Header :right-icon="Check" :right-function="save"/>
-    <div class = "frame">
+    <Header :right-icon="Check" :right-function="save" />
+    <div class="frame">
+      Username:
+      <input class="input-frame" v-model="activeUser.username" />
       Email:
-      <input class = "input-frame" v-model:="email"/>
-    </div>
-    <div class = "frame">
-      Phone:
-      <input class = "input-frame" v-model:="phone"/>
+      <input class="input-frame" v-model="activeUser.email" />
     </div>
   </div>
 </template>
-
-<script>
-import router from '@/router';
-
-export default {
-  name: "EditProfile",
-  components: {
-    Header
-  },
-  methods: {
-    save() {
-      // Save profile changes logic here
-      router.push({ name: 'profile' });
-    }
-  } 
-}
-</script>
 
 <style>
 .edit-profile {
   background: var(--background-green);
   display: flex;
   flex-direction: column;
-  height: 100vh;       
-  overflow-y: auto;   
+  height: 100vh;
+  overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -58,7 +47,6 @@ export default {
   font-size: 32px;
   font-family: var(--profile-font-family);
   color: black;
-
 }
 
 .frame .input-frame {
@@ -73,6 +61,4 @@ export default {
   border-radius: 8px;
   text-align: right;
 }
-
-
 </style>

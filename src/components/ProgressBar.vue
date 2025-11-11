@@ -1,18 +1,16 @@
 <template>
-  <div class = "progress-bar">
+  <div class="progress-bar">
     <div class="fill" :style="{ width: progress + '%' }" />
   </div>
 </template>
 
 <script>
-
 export default {
-  name: "ProgressBar",
+  name: 'ProgressBar',
   props: {
-    progress: { type: Number, default: 0 }
-  }
+    progress: { type: Number, default: 0 },
+  },
 }
-
 </script>
 
 <style>
@@ -22,7 +20,7 @@ export default {
   background-color: white;
   border: 2px solid #000;
   border-radius: 6px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 .fill {

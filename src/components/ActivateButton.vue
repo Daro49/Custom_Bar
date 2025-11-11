@@ -15,20 +15,20 @@
 import { ref, computed } from 'vue'
 
 export default {
-  name: "ActivateButton",
+  name: 'ActivateButton',
   props: {
-    activation_points: { type: [String, Number], default: null }
+    activation_points: { type: [String, Number], default: null },
   },
   setup(props) {
     const isActive = ref(false)
     const txt = computed(() =>
-      isActive.value ? "Activated" : `Activate for ${props.activation_points}`
+      isActive.value ? 'Activated' : `Activate for ${props.activation_points}`,
     )
     function toggle() {
       isActive.value = !isActive.value
     }
     return { isActive, txt, toggle }
-  }
+  },
 }
 </script>
 
@@ -37,7 +37,7 @@ export default {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding: 0;             
+  padding: 0;
   border: none;
   background: none;
   cursor: pointer;
@@ -53,11 +53,14 @@ export default {
 
 .btn-image {
   width: 100%;
-  height: 44px;            
+  height: 44px;
   border-radius: 6px;
   box-sizing: border-box;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-  border: 2px solid #000;  
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.12s ease;
+  border: 2px solid #000;
 }
 
 .btn-text {
@@ -68,17 +71,16 @@ export default {
   pointer-events: none;
   color: white;
   font-weight: bold;
-  font-size: 20px;        
-  text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+  font-size: 20px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
   white-space: nowrap;
 }
 
 .button.activated .btn-image {
-  background: linear-gradient(180deg, #045209 0%, #03800E 100%);
+  background: linear-gradient(180deg, #045209 0%, #03800e 100%);
 }
 
 .button.deactivated .btn-image {
   background: linear-gradient(180deg, #6d6d6d 0%, #242424 100%);
 }
-
 </style>

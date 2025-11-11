@@ -1,49 +1,49 @@
 <template>
   <header class="header">
-    <button class="back-btn" @click="back" 
-    v-if="backButton" v-html="ArrowLeftSvg">
-    </button>
-    
+    <button class="back-btn" @click="back" v-if="backButton" v-html="ArrowLeftSvg"></button>
+
     <div class="center-content">
       <slot name="title">{{ title }}</slot>
     </div>
 
     <div class="right-content">
       <slot name="right">
-        <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile"/>
-        <button class="back-btn" @click="rightFunction" 
-          v-if="rightIcon" v-html="rightIcon">
-        </button>
+        <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile" />
+        <button
+          class="back-btn"
+          @click="rightFunction"
+          v-if="rightIcon"
+          v-html="rightIcon"
+        ></button>
       </slot>
     </div>
   </header>
-  
 </template>
 
 <script>
-import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw';
-import router from '@/router';
+import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
+import router from '@/router'
 
 export default {
-  name: "Header",
+  name: 'Header',
   props: {
     backButton: { type: Boolean, default: true },
-    title: { type: String, default: "" },
+    title: { type: String, default: '' },
     avatar: { type: String, default: null },
     rightIcon: { type: String, default: null },
-    rightFunction: { type: Function, default: null }
+    rightFunction: { type: Function, default: null },
   },
   setup() {
     return { ArrowLeftSvg }
   },
   methods: {
     back() {
-      router.back();
+      router.back()
     },
     openProfile() {
-      router.push({ name: 'profile' });
-    }
-  }
+      router.push({ name: 'profile' })
+    },
+  },
 }
 </script>
 
@@ -69,7 +69,7 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  color: black; 
+  color: black;
 }
 
 .center-content {

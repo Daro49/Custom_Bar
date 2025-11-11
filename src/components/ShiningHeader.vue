@@ -1,19 +1,18 @@
 <template>
-    <header class="header">
-        <div class="header-frame">
-            <p class = "header-text">Today's special!</p>
-        </div>
-    </header>
+  <header class="header">
+    <div class="header-frame">
+      <p class="header-text">Today's special!</p>
+    </div>
+  </header>
 </template>
 
 <script>
 export default {
-    name: "ShiningHeader"
-};
+  name: 'ShiningHeader',
+}
 </script>
 
 <style>
-
 .header-frame {
   height: 200px;
   position: relative;

@@ -1,10 +1,7 @@
 <script setup>
-import Edit from '@/assets/edit.svg?raw';
-import ProfileImg from '@/assets/amir.jpg';
-
-const email = "amir@gmail.com";
-const phone = "+45 12345678";
-const points = "454";
+import Edit from '@/assets/edit.svg?raw'
+import ProfileImg from '@/assets/user.png'
+import { activeUser } from '@/stores/Login.js'
 
 </script>
 
@@ -15,52 +12,56 @@ const points = "454";
     <img :src="ProfileImg" alt="Profile Picture" class="picture" />
 
     <div class="username">
-      <h2>Amir Hassan</h2>
+      <h2>{{activeUserRef.username}}</h2>
     </div>
 
-    <SectionDivider/>
+    <SectionDivider />
 
     <div class="details">
       <div class="row">
         <span class="label">Email:</span>
-        <span class="value">{{ email }}</span>
+        <span class="value">{{activeUserRef.email}}</span>
       </div>
-      <div class="row">
-        <span class="label">Phone:</span>
-        <span class="value">{{ phone }}</span>
-      </div>
+
       <div class="row">
         <span class="label">Points:</span>
-        <span class="value">{{ points }}</span>
+        <span class="value">{{activeUserRef.points}}</span>
       </div>
     </div>
 
-    <button class="profile-button">
-      My Drinks
-    </button>
-    <button class="profile-button">
-      My Checks
-    </button>
+    <button class="profile-button">My Drinks</button>
+    <button class="profile-button">My Checks</button>
+    <button class="profile-button" @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
-import router from '@/router';
-import Header from '@/components/Header.vue';
-import SectionDivider from '@/components/SectionDivider.vue';
+import router from '@/router'
+import Header from '@/components/Header.vue'
+import SectionDivider from '@/components/SectionDivider.vue'
 
 export default {
-  name: "Profile",
+  name: 'Profile',
   components: {
     Header,
-    SectionDivider
+    SectionDivider,
+  },
+  data() {
+    return {
+      activeUserRef: activeUser, 
+    }
   },
   methods: {
     edit() {
-      router.push({ name: 'edit_profile'});
-    }
-  }
-};
+      router.push({ name: 'edit_profile' })
+    },
+    logout() {
+      localStorage.removeItem('activeUser')
+      router.push({ name: 'login' })
+    },
+  },
+
+}
 </script>
 
 <style>
@@ -68,8 +69,8 @@ export default {
   background: var(--background-green);
   display: flex;
   flex-direction: column;
-  height: 100vh;       
-  overflow-y: auto;   
+  height: 100vh;
+  overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -78,15 +79,15 @@ export default {
 .picture {
   align-self: center;
   margin: 20px 0;
-  width: 300px;         
-  height: 300px;        
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
 }
 
 .username {
   align-self: center;
   font-family: var(--profile-font-family);
-  font-size: clamp(24px, 4vw, 48px); 
+  font-size: clamp(24px, 4vw, 48px);
   color: white;
   margin-bottom: 10px;
 }
@@ -104,7 +105,7 @@ export default {
 
 .row {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   width: 100%;
 }
 
@@ -113,7 +114,7 @@ export default {
 }
 
 .value {
-  text-align: right; 
+  text-align: right;
 }
 
 .profile-button {

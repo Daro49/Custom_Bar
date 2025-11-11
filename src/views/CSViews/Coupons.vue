@@ -1,6 +1,6 @@
 <script setup>
-import Profile from "@/assets/amir.jpg";
-import drinksImg from "@/assets/bottles.jpg";
+import Profile from '@/assets/user.png'
+import drinksImg from '@/assets/bottles.jpg'
 </script>
 
 <template>
@@ -8,56 +8,54 @@ import drinksImg from "@/assets/bottles.jpg";
     <Header :avatar="Profile" />
     <PointsPresenter :pts="45" />
     <div class="coupon-list">
-        
-        <CouponCard
-          :activationPoints="4"
-          :image="drinksImg"
-          :validUntil="date"
-          description="blablabla"
-          details="more blablabla"
-        />
+      <CouponCard
+        :activationPoints="4"
+        :image="drinksImg"
+        :validUntil="date"
+        description="blablabla"
+        details="more blablabla"
+      />
 
-        <CouponCard
-          :activationPoints="7"
-          :image="drinksImg"
-          :validUntil="date"
-          description="another"
-          details="another description"
-        />
+      <CouponCard
+        :activationPoints="7"
+        :image="drinksImg"
+        :validUntil="date"
+        description="another"
+        details="another description"
+      />
 
-        <CouponCard
-          :activationPoints="9"
-          :image="drinksImg"
-          :validUntil="date"
-          description="another one"
-          details="another description one"
-        />
+      <CouponCard
+        :activationPoints="9"
+        :image="drinksImg"
+        :validUntil="date"
+        description="another one"
+        details="another description one"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
-import SectionDivider from "@/components/SectionDivider.vue";
-import CouponCard from "@/components/CouponCard.vue";
-import PointsPresenter from "@/components/PointsPresenter.vue";
+import Header from '@/components/Header.vue'
+import SectionDivider from '@/components/SectionDivider.vue'
+import CouponCard from '@/components/CouponCard.vue'
+import PointsPresenter from '@/components/PointsPresenter.vue'
 
 export default {
-  name: "Coupons",
+  name: 'Coupons',
   components: {
     Header,
     SectionDivider,
     CouponCard,
-    PointsPresenter
+    PointsPresenter,
   },
   data() {
     return {
-      date: "22.11.2025"
+      date: '22.11.2025',
     }
-  }
-};
+  },
+}
 </script>
-
 
 <style>
 .coupons {
@@ -80,4 +78,4 @@ export default {
   position: relative;
   width: 100%;
 }
-</style> 
+</style>
