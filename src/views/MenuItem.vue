@@ -10,7 +10,7 @@
 
   <div class="drink-info-header">
     <h2 class="drink-info-name">{{ data?.name }}</h2>
-    <div class="drink-info-sub" v-if="data?.rating">
+    <div class="drink-info-sub" v-if="data && data.rating !=null" >
       <span>#1</span>
       <span>{{data?.rating}}</span>
     </div>
@@ -25,7 +25,10 @@
 {{ ingredientsLine }}
   </div>
 
-  <button class="rate-button">Buy to rate</button>
+  <div class="drink-actions" v-if="data && data.rating" >
+    <button class="action-button" @click="rate(1)">♡</button>
+    <button class="action-button" @click="rate(-1)">dislike</button>
+  </div>
 
   <button class="order-section">
     <span>ORDER:</span>
@@ -38,6 +41,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { ref, onMounted } from 'vue'
+import { onBeforeUnmount } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -67,9 +71,8 @@ function goBackToList() {
 }
 const data = ref(null)
 const error = ref(null)
-
-onMounted(async () => {
-  try {
+async function getData() {
+try {
     var response;
     const drinkName = encodeURIComponent(route.params.name || name.value)
     if (route.path.includes('softdrinksmenu')) {
@@ -89,7 +92,46 @@ onMounted(async () => {
   } catch (err) {
     error.value = err.message
   }
+}
+var intervalId;
+onMounted(() => {
+  getData()
+  intervalId = setInterval(getData, 5000)
 })
+onBeforeUnmount(() => {
+  if (intervalId) clearInterval(intervalId)
+})
+
+async function rate(value) {
+  var rating = {"rating": value};
+  try {
+    var response;
+    const drinkName = encodeURIComponent(route.params.name || name.value)
+    if (route.path.includes('custommenu')) {
+        response = await fetch(`https://itu-wb12.onrender.com/customDrinks/${drinkName}/rate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rating)
+      
+    })
+    console.log(response)
+    } else {
+      response = await fetch(`https://itu-wb12.onrender.com/drinks/${drinkName}/rate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(rating)
+    })
+  console.log(response)
+  }
+  } catch (err) {
+
+    return null
+  }
+}
 
 
 </script>
@@ -156,20 +198,27 @@ onMounted(async () => {
   line-height: 1.4;
 }
 
-.rate-button {
-  background-color: #d4d4d4;
-  color: #1e1e1e;
-  border: none;
-  border-radius: 20px;
-  font-weight: 600;
-  padding: 6px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+.drink-actions {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 8px;
 }
 
-.rate-button:hover {
-  background-color: #f7c244;
+.action-button {
+  background-color: #1e463b;
+  color: #f7d77c;
+  border: none;
+  border-radius: 10px;
+  width: 50px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.action-button:hover {
+  transform: scale(1.05);
 }
 
 .order-section {
