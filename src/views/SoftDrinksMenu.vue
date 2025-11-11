@@ -5,7 +5,7 @@
   <button @click="$router.push('/menu')">-></button >
   </div>
   <div class="drink-card" v-for="drink in data" :key="drink.id">
-    <img class="drink-image" :src="imageUrl" :alt="IMG" />
+    <img class="drink-image" :src=" drink.image" alt="IMG" />
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
@@ -68,13 +68,16 @@ function goToDrink(name) {
 }
 
 .drink-image {
-  width: 60px;
+   width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain; /* show the full image inside the circle */
+  background-color: #fff; /* optional: fill background */
   border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 2px; /* small inner margin if needed */
+  object-fit: cover;
+  border-radius: 8px;
 }
-
 .drink-info {
   flex: 1;
   margin-left: 16px;
