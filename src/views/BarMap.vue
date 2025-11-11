@@ -16,6 +16,7 @@ import MapTerrace from '../components/maps/MapTerrace.vue'
 import MapEntry from '../components/maps/MapEntry.vue'
 import MapBack from '../components/maps/MapBack.vue'
 import MapGarden from '../components/maps/MapGarden.vue'
+import { activeUser } from '@/stores/Login.js'
 
 export default {
   name: "TableLayoutA",
@@ -33,7 +34,7 @@ export default {
       // Send POST request to server when table is selected
       if (this.selectedTable) {
         try {
-          const username = 'Matej' // TODO: replace with dynamic username
+          const username = activeUser.value.username
           console.log('Sending table select request for:', label)
           const response = await fetch('https://itu-wb12.onrender.com/users/' + username + '/table/select', {
             method: 'POST',

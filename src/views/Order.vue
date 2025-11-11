@@ -58,6 +58,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
+import { activeUser } from '@/stores/Login.js'
 
 const router = useRouter()
 const orderItems = ref([])
@@ -75,7 +76,7 @@ const goOrderHistory = () => {
 const fetchOrder = async () => {
   try {
     isLoading.value = true
-    const username = 'Matej' // TODO: replace with dynamic username
+    const username = activeUser.value.username
     const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order`)
     
     if (!response.ok) {
@@ -95,7 +96,7 @@ const fetchOrder = async () => {
 
 const confirmOrder = async () => {
   try {
-    const username = 'Matej'
+    const username = activeUser.value.username
     const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
       method: 'POST',
       headers: {
