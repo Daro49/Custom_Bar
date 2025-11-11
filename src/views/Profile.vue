@@ -6,13 +6,13 @@ import { activeUser } from '@/stores/Login.js'
 </script>
 
 <template>
-  <div class="profile">
+  <div class="profile" v-if="activeUserRef!=null">
     <Header :right-icon="Edit" :rightFunction="edit" />
 
     <img :src="ProfileImg" alt="Profile Picture" class="picture" />
 
     <div class="username">
-      <h2>{{activeUserRef.username}}</h2>
+      <h2 >{{activeUserRef.username}}</h2>
     </div>
 
     <SectionDivider />

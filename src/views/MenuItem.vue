@@ -28,7 +28,7 @@
     <button class="action-button" @click="rate(-1)">dislike</button>
   </div>
 
-  <button class="order-section">
+  <button class="order-section" @click="addToOrder()" >
     <span>ORDER:</span>
   <span class="order-price">{{ data?.price }}€</span>
   </button>
@@ -51,6 +51,34 @@ const ingredientsLine = computed(() => {
   if (Array.isArray(ing)) return ing.join(', ')
   return String(ing)
 })
+import { activeUser } from '@/stores/Login'
+async function addToOrder() {
+  console.log( activeUser.value.table, "aaaa")
+  console.log( data.value, "bbbb")
+  var sending = {
+    drink: data.value,
+    tableCode: activeUser.value.table
+  }
+  
+  try {
+
+      var response = await fetch(`https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(sending)
+      
+    })
+     console.log(response)
+
+  
+  } catch (err) {
+    console.error(err)
+
+    return null
+  }
+}
 
 const name = computed(() => route.params.name)
 

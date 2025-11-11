@@ -16,8 +16,9 @@ export async function login(username) {
 
       const data = await response.json();
       
-      activeUser.value = new User(data.user.username, data.user.points, data.user.email);
-      
+      activeUser.value = new User(data.user.username, data.user.points, data.user.email, data.user.table);
+      console.log(data.user.table);
+      console.log(activeUser.value.table);
       localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
       
       return true;

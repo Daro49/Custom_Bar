@@ -9,7 +9,7 @@ import router from './router'
 const savedUser = localStorage.getItem('activeUser');
 if (savedUser) {
   const u = JSON.parse(savedUser);
-  activeUser.value = new User(u.username, u.points, u.email);
+  activeUser.value = new User(u.username, u.points, u.email, u.table);
 }
 
 const app = createApp(App)
