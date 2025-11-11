@@ -1,8 +1,9 @@
 <template>
-  <h1>Leaderboard View</h1>
-  <button @click="router.push('/')">to Main Menu</button ><br />
+    <div class="app">
+<div>
 <button @click="$router.push('/leaderboard')"><-</button >
   <button @click="$router.push('/leaderboard')">-></button >
+  </div>
   <div class="drink-card" v-for="(drink,i) in data" :key="drink.id">
   <!-- <img src="gabor-secret.jpg" alt="Gabor's Secret" class="drink-image" /> -->
   
@@ -16,6 +17,7 @@
 
   <button class="info-button" @click="goToDrink(drink.name)">ℹ️</button>
 </div>
+    </div>
 </template>
 <script setup>
 import { useRouter } from 'vue-router'
@@ -58,6 +60,18 @@ onBeforeUnmount(() => {
 
 
 <style >
+.app {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 8px;
+   background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    height: 917px;
+    overflow-y: auto;
+  }
 .drink-card {
   display: flex;
   align-items: center;
