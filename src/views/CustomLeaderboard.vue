@@ -1,8 +1,8 @@
 <template>
   <h1>Leaderboard View</h1>
   <button @click="router.push('/')">to Main Menu</button ><br />
-<button @click="$router.push('/customleaderboard')"><-</button >
-  <button @click="$router.push('/customleaderboard')">-></button >
+<button @click="$router.push('/leaderboard')"><-</button >
+  <button @click="$router.push('/leaderboard')">-></button >
   <div class="drink-card" v-for="(drink,i) in data" :key="drink.id">
   <!-- <img src="gabor-secret.jpg" alt="Gabor's Secret" class="drink-image" /> -->
   
@@ -28,12 +28,12 @@ const error = ref(null)
 let intervalId = null
 
 function goToDrink(name) {
-  router.push({ name: 'menuitem', params: { name: name }, query: { from: '/leaderboard' } })
+  router.push({ name: 'custommenuitem', params: { name: name }, query: { from: '/customleaderboard' } })
 }
 
 async function fetchLeaderboard() {
   try {
-    const res = await fetch('https://itu-wb12.onrender.com/drinksleaderboard')
+    const res = await fetch('https://itu-wb12.onrender.com/customdrinksleaderboard')
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     data.value = await res.json()
   

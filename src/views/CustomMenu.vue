@@ -1,16 +1,15 @@
 <template>
-  <h1>Order View</h1>
+  <h1>Custom drinks menu View</h1>
   <button @click="$router.push('/')">to Main Menu</button ><br />
-  <button @click="$router.push('/softdrinksmenu')"><-</button >
-  <button @click="$router.push('/custommenu')">-></button >
-  <button class="drinkCard" v-if="data && data.length > 0" @click="goToDrink(data[0].name)">
+  <button @click="$router.push('/menu')"><-</button >
+  <button @click="$router.push('/alcoholmenu')">-></button >
+     <button class="drinkCard" v-if="data && data.length > 0" @click="goToDrink(data[0].name)">
     <div class="drinkHeader">POPULAR NOW</div>
     <img :src="data[0].image" :alt="data[0].name" class="drinkImage" />
     <div class="drinkFooter">{{ data[0].name }}</div>
   </button>
-
   <div class="drink-card" v-for="drink in data?.slice(1)" :key="drink.id">
-    <img class="drink-image" :src="drink.image" :alt="drink.name" />
+    <img class="drink-image" :src="imageUrl" :alt="IMG" />
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
@@ -29,7 +28,7 @@ const error = ref(null)
 
 onMounted(async () => {
   try {
-    const response = await fetch('https://itu-wb12.onrender.com/drinks')
+    const response = await fetch('https://itu-wb12.onrender.com/customDrinks')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -41,7 +40,7 @@ onMounted(async () => {
 })
 
 function goToDrink(name) {
-  router.push({ name: 'menuitem', params: { name: name }, query: { from: '/menu' } })
+  router.push({ name: 'custommenuitem', params: { name }, query: { from: '/custommenu' } })
 }
 </script>
 
@@ -79,7 +78,6 @@ function goToDrink(name) {
   color: var(--gold, #d4af37);
   text-align: center;
 
-
   font-family: 'Josefin Slab';
   font-size: 20px;
   font-style: normal;
@@ -99,6 +97,7 @@ function goToDrink(name) {
   font-weight: 700;
   line-height: normal;
   align-self: stretch;
+
 }
 
 .info-button {
@@ -165,5 +164,4 @@ function goToDrink(name) {
 .drinkCard {
   width: 362px;
 }
-
 </style>

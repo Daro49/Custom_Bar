@@ -40,9 +40,52 @@ const router = createRouter({
       component: () => import('../views/Leaderboard.vue'),
     },
     {
+      path: '/customleaderboard',
+      name: 'customleaderboard',
+      component: () => import('../views/CustomLeaderboard.vue'),
+    },
+    {
       path: '/menu/order',
       name: 'order',
       component: () => import('../views/Order.vue'),
+    },
+    {
+      path: '/menu/:name',
+      name: 'menuitem',
+      component: () => import('../views/MenuItem.vue'),
+      props: true,  
+    },
+    {
+      path: '/custommenu',
+      name: 'custommenu',
+      component: () => import('../views/CustomMenu.vue'),
+    },
+    {
+      path: '/alcoholmenu',
+      name: 'alcoholmenu',
+      component: () => import('../views/AlcoholMenu.vue'),
+    },
+    {
+      path: '/softdrinksmenu',
+      name: 'softdrinksmenu',
+      component: () => import('../views/SoftDrinksMenu.vue'),
+    },
+    {
+      path: '/custommenu/:name',
+      name: 'custommenuitem',
+      component: () => import('../views/MenuItem.vue'),
+      props: true,  
+    },{
+      path: '/softdrinksmenu/:name',
+      name: 'softdrinksmenuitem',
+      component: () => import('../views/MenuItem.vue'),
+      props: true,  
+    },
+    {
+      path: '/alcoholmenu/:name',
+      name: 'alcoholmenuitem',
+      component: () => import('../views/MenuItem.vue'),
+      props: true,  
     },
   ],
 })
