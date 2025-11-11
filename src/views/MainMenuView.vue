@@ -16,6 +16,9 @@
 
   <div class ="bottom-button-group">
     <button class="btn-bottom">
+      <RouterLink to="/map">Map</RouterLink>
+    </button>
+    <button class="btn-bottom">
       <RouterLink to="/customdrink">Custom Drink</RouterLink>
     </button>
     <button class="btn-bottom">
