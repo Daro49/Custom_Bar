@@ -53,6 +53,16 @@ const router = createRouter({
       path: '/cs_views/packages',
       name: 'packages',
       component: () => import('../views/CSViews/Packages.vue'),
+    },
+    {
+      path: '/cs_views/milestones',
+      name: 'milestones',
+      component: () => import('../views/CSViews/Milestones.vue'),
+    },
+    {
+      path: '/cs_views/edit_profile',
+      name: 'edit_profile',
+      component: () => import('../views/CSViews/EditProfile.vue'),
     }
   ],
 })

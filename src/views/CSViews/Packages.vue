@@ -8,8 +8,9 @@ import Img from "@/assets/alpa-francovka.jpg";
     <Header :avatar="Profile" />
     <PointsPresenter pts="45" />
     <div class="package-list">
-      <PackageCard :img="Img" name="Alpa Francovka" price="1500 Points"/>
-      <PackageCard :img="Img" name="Alpa Francovka" price="1500 Points"/>
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
+      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points"/>
     </div>
   </div>
 </template>
@@ -32,13 +33,11 @@ export default {
 <style>
 .packages {
   background: var(--background-green);
-  border: 1px solid;
-  border-color: #000000;
   display: flex;
   flex-direction: column;
-  height: 917px;
-  width: 100%;
+  height: 100%;
   overflow-y: auto;
+  width: 100%;
 }
 
 .packages .header-child-instance {

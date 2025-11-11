@@ -61,14 +61,7 @@ export default {
 
 <style>
 .coupons {
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  background-color: var(--green);
-  border: 1px solid;
-  border-color: #000000;
+  background: var(--background-green);
   display: flex;
   flex-direction: column;
   height: 100%;

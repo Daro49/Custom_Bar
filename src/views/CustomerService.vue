@@ -17,7 +17,7 @@ import Profile from "@/assets/amir.jpg";
         <div class="frame-3">
           <MenuButton txt = "Coupons" :to="{ name: 'coupons' }"/>
           <MenuButton txt = "Packages" :to="{ name: 'packages' }"/>
-          <MenuButton txt = "Milestones"/>
+          <MenuButton txt = "Milestones" :to="{ name: 'milestones' }"/>
         </div>
       </div>
     </div>
@@ -44,23 +44,12 @@ export default {
 
 <style>
 .customer-service {
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  background-color: var(--green);
+  background: var(--background-green);
   display: flex;
   flex-direction: column;
-  gap: 11px;
   height: 100%;
+  overflow-y: auto;
   width: 100%;
-}
-
-.customer-service .header-child-instance {
-  height: 76px !important;
-  left: unset !important;
-  top: unset !important;
 }
 
 .customer-service .frame {

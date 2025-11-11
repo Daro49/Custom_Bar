@@ -10,8 +10,10 @@
 
     <div class="right-content">
       <slot name="right">
-        <img v-if="avatar" :src="avatar" class="avatar" />
-        <i v-else-if="rightIcon" :class="rightIcon"></i>
+        <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile"/>
+        <button class="back-btn" @click="rightFunction" 
+          v-if="rightIcon" v-html="rightIcon">
+        </button>
       </slot>
     </div>
   </header>
@@ -19,7 +21,7 @@
 </template>
 
 <script>
-import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
+import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw';
 import router from '@/router';
 
 export default {
@@ -28,7 +30,8 @@ export default {
     backButton: { type: Boolean, default: true },
     title: { type: String, default: "" },
     avatar: { type: String, default: null },
-    rightIcon: { type: String, default: null }
+    rightIcon: { type: String, default: null },
+    rightFunction: { type: Function, default: null }
   },
   setup() {
     return { ArrowLeftSvg }
@@ -36,6 +39,9 @@ export default {
   methods: {
     back() {
       router.back();
+    },
+    openProfile() {
+      router.push({ name: 'profile' });
     }
   }
 }
