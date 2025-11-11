@@ -13,7 +13,7 @@
           <span>{{ elapsedFormatted }}</span>
           <span>{{ totalFormatted }}</span>
         </div>
-        <div class=progress_bar>
+        <div class="progress_bar">
           <div class="progress-fill" :style="{ width: progress + '%' }"></div>
         </div>
       </div>    
@@ -180,7 +180,7 @@ async function fetchPlaylist() {
   try {
     const response = await fetch('https://itu-wb12.onrender.com/playlist')
     if(!response.ok) {
-      throw new Error('Server error: &{response.status}');
+      throw new Error(`Server error: ${response.status}`);
     }
     const data = await response.json();
     playlist.value = data;
@@ -206,7 +206,7 @@ const nextSongs = computed(() => {
 })
 
 onMounted(()=> {
-  playlist.value = fetchPlaylist();
+  fetchPlaylist();
   refreshTimer = setInterval( async () => {
     await fetchPlaylist()
   }, 3500);
@@ -227,7 +227,7 @@ async function fetchSongs() {
   try {
     const response = await fetch('https://itu-wb12.onrender.com/songs')
     if(!response.ok) {
-      throw new Error('Server error: &{response.status}');
+      throw new Error(`Server error: ${response.status}`);
     }
     const data = await response.json();
     songs.value = data;
@@ -254,7 +254,7 @@ async function addToQueue(song) {
       }),
     })
     if(!request.ok) {
-      throw new Error('Server error: &{response.status}');
+      throw new Error(`Server error: ${request.status}`);
     }
     const data = await request.json()
     console.log('Song added successfully', data)
@@ -276,7 +276,7 @@ async function promoteSong(song) {
       },
     })
     if(!request.ok) {
-      throw new Error('Server error: &{response.status}');
+      throw new Error(`Server error: ${request.status}`);
     }
     const data = await request.json()
     console.log('Song added successfully', data)
