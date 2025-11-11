@@ -5,13 +5,13 @@
   <button @click="$router.push('/customleaderboard')">-></button >
     </div>
   <div class="drink-card" v-for="(drink,i) in data" :key="drink.id">
-  <img src={{ drink.image }} alt="Gabor's Secret" class="drink-image" />
+  <img :src="drink.image" alt="Gabor's Secret" class="drink-image" />
   
   <div class="drink-info">
     <div class="drink-name">{{ drink.name }}</div>
     <div class="drink-meta">
       <span>#{{i+1}}</span>
-      <span>{{drink.rating}}⭡</span>
+      <span>rating: {{drink.rating}}⭡</span>
     </div>
   </div>
 
@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
 </script>
 
 
-<style >
+<style scoped>
 .app {
     margin-top: 8px;
     padding: 8px;
@@ -79,54 +79,55 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   background-color: #2e4c43; 
   border-radius: 12px;
-  padding: 8px 12px;
-  width: 180px; 
-  height: 66px;
+  padding: 10px 16px;        /* from larger card */
+  width: 362px;              /* larger width */
+  height: 121px;             /* larger height */
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   color: #f7d77c;
   font-family: 'Josefin Slab', serif;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
+/* Keep smaller image look but proportionally nice in bigger card */
 .drink-image {
-   width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: contain; /* show the full image inside the circle */
-  background-color: #fff; /* optional: fill background */
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px; /* small inner margin if needed */
-  object-fit: cover;
+  width: 70px;               /* a bit larger than small, still balanced */
+  height: 70px;
   border-radius: 8px;
+  object-fit: cover;
+  background-color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 2px;
 }
+
 .drink-info {
   flex: 1;
-  margin-left: 8px;
+  margin-left: 12px;
   text-align: left;
 }
 
 .drink-name {
-  font-size: 12px;
+  font-size: 16px;           /* keep smaller style, scaled up slightly */
   font-weight: 600;
   color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
 }
 
 .drink-meta {
-  font-size: 10px;
+  font-size: 12px;
   color: #f7d77c;
   display: flex;
   gap: 8px;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .info-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
+  width: 48px;               /* same as big */
+  height: 48px;
+  border-radius: 14px;
   border: none;
   background: linear-gradient(135deg, #f7c244, #c98f00);
   color: black;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -137,4 +138,5 @@ onBeforeUnmount(() => {
 .info-button:hover {
   transform: scale(1.05);
 }
+
 </style>

@@ -46,7 +46,7 @@ function goToDrink(name) {
 }
 </script>
 
-<style>
+<style scoped>
 .app {
     margin-top: 8px;
     padding: 8px;

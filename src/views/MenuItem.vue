@@ -10,7 +10,7 @@
     <h2 class="drink-info-name">{{ data?.name }}</h2>
     <div class="drink-info-sub" v-if="data && data.rating !=null" >
       <span>#1</span>
-      <span>{{data?.rating}}</span>
+      <span>rating: {{data?.rating}}</span>
     </div>
   </div>
 
