@@ -17,6 +17,7 @@
 
 <script setup>
 import RecipeListItem from './RecipeListItem.vue';
+import { activeUser } from '@/stores/Login';
 
 const props = defineProps({
     ingredientList: {
@@ -32,9 +33,9 @@ async function sendOrder() {
         ingredients: props.ingredientList
     }
 
-    var send = {drink: newDrink, tableCode: "T1"}
+    var send = {drink: newDrink, tableCode: activeUser.value.table}
     try {
-        var response = await fetch(`https://itu-wb12.onrender.com/users/Ja/order/add`, {
+        var response = await fetch(`https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
