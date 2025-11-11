@@ -57,6 +57,7 @@ export default {
     },
     logout() {
       localStorage.removeItem('activeUser')
+      activeUser.value = null
       router.push({ name: 'login' })
     },
   },
