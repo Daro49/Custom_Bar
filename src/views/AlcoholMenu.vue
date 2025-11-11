@@ -1,16 +1,10 @@
 <template>
-  <h1>Order View</h1>
+  <h1>Alcohols menu View</h1>
   <button @click="$router.push('/')">to Main Menu</button ><br />
-  <button @click="$router.push('/softdrinksmenu')"><-</button >
-  <button @click="$router.push('/custommenu')">-></button >
-  <button class="drinkCard" v-if="data && data.length > 0" @click="goToDrink(data[0].name)">
-    <div class="drinkHeader">POPULAR NOW</div>
-    <img :src="data[0].image" :alt="data[0].name" class="drinkImage" />
-    <div class="drinkFooter">{{ data[0].name }}</div>
-  </button>
-
-  <div class="drink-card" v-for="drink in data?.slice(1)" :key="drink.id">
-    <img class="drink-image" :src="drink.image" :alt="drink.name" />
+  <button @click="$router.push('/custommenu')"><-</button >
+  <button @click="$router.push('/softdrinksmenu')">-></button >
+  <div class="drink-card" v-for="drink in data" :key="drink.id">
+    <img class="drink-image" :src="imageUrl" :alt="IMG" />
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
@@ -29,7 +23,7 @@ const error = ref(null)
 
 onMounted(async () => {
   try {
-    const response = await fetch('https://itu-wb12.onrender.com/drinks')
+    const response = await fetch('https://itu-wb12.onrender.com/alcohols')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -41,7 +35,7 @@ onMounted(async () => {
 })
 
 function goToDrink(name) {
-  router.push({ name: 'menuitem', params: { name: name }, query: { from: '/menu' } })
+  router.push({ name: 'alcoholmenuitem', params: { name } })
 }
 </script>
 
@@ -79,7 +73,7 @@ function goToDrink(name) {
   color: var(--gold, #d4af37);
   text-align: center;
 
-
+  /* Song name */
   font-family: 'Josefin Slab';
   font-size: 20px;
   font-style: normal;
@@ -92,9 +86,19 @@ function goToDrink(name) {
   color: var(--gold, #d4af37);
   text-align: center;
 
-
+  /* Song name */
   font-family: 'Josefin Slab';
   font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  align-self: stretch;
+  color: var(--gold, #d4af37);
+  text-align: center;
+
+  /* Song name */
+  font-family: 'Josefin Slab';
+  font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -118,52 +122,4 @@ function goToDrink(name) {
 .info-button:hover {
   transform: scale(1.05);
 }
-
-.drinkCard {
-  width: 250px;
-  height: 300px;
-  background: linear-gradient(180deg, #d8a543 0%, #a8792b 100%);
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  font-family: 'Georgia', serif;
-  color: #000;
-  overflow: hidden;
-   margin-bottom: 16px;
-}
-
-.drinkHeader {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  padding-top: 10px;
-  letter-spacing: 1px;
-}
-
-.drinkImage {
-  width: 90%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.drinkFooter {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-  color: #2a1800;
-}
-.drinkCard:hover {
-  transform: scale(1.05);
-  transition: transform 0.2s ease-in-out;
-}
-.drink-card,
-.drinkCard {
-  width: 362px;
-}
-
 </style>
