@@ -48,13 +48,13 @@ const props = defineProps({
   width: 47px; /* approx 47.06 */
   height: 117px; /* approx 117.32 */
   background-color: v-bind(tableColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 14px;
   display:flex; align-items:center; justify-content:center;
 }
 .side-seats { display:flex; flex-direction:column; gap: 8px }
-.seat { width: 11px; height: 29px; background-color: v-bind(seatColor); border: 2px solid black; border-radius: 8px }
-.top-seat, .bottom-seat { width: 47px; height: 12px; background-color: v-bind(seatColor); border:2px solid black; border-radius: 12px }
+.seat { width: 11px; height: 29px; background-color: v-bind(seatColor); border: 1px solid black; border-radius: 8px }
+.top-seat, .bottom-seat { width: 29px; height: 12px; background-color: v-bind(seatColor); border:1px solid black; border-radius: 12px }
 .table-label { font-family: "Georgia","Times New Roman", serif; font-size: 1.2rem; font-weight:700; color: black }
 .table-b-component.active .main-table, .table-b-component.active .seat, .table-b-component.active .top-seat, .table-b-component.active .bottom-seat { 
   background-color: #513C2C !important;

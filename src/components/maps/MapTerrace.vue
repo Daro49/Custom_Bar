@@ -15,7 +15,7 @@
       <TableE class="table-e-instance" label="T7" :selected="selectedTable === 'T7'" @select="$emit('selectTable', $event)" />
     </div>
 
-    <div class="group">
+    <div class="group" @click="$emit('navigate', 'entry'); $emit('close')" style="cursor: pointer;">
       <div class="text-wrapper-2">ENTRY</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div>
@@ -34,7 +34,7 @@ defineProps({
   selectedTable: String
 })
 
-defineEmits(['selectTable'])
+defineEmits(['selectTable', 'navigate', 'close'])
 </script>
 
 <style scoped>

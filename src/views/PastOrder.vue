@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="header">
       <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/Order History.svg" class="header-icon order-history-icon" @click="goOrderHistory"/>
+      <img src="../assets/avatar.png" class="header-icon profile-icon" @click="goToProfile" />
     </div>
 
     <!-- Content -->
@@ -23,14 +23,18 @@
           />
         </svg>
         <h2>ORDER</h2>
+        <!-- Date, TODO: change content to &lt; {{ orderDate }} &gt;-->
+        <div class="order-date">
+            &lt; 11.11.2025 &gt;
+        </div>
         <div class="divider-line"></div>
       </div>
 
       <!-- Order Items -->
       <div class="order-items">
         <div v-if="isLoading" class="loading">Loading order...</div>
-        <div v-else-if="error" class="error">Error: {{ error }}</div>
-        <div v-else-if="orderItems.length === 0" class="empty">You are dry</div>
+        <div v-else-if="error" class="error">{{ error }}</div>
+        <div v-else-if="orderItems.length === 0" class="empty">No items</div>
         <div v-for="item in orderItems" :key="item.id" class="order-item">
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
@@ -41,16 +45,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Apply Coupons -->
-      <div class="apply-coupons">
-        <a href="#" @click.prevent="router.push('/coupons')">apply coupons</a>
-      </div>
-
-      <!-- Pay Button -->
-      <button class="pay-button" @click="handleButtonClick">
-        {{ orderItems.length === 0 ? 'ORDER SOMETHING' : 'PAY' }}
-      </button>
     </div>
   </div>
 </template>
@@ -61,6 +55,7 @@ import { ref, onMounted } from 'vue'
 
 const router = useRouter()
 const orderItems = ref([])
+const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
 
@@ -68,69 +63,30 @@ const goBack = () => {
   router.back()
 }
 
-const goOrderHistory = () => {
-  router.push('/orders')
+const goToProfile = () => {
+  router.push('/profile')
 }
 
 const fetchOrder = async () => {
   try {
     isLoading.value = true
     const username = 'Matej' // TODO: replace with dynamic username
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order`)
+    const index = '0';
+    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${index}`)
     
     if (!response.ok) {
-      throw new Error('Failed to fetch order')
+      throw new Error('No past orders')
     }
     
     const data = await response.json()
     orderItems.value = data
-    console.log('Order items fetched:', data)
+    orderDate.value = new Date().toLocaleDateString()
+    console.log('Past order items fetched:', data)
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
   } finally {
     isLoading.value = false
-  }
-}
-
-const confirmOrder = async () => {
-  try {
-    const username = 'Matej'
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to confirm order')
-    }
-    
-    const data = await response.json()
-    console.log('Order confirmed:', data)
-    
-    // Clear the order items and show success
-    orderItems.value = []
-    alert('Order confirmed! Thank you for your purchase.')
-    
-    // Optionally redirect back or to a success page
-    setTimeout(() => {
-      router.back()
-    }, 1000)
-  } catch (err) {
-    console.error('Error confirming order:', err)
-    alert('Failed to confirm order: ' + err.message)
-  }
-}
-
-const handleButtonClick = () => {
-  if (orderItems.value.length === 0) {
-    // Route to menu if no items
-    router.push('/menu')
-  } else {
-    // Confirm order if items exist
-    confirmOrder()
   }
 }
 
@@ -206,7 +162,6 @@ onMounted(() => {
   transform: rotate(180deg);
 }
 
-
 .order-title h2 {
   margin: 0;
   font-family: "Georgia", "Times New Roman", serif;
@@ -223,6 +178,15 @@ onMounted(() => {
   margin-top: 8px;
 }
 
+/* Order Date */
+.order-date {
+  text-align: center;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 14px;
+  color: black;
+  margin-bottom: 16px;
+}
+
 /* Order Items */
 .order-items {
   display: flex;
@@ -236,13 +200,16 @@ onMounted(() => {
 .empty {
   text-align: center;
   font-family: "Georgia", "Times New Roman", serif;
-  font-size: 26px;
+  font-size: 28px;
   color: black;
-  padding: 100px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .error {
-  color: #c41e3a;
+  color: #000000;
 }
 
 .order-item {
@@ -283,45 +250,5 @@ onMounted(() => {
   width: 24px;
   height: 24px;
   cursor: pointer;
-}
-
-/* Apply Coupons */
-.apply-coupons {
-  text-align: center;
-  margin: 16px 0;
-}
-
-.apply-coupons a {
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: 14px;
-  color: black;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Pay Button */
-.pay-button {
-  width: 382px;
-  height: 122px;
-  align-self: center;
-  background-color: #2d5f5f;
-  border: 2px solid black;
-  border-radius: 24px;
-  color: #d39e30;
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: 32px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  margin-top: auto;
-}
-
-.pay-button:hover {
-  transform: translateY(-3px);
-  background-color: #1a3a3a;
-}
-
-.pay-button:active {
-  transform: translateY(-1px);
 }
 </style>

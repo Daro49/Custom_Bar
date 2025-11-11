@@ -1,8 +1,8 @@
 <template>
   <div class="table-layout-a">
-  <SlidePanel class="slide-up-table-layout" :currentMap="currentMap" @navigate="switchMap" />
+  <SlidePanel class="slide-up-table-layout" :currentMap="currentMap" @navigate="switchMap" @close="closeSlidePanel" />
   <LayoutHeader class="layout-header-instance" label="bar" @back="goToPreviousMap" />
-    <component :is="mapComponents[currentMap]" :selectedTable="selectedTable" @selectTable="selectTable" />
+    <component :is="mapComponents[currentMap]" :selectedTable="selectedTable" @selectTable="selectTable" @navigate="switchMap" @close="closeSlidePanel" />
   </div>
 </template>
 
@@ -27,11 +27,37 @@ export default {
     }
   },
   methods: {
-    selectTable(label) {
+    async selectTable(label) {
       this.selectedTable = this.selectedTable === label ? null : label
+      
+      // Send POST request to server when table is selected
+      if (this.selectedTable) {
+        try {
+          const username = 'Matej' // TODO: replace with dynamic username
+          console.log('Sending table select request for:', label)
+          const response = await fetch('https://itu-wb12.onrender.com/users/' + username + '/table/select', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ tableCode: label })
+          })
+          
+          console.log('Response status:', response.status)
+          const data = await response.json()
+          console.log('Response data:', data)
+          
+          if (!response.ok) {
+            console.error('Failed to select table:', data)
+          } else {
+            console.log('Table selected:', data)
+          }
+        } catch (error) {
+          console.error('Error selecting table:', error)
+        }
+      }
     },
     switchMap(name) {
-      // expected names: 'terrace','entry','back','garden'
       if (['terrace', 'entry', 'back', 'garden'].includes(name)) {
         this.previousMap = this.currentMap
         this.currentMap = name
@@ -41,6 +67,8 @@ export default {
       const temp = this.currentMap
       this.currentMap = this.previousMap
       this.previousMap = temp
+    },
+    closeSlidePanel() {
     }
   },
   computed: {

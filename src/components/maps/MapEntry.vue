@@ -14,10 +14,10 @@
       <TableD class="table-d-instance" label="E8" :selected="selectedTable === 'E8'" @select="$emit('selectTable', $event)" />
     </div>
 
-    <div class="group">
+    <!-- <div class="group">
       <div class="text-wrapper-2">TERRACE</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div>
+    </div> -->
     <LayoutHeader class="layout-header-instance" label="entry" />
   </div>
 </template>

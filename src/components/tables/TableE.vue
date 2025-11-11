@@ -72,7 +72,7 @@ const props = defineProps({
   width: 47px;
   height: 194px;
   background-color: v-bind(tableColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -99,7 +99,7 @@ const props = defineProps({
 
 .seat {
   background-color: v-bind(seatColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 10px;
   flex-shrink: 0;
   transition: background-color 0.2s ease;

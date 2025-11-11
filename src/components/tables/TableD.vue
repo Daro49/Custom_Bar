@@ -78,7 +78,7 @@ const props = defineProps({
   width: 45px;
   height: 80px;
   background-color: v-bind(tableColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 8px;
   display: flex;
   align-items: center;

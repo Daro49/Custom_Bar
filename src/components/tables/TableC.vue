@@ -39,7 +39,7 @@ const props = defineProps({
   width: 27px; /* approx 27px */
   height: 135px; /* approx 135px */
   background-color: v-bind(tableColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -56,13 +56,13 @@ const props = defineProps({
   width: 20px;
   height: 20px;
   background-color: v-bind(seatColor);
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 50%;
 }
 
 .table-label {
   font-family: "Georgia", "Times New Roman", serif;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: black;
 }

@@ -92,6 +92,11 @@ const router = createRouter({
       component: () => import('../views/MenuItem.vue'),
       props: true,  
     },
+    {
+      path: '/orders', //TODO fix later
+      name: 'orders',
+      component: () => import('../views/PastOrder.vue'),
+    },
   ],
 })
 

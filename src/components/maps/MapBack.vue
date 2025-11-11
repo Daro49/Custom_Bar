@@ -33,23 +33,23 @@
       </div>
     </div>
 
-    <!-- signs (visual helpers) -->
-    <div class="restrooms" aria-hidden>
+    <!-- signs (visual helpers) --> TODO: revisit these
+    <!-- <div class="restrooms" aria-hidden>
       <div class="arrow">↑</div>
       <div class="text-wrapper-2">RESTROOMS</div>
-    </div>
+    </div> -->
 
-    <div class="sign-right" aria-hidden>
+    <!-- <div class="sign-right" aria-hidden>
       <div class="text-wrapper-2">GARDEN</div>
-    </div>
-    <div class="sign-entry" aria-hidden>
+    </div> -->
+    <!-- <div class="sign-entry" aria-hidden>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div>
+    </div> -->
 
-    <div class="group">
+    <!-- <div class="group">
       <div class="text-wrapper-2">ENTRY</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div>
+    </div> -->
 
     <LayoutHeader class="layout-header-instance" label="back" />
   </div>
