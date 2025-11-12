@@ -30,7 +30,7 @@ export default {
   methods: {
     async selectTable(label) {
       this.selectedTable = this.selectedTable === label ? null : label
-      
+      activeUser.value.table = this.selectedTable
       // Send POST request to server when table is selected
       if (this.selectedTable) {
         try {
