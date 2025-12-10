@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar = "Profile"/>
   <div id="tied" @click="toggleShow">
 
     <div id="middlePanel">
@@ -50,6 +51,8 @@ import CustomDrink_Ingredient from '@/components/CustomDrink_Ingredient.vue';
 import RecipeMenu from '@/components/RecipeMenu.vue';
 
 import { useDrinkRecipe } from '@/stores/drinkRecipe';
+import Header from '@/components/Header.vue';
+import Profile from '@/assets/user.png';
 
 const recipe = useDrinkRecipe();
 

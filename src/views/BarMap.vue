@@ -108,7 +108,7 @@ export default {
   border-color: #000000;
   height: 917px;
   position: relative;
-  width: 412px;
+  width: 90%;
 }
 
 .table-layout-a .slide-up-table-layout {

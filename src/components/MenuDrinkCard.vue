@@ -12,6 +12,7 @@
 </template>
 
 <script setup>
+
 defineProps({
   drink: { type: Object, required: true }
 })
@@ -24,7 +25,6 @@ defineEmits(["info"]);
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
     flex-direction: column;
     gap: 8px;
     align-items: center;

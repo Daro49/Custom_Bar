@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar="Profile"/>
   <div class="app">
     
     <div>
@@ -35,15 +36,17 @@ import {
 } from "@/stores/CustomLeaderboard.js";
 
 import LeaderboardDrinkCard from "@/components/LeaderboardDrinkCard.vue";
+import Header from "@/components/Header.vue";
+import Profile from '@/assets/user.png';
 
 const router = useRouter();
 let intervalId = null;
 
 function goToDrink(name) {
   router.push({
-    name: "menuitem",
+    name: "custommenuitem",
     params: { name },
-    query: { from: "/leaderboard" }
+    query: { from: "/customleaderboard" }
   });
 }
 
@@ -59,10 +62,36 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .app {
-  margin-top: 8px;
-  padding: 8px;
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    height: 917px;
+    overflow-y: auto;
+  }
+.drink-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2e4c43; 
+  border-radius: 12px;
+  padding: 10px 16px;        /* from larger card */
+  width: 90%;              /* larger width */
+  height: 121px;             /* larger height */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  margin-bottom: 16px;
+}
+
+/* Keep smaller image look but proportionally nice in bigger card */
+.drink-image {
+  width: 70px;               /* a bit larger than small, still balanced */
+  height: 70px;
   border-radius: 8px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
   display: flex;
   flex-direction: column;
   gap: 8px;

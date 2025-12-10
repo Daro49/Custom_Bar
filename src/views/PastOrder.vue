@@ -98,7 +98,7 @@ onMounted(() => {
 
 <style scoped>
 .order-container {
-  width: 412px;
+  width: 90%;
   height: 917px;
   background: linear-gradient(
       0deg,

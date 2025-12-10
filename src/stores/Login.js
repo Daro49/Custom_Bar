@@ -3,7 +3,6 @@ import User from '@/stores/User.js';
 
 export var activeUser = ref(new User(''));
 
-
 export async function login(username) {
     try {
       const response = await fetch('https://itu-wb12.onrender.com/login', {

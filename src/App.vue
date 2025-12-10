@@ -1,11 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import MainHeader from '@/components/MainHeader.vue'
 </script>
 
 <template>
   <div class="wrapper">
-      <MainHeader />
       <RouterView />
   </div>
 </template>
@@ -42,30 +40,55 @@ nav a:first-of-type {
   border: 0;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.wrapper {
+  background-color: var(--background-green);
+  width: 100%;
+  min-height: 100vh;
 }
+/* PC adjustment */
+@media (min-width: 768px) {
+  .wrapper {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0 var(--section-gap);
+    background-color: var(--background-green);
+    height: 100%;
+
+  }
+
+}
+
+header {
+  display: flex;
+  place-items: center;
+  padding-right: calc(var(--section-gap) / 2);
+}
+
+.logo {
+  margin: 0 2rem 0 0;
+}
+
+header .wrapper {
+  display: flex;
+  place-items: flex-start;
+  flex-wrap: wrap;
+  max-width: 540px;
+}
+
+nav {
+  text-align: left;
+  margin-left: -1rem;
+  font-size: 1rem;
+
+  padding: 1rem 0;
+  margin-top: 1rem;
+}
+
+html, body, #app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: -10;
+}
+
 </style>

@@ -5,11 +5,11 @@
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-meta">
-        <span>#{{ index + 1 }}</span>
+        <span>#{{ drink.position }}</span>
        <span>
   rating: {{ drink.rating }}
-  <span v-if="trend === 'up'">⭡</span>
-  <span v-else-if="trend === 'down'">⭣</span>
+  <span v-if="drink.trend === 1">⭡</span>
+  <span v-else-if="drink.trend === 2">⭣</span>
 </span>
       </div>
     </div>

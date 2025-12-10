@@ -47,7 +47,6 @@ export default {
   overflow-y: auto;
   width: 100%;
 }
-
 .customer-service .frame {
   align-items: center;
   align-self: center;
@@ -56,7 +55,6 @@ export default {
   gap: 16px;
   height: 814px;
   position: relative;
-  width: 384px;
   background: var(--background-green);
 }
 

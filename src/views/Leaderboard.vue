@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar="Profile"/>
   <div class="app">
     
     <div>
@@ -26,6 +27,8 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
+import Profile from '@/assets/user.png';
+import Header from "@/components/Header.vue";
 
 import {
   leaderboard,
@@ -62,7 +65,6 @@ onBeforeUnmount(() => {
   margin-top: 8px;
   padding: 8px;
   border-radius: 8px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
   display: flex;
   flex-direction: column;
   gap: 8px;

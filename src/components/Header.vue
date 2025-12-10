@@ -27,21 +27,36 @@ import router from '@/router'
 export default {
   name: 'Header',
   props: {
-    backButton: { type: Boolean, default: true },
-    title: { type: String, default: '' },
-    avatar: { type: String, default: null },
-    rightIcon: { type: String, default: null },
-    rightFunction: { type: Function, default: null },
+    previous: { type: Boolean, default: false }, /* on true goes back to previous page, else goes to parent route */
+    backButton: { type: Boolean, default: true }, /* show/hide back button */
+    title: { type: String, default: '' }, /* title text in middle */
+    avatar: { type: String, default: null }, /* avatar icon on right */
+    rightIcon: { type: String, default: null }, /* other icon on right */
+    rightFunction: { type: Function, default: null }, /* function activating when clicking on icon on right */
   },
   setup() {
     return { ArrowLeftSvg }
   },
   methods: {
     back() {
-      router.back()
+      /* Go back to previous page */
+      if (this.previous) {
+        router.back();
+        return
+      }
+      /* Go to parent route */
+      const current = this.$route.path.split('/')
+      current.pop()
+
+      const parent = current.join('/') || '/'
+
+      this.$router.push(parent)
     },
     openProfile() {
       router.push({ name: 'profile' })
+    },
+    menu()  {
+      router.push({ name: 'main' })
     },
   },
 }
@@ -52,9 +67,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(#e0b04d, #be8e21);
+  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 10px 14px;
-  border-radius: 8px;
 
   width: 100%;
   box-sizing: border-box;
