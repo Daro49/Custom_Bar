@@ -1,13 +1,15 @@
 <template>
   <Header :avatar="Profile"/>
-  <div class="jukebox"  v-if="!(showSearchPanel || showDetailSearch || showDetailQueue)" >
+  <div class="jukebox"  v-if="!(showSearchPanel)" >
     <div class="current" v-if="currentSong">
       <SongButton
         :imageSrc="getCover(currentSong.title)"
         :title="currentSong.title"
         :artist="currentSong.artist"
         :song="currentSong"
-        @click="openDetailQueue(currentSong)"
+        :showAdd="false"
+        :showCut="false"
+        :showPromote="false"
       />
       <div class="progress_wrapper">
         <div class="progress_timer">
@@ -19,7 +21,7 @@
         </div>
       </div>    
     </div>
-    <h1 class="priecka"> ----------------------------------------------------------------------------------------------------------------------------------------------</h1>
+    <h1 class="priecka"> -------------------------------------------</h1>
     <div class="playlist">
       <SongButton
       v-for="song in nextSongs"
@@ -27,7 +29,7 @@
       :imageSrc="getCover(song.title)"
       :title="song.title"
       :artist="song.artist"
-       @click="openDetailQueue(song)"
+       @promote="promoteSong(song)"
       :showAdd="false"
       />
       <h1 v-if="playlist.length===0"> Playlist je prazdny </h1>
@@ -55,33 +57,10 @@
       :title="song.title"
       :artist="song.artist"
       :song="song"
-      @click="DetailSearch(song)"
+      @add="addToQueue(song)"
       :showPromote="false"
       :showCut="false"
     />
-  </div>
-
-  <div v-if="showDetailSearch && selectedSong" class="showDetailAdd">
-    <button class="back_btn" @click="ReturnBackSearch"> Spat </button>
-    <SongButton
-      :imageSrc="getCover(selectedSong.title)"
-      :title="selectedSong.title"
-      :artist="selectedSong.artist"
-      :song="selectedSong"
-    />
-    <button class="add_btn" @click="addToQueue(selectedSong)"> Pridaj do zoznamu </button>
-
-  </div>
-
-  <div v-if="showDetailQueue && selectedSong" class="showDetailQueue">
-    <button class="back_btn" @click="ReturnBackQueue"> Spat </button>
-    <SongButton
-      :imageSrc="getCover(selectedSong.title)"
-      :title="selectedSong.title"
-      :artist="selectedSong.artist"
-      :song="selectedSong"
-    />
-    <button class="promote_btn" @click="promoteSong(selectedSong)"> Promote </button>
   </div>
 </template>
 
