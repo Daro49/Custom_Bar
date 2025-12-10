@@ -1,6 +1,6 @@
 <!-- src/views/DrinksView.vue -->
 <template>
-      <Header :avatar="Profile"/>
+  <Header :rightIcon = "cart" :rightFunction = "order" />
 
   <div class="app">
     <div>
@@ -15,7 +15,7 @@
     <!-- Featured drink -->
     <div class="featured-container" v-if="drinks?.length">
     <button 
-      class="drinkCardFe"
+      class="drinkCard"
       v-if="drinks?.length"
       @click="goToDrink(drinks[0].name)"
     >
@@ -38,7 +38,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
-import Profile from '@/assets/user.png'
+import cart from "@/assets/OrderHistory.svg?raw";
 
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 
@@ -57,6 +57,11 @@ function goToDrink(name) {
     query: { from: "/menu" }
   });
 }
+
+function order(){
+      router.push({ name: 'order' })
+    };
+
 </script>
 
 <style scoped>
@@ -70,6 +75,8 @@ function goToDrink(name) {
     align-items: center;
     height: 917px;
     overflow-y: auto;
+        box-sizing: border-box;
+    height: 100%;
   }
 .drink-card {
   display: flex;
@@ -78,11 +85,16 @@ function goToDrink(name) {
   background-color: #2e4c43;
   border-radius: 12px;
   padding: 10px 16px;
-  width: 90%;
+  width: 640px;
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
 }
+@media (max-width: 768px) {
+.drink-card,
+.drinkCard {
+  width: 90%;
+}}
 
 .drink-image {
    width: 60px;
@@ -148,8 +160,8 @@ function goToDrink(name) {
   transform: scale(1.05);
 }
 
-.drinkCardFe {
-  width: 362px;
+.drinkCard {
+  width: 640px;
   height: 300px;
   background: linear-gradient(180deg, #d8a543 0%, #a8792b 100%);
   border-radius: 15px;
@@ -183,14 +195,11 @@ function goToDrink(name) {
   margin-bottom: 10px;
   color: #2a1800;
 }
-.drinkCardFe:hover {
+.drinkCard:hover {
   transform: scale(1.05);
   transition: transform 0.2s ease-in-out;
 }
-.drink-card,
-.drinkCard {
-  width: 90%;
-}
+
 
 /* TODO -> still temporary*/
 .nav-btn { 

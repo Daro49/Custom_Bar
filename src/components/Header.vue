@@ -58,6 +58,7 @@ export default {
     menu()  {
       router.push({ name: 'main' })
     },
+    
   },
 }
 </script>

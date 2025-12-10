@@ -23,8 +23,8 @@
     </div>
 
     <div class="drink-actions" v-if="drink.rating != null">
-      <button class="action-button" @click="$emit('rate', 1)">♡</button>
-      <button class="action-button" @click="$emit('rate', -1)">♡̶</button>
+      <button class="action-button" @click="$emit('rate', 1)">❤</button>
+      <button class="action-button" @click="$emit('rate', -1)">💔</button>
     </div>
 
     <button class="order-section" @click="$emit('order')">
@@ -51,9 +51,9 @@ const ingredientsLine = computed(() => {
 </script>
 
 <style scoped>
-
+@media (min-width: 768px) {
 .drink-info-card {
-  width: 360px;
+  width: 620px;
   background: linear-gradient(180deg, #d7a84d 0%, #ab7e2e 100%);
   border-radius: 16px;
   padding: 12px;
@@ -64,6 +64,24 @@ const ingredientsLine = computed(() => {
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+}
+
+@media (max-width: 768) {
+    .drink-info-card {
+   width: 90%;
+  height: 100%;
+  background: linear-gradient(180deg, #d7a84d 0%, #ab7e2e 100%);
+  border-radius: 16px;
+  padding: 12px;
+  font-family: 'Josefin Slab', serif;
+  color: #2e1b00;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 }
 
 .arrow {

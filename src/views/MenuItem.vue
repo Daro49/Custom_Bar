@@ -1,5 +1,6 @@
 
 <template>
+  <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
  <p v-if="drinkLoading && (!drinkData || drinkData.length === 0)">
   Loading...
@@ -20,7 +21,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
+import cart from "@/assets/OrderHistory.svg?raw";
 import DrinkInfoCard from "@/components/DrinkInfoCard.vue";
 import {
   drinkData,
@@ -34,6 +35,7 @@ import {
 } from "@/stores/DrinkInfo.js";
 
 import { activeUser } from "@/stores/Login.js";
+import Header from "@/components/Header.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -65,6 +67,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopDrinkAutoRefresh();
 });
+
+function order(){
+      router.push({ name: 'order' })
+    };
+
 </script>
 
 <style scoped>
@@ -76,7 +83,7 @@ onBeforeUnmount(() => {
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
     overflow-y: auto;
+     height: 917px;
   }
 </style>
