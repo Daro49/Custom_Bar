@@ -76,5 +76,6 @@ function order(){
   align-items: center;
   height: 917px;
   overflow-y: auto;
+  padding-bottom: 71px;
 }
 </style>

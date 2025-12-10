@@ -21,16 +21,6 @@ defineEmits(["info"]);
 </script>
 
 <style scoped>
-.app {
-    margin-top: 8px;
-    padding: 8px;
-    border-radius: 8px;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    height: 917px;
-    overflow-y: auto;
-  }
 .drink-card {
     flex-shrink: 0;
   display: flex;
@@ -129,5 +119,10 @@ defineEmits(["info"]);
   color: #2a1800;
 }
 
+@media (max-width: 768px) {
+.drink-card,
+.drinkCard {
+  width: 90%;
+}}
 
 </style>

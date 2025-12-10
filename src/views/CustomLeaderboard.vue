@@ -72,34 +72,8 @@ function order(){
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
     overflow-y: auto;
+    padding-bottom: 71px;
   }
-.drink-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #2e4c43; 
-  border-radius: 12px;
-  padding: 10px 16px;        /* from larger card */
-  width: 90%;              /* larger width */
-  height: 121px;             /* larger height */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
-  color: #f7d77c;
-  font-family: 'Josefin Slab', serif;
-  margin-bottom: 16px;
-}
 
-/* Keep smaller image look but proportionally nice in bigger card */
-.drink-image {
-  width: 70px;               /* a bit larger than small, still balanced */
-  height: 70px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  height: 917px;
-  overflow-y: auto;
-}
 </style>
