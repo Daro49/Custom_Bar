@@ -83,7 +83,6 @@ function order(){
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
     overflow-y: auto;
   }
 </style>

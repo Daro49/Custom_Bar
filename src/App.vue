@@ -44,6 +44,8 @@ nav a:first-of-type {
   background-color: var(--background-green);
   width: 100%;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 /* PC adjustment */
 @media (min-width: 768px) {
