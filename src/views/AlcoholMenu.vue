@@ -1,5 +1,5 @@
 <template>
-  <Header :avatar="Profile"/>
+  <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
     <div>
     <RouterLink to="/custommenu" class="nav-btn"><-</RouterLink>
@@ -27,8 +27,8 @@ import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 
 import { drinks, loadDrinks } from "@/stores/MenuAlcohol.js";
-import Profile from '@/assets/user.png';
 import Header from "@/components/Header.vue";
+import cart from "@/assets/OrderHistory.svg?raw";
 const router = useRouter();
 
 onMounted(() => {
@@ -42,6 +42,10 @@ function goToDrink(name) {
     query: { from: "/alcoholmenu" }
   });
 }
+function order(){
+      router.push({ name: 'order' })
+    };
+
 </script>
 
 <style scoped>

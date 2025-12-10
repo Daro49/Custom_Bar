@@ -1,5 +1,5 @@
 <template>
-  <Header :avatar="Profile"/>
+  <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
     
     <div>
@@ -27,7 +27,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-import Profile from '@/assets/user.png';
+import cart from "@/assets/OrderHistory.svg?raw";
 import Header from "@/components/Header.vue";
 
 import {
@@ -58,6 +58,11 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId);
 });
+
+function order(){
+      router.push({ name: 'order' })
+    };
+
 </script>
 
 <style scoped>

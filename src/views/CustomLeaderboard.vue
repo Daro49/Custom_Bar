@@ -1,5 +1,5 @@
 <template>
-  <Header :avatar="Profile"/>
+    <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
     
     <div>
@@ -37,7 +37,7 @@ import {
 
 import LeaderboardDrinkCard from "@/components/LeaderboardDrinkCard.vue";
 import Header from "@/components/Header.vue";
-import Profile from '@/assets/user.png';
+import cart from "@/assets/OrderHistory.svg?raw";
 
 const router = useRouter();
 let intervalId = null;
@@ -58,6 +58,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId);
 });
+function order(){
+      router.push({ name: 'order' })
+    };
 </script>
 
 <style scoped>

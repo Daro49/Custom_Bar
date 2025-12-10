@@ -23,8 +23,8 @@
     </div>
 
     <div class="drink-actions" v-if="drink.rating != null">
-      <button class="action-button" @click="$emit('rate', 1)">♡</button>
-      <button class="action-button" @click="$emit('rate', -1)">♡̶</button>
+      <button class="action-button" @click="$emit('rate', 1)">❤</button>
+      <button class="action-button" @click="$emit('rate', -1)">💔</button>
     </div>
 
     <button class="order-section" @click="$emit('order')">
