@@ -64,39 +64,39 @@ export default {
 </script>
 
 <style scoped>
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
-  padding: 10px 14px;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
+    padding: 10px 14px;
 
-  width: 100%;
-  box-sizing: border-box;
-}
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-.back-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: black;
-}
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: black;
+  }
 
-.center-content {
-  flex: 1;
-  text-align: center;
-  font-weight: 600;
-  font-size: 18px;
-}
+  .center-content {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+  }
 
-.avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-}
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+  }
 </style>

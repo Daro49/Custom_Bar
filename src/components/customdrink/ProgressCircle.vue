@@ -43,7 +43,5 @@
         font-style: normal;
         font-weight: 400;
         line-height: normal;
-
-        border: 1px solid rgba(200, 200, 200 ,.8);
     }
 </style>

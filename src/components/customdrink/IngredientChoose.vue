@@ -1,14 +1,16 @@
 <template>
     <div class="ingredient_box">
         <h2>{{ props.category_name }}</h2>
-        <div v-for="ingredient in ingredients">
-            <IngredientListItem :name="ingredient.name" />
-        </div>
+
+        <IngredientListItem 
+            v-for="ingredient in ingredients"
+            :name="ingredient.name" 
+        />
     </div>
 </template>
 
 <script setup>
-    import { onMounted } from 'vue';
+    import { onMounted, ref } from 'vue';
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
     import IngredientListItem from './IngredientListItem.vue';
 
@@ -21,7 +23,7 @@
     const ingredients = ref([]);
 
     onMounted(async () => {
-        ingredients.value = await recipe.fetchIngredients(ingredient_category.name);
+        ingredients.value = await recipe.fetchIngredients(props.category_name);
     })
 </script>
 
@@ -29,7 +31,6 @@
 
     .ingredient_box {
         display: flex;
-        height: 675px;
         padding: 30px;
         flex-direction: column;
         align-items: flex-start;
@@ -38,6 +39,15 @@
 
         border-radius: 50px;
         border: 2px solid #552808;
+    }
+
+    h2 {
+        color: #552808;
+        font-family: "Josefin Slab", sans-serif;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
     }
 
 </style>
