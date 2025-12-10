@@ -44,9 +44,9 @@ let intervalId = null;
 
 function goToDrink(name) {
   router.push({
-    name: "menuitem",
+    name: "custommenuitem",
     params: { name },
-    query: { from: "/leaderboard" }
+    query: { from: "/customleaderboard" }
   });
 }
 

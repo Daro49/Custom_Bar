@@ -7,11 +7,12 @@
     <div class="drink-info-header">
       <h2 class="drink-info-name">{{ drink.name }}</h2>
 
-      <div class="drink-info-sub" v-if="drink.rating != null">
-        <span>#1</span>
+      
+    </div>
+    <div class="drink-info-sub" v-if="drink.rating != null">
+        <span>#{{ drink.position }}</span>
         <span>rating: {{ drink.rating }}</span>
       </div>
-    </div>
 
     <p class="drink-description" v-if="drink.description">
       {{ drink.description }}
@@ -23,7 +24,7 @@
 
     <div class="drink-actions" v-if="drink.rating != null">
       <button class="action-button" @click="$emit('rate', 1)">♡</button>
-      <button class="action-button" @click="$emit('rate', -1)">dislike</button>
+      <button class="action-button" @click="$emit('rate', -1)">♡̶</button>
     </div>
 
     <button class="order-section" @click="$emit('order')">

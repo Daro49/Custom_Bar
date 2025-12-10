@@ -51,9 +51,9 @@ onMounted(() => {
 
 function goToDrink(name) {
   router.push({
-    name: "menuitem",
+    name: "custommenuitem",
     params: { name },
-    query: { from: "/menu" }
+    query: { from: "/custommenu" }
   });
 }
 </script>
