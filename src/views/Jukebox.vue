@@ -27,6 +27,7 @@
       :title="song.title"
       :artist="song.artist"
        @click="openDetailQueue(song)"
+      :showAdd="false"
       />
       <h1 v-if="playlist.length===0"> Playlist je prazdny </h1>
     </div>
@@ -54,6 +55,8 @@
       :artist="song.artist"
       :song="song"
       @click="DetailSearch(song)"
+      :showPromote="false"
+      :showCut="false"
     />
   </div>
 
@@ -100,10 +103,6 @@ const elapsedTime = ref(0)
 const progress = ref(0)
 
 let progressTimer = null
-
-/*TODO: 
-/* -pridaj unmotune
-*/
 
 function formatTime (duration) {
   const mins = Math.floor(duration/60)
