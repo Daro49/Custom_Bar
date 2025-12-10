@@ -15,10 +15,10 @@
       <TableE class="table-e-instance" label="T7" :selected="selectedTable === 'T7'" @select="$emit('selectTable', $event)" />
     </div>
 
-    <!-- <div class="group" @click="$emit('navigate', 'entry'); $emit('close')" style="cursor: pointer;">
+    <div class="group" @click="$emit('navigate', 'entry'); $emit('close')" style="cursor: pointer;">
       <div class="text-wrapper-2">ENTRY</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -36,13 +36,12 @@ defineEmits(['selectTable', 'navigate', 'close'])
 
 <style scoped>
   .table-layout-a {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     height: 917px;
     width: 70%;
-    /* border: 1px solid;
-    border-color: #000000; */
   }
 
 .table-layout-a .table-e-instance {
@@ -65,16 +64,6 @@ defineEmits(['selectTable', 'navigate', 'close'])
   width: 96.23px;
 }
 
-.table-layout-a .group {
-  display: flex;
-  gap: 8px;
-  height: 16px;
-  left: 274px;
-  position: absolute;
-  top: 468px;
-  width: 115px;
-}
-
 .table-layout-a .text-wrapper-2 {
   color: #000000;
   font-family: "Josefin Slab-Bold", Helvetica;
@@ -90,18 +79,33 @@ defineEmits(['selectTable', 'navigate', 'close'])
 .table-layout-a .out-tables-1 {
   display: flex;
   flex-direction: column;
-  height: 760px;
+  height: 80%;
   justify-content: space-between;
   width: 115px;
+  margin-top: 50px;
+  margin-bottom: 150px;
 }
 
 .table-layout-a .out-tables-2 {
-  align-items: center;
   display: flex;
   flex-direction: column;
-  height: 760px;
+  align-items: center;
   justify-content: space-between;
-  padding: 0px -20px;
-  width: 100px;
+  width: 120px;
+  height: 80%;
+  margin-top: 50px;
+  margin-bottom: 150px;
+}
+
+.table-layout-a .group {
+  position: absolute;
+  right: 110px;
+  top: 47%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
 }
 </style>

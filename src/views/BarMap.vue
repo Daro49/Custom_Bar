@@ -1,5 +1,9 @@
 <template>
-  <LayoutHeader class="layout-header-instance" label="bar" @back="goToPreviousMap" />
+  <Header :rightIcon="cart" :rightFunction="order">
+      <template #title>
+      <span class="custom-title">{{ currentMap }}</span>
+    </template>
+  </Header>
   <div class="horizontal-center-parent">
     <SlidePanel class="slide-up-table-layout" :currentMap="currentMap" @navigate="switchMap" @close="closeSlidePanel" />
     <component :is="mapComponents[currentMap]" :selectedTable="selectedTable" @selectTable="selectTable" @navigate="switchMap" @close="closeSlidePanel" />
@@ -8,15 +12,13 @@
 
 <script>
 import SlidePanel from '../components/SlidePanel.vue';
-import TableE from '../components/tables/TableE.vue';
-import Plant from '../components/Plant.vue';
-import LayoutHeader from '../components/LayoutHeader.vue';
-import TableA from '../components/tables/TableA.vue'
-import MapTerrace from '../components/maps/MapTerrace.vue'
-import MapEntry from '../components/maps/MapEntry.vue'
-import MapBack from '../components/maps/MapBack.vue'
-import MapGarden from '../components/maps/MapGarden.vue'
-import { activeUser } from '@/stores/Login.js'
+import Header from '@/components/Header.vue';
+import cart from "@/assets/OrderHistory.svg?raw";
+import MapTerrace from '../components/maps/MapTerrace.vue';
+import MapEntry from '../components/maps/MapEntry.vue';
+import MapBack from '../components/maps/MapBack.vue';
+import MapGarden from '../components/maps/MapGarden.vue';
+import { activeUser } from '@/stores/Login.js';
 
 export default {
   name: "TableLayoutA",
@@ -24,7 +26,8 @@ export default {
     return {
       selectedTable: null,
       currentMap: 'terrace',
-      previousMap: 'terrace'
+      previousMap: 'terrace',
+      cart
     }
   },
   methods: {
@@ -70,7 +73,8 @@ export default {
       this.previousMap = temp
     },
     closeSlidePanel() {
-    }
+    },
+    order(){ this.$router.push({ name: 'order' })}
   },
   computed: {
     mapComponents() {
@@ -84,14 +88,11 @@ export default {
   },
   components: {
     SlidePanel,
-    TableE,
-    Plant,
-    LayoutHeader,
-    TableA,
     MapTerrace,
     MapEntry,
     MapBack,
-    MapGarden
+    MapGarden,
+    Header
   }
 };
 </script>
@@ -108,5 +109,16 @@ export default {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
+}
+
+.custom-title {
+  flex-grow: 1;
+  text-align: center;
+  color: black;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 </style>

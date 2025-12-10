@@ -59,8 +59,8 @@ function goToDrink(name) {
 }
 
 function order(){
-      router.push({ name: 'order' })
-    };
+  router.push({ name: 'order' })
+};
 
 </script>
 
