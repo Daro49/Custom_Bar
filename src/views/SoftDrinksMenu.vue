@@ -26,7 +26,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 
-import { drinks, loadDrinks } from "@/stores/MenuSoft.js";
+import { drinks, loadDrinks , drinksLoading} from "@/stores/MenuSoft.js";
 import Header from "@/components/Header.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
 const router = useRouter();
@@ -53,6 +53,7 @@ function order(){
 .app {
     margin-top: 8px;
     padding: 8px;
+    padding-bottom: 71px;
     border-radius: 8px;
     display:flex;
     flex-direction: column;
@@ -60,7 +61,7 @@ function order(){
     align-items: center;
     height: 917px;
     overflow-y: auto;
-        box-sizing: border-box;
+    box-sizing: border-box;
     height: 100%;
   }
 .drink-card {

@@ -40,7 +40,7 @@ import DrinkCard from "@/components/MenuDrinkCard.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
 
 
-import { drinks, loadDrinks } from "@/stores/MenuCustom.js";
+import { drinks, loadDrinks,drinksLoading } from "@/stores/MenuCustom.js";
 import Header from "@/components/Header.vue";
 
 const router = useRouter();
@@ -173,6 +173,7 @@ function order(){
   overflow: hidden;
    margin-bottom: 16px;
 }
+
 
 .drinkHeader {
   font-size: 18px;

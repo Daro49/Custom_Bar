@@ -77,6 +77,7 @@ function order(){
     overflow-y: auto;
         box-sizing: border-box;
     height: 100%;
+    padding-bottom: 71px;
   }
 .drink-card {
   display: flex;
