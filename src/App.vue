@@ -50,7 +50,7 @@ nav a:first-of-type {
 /* PC adjustment */
 @media (min-width: 768px) {
   .wrapper {
-    max-width: 540px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 var(--section-gap);
     background-color: var(--background-green);
