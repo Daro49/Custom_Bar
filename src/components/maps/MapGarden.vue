@@ -1,37 +1,26 @@
 <template>
-  <div>
-    <div class="out-tables-1" style="display:flex; flex-direction:column; gap:0">
-      <!-- left: decorative plants down the side -->
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
-      <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" style="margin:-10px 0" />
+  <div class="table-d-layout">
+    <div class="garden" v-html="Garden"></div>
+
+    <div class="out-tables-2">
+      <TableB class="table-b-instance" label="G1" :selected="selectedTable === 'G1'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G2" :selected="selectedTable === 'G2'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G3" :selected="selectedTable === 'G3'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G4" :selected="selectedTable === 'G4'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G5" :selected="selectedTable === 'G5'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G6" :selected="selectedTable === 'G6'" @select="$emit('selectTable', $event)"/>
     </div>
 
-    <div class="out-tables-2" style="display:flex; flex-direction:column; gap:0">
-      <TableB class="table-b-instance" label="G1" :selected="selectedTable === 'G1'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
-      <TableB class="table-b-instance" label="G2" :selected="selectedTable === 'G2'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
-      <TableB class="table-b-instance" label="G3" :selected="selectedTable === 'G3'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
-      <TableB class="table-b-instance" label="G4" :selected="selectedTable === 'G4'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
-      <TableB class="table-b-instance" label="G5" :selected="selectedTable === 'G5'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
-      <TableB class="table-b-instance" label="G6" :selected="selectedTable === 'G6'" @select="$emit('selectTable', $event)"  style="margin:-30px 0"/>
+    <div class="group" @click="$emit('navigate', 'back'); $emit('close')" style="cursor: pointer;">
+      <img class="entry" alt="Entry" src="../../assets/Entry.png" style="transform: rotate(180deg);"/>
+      <div class="text-wrapper-2">BACK</div>
     </div>
-
-    <!-- <div class="group">
-      <div class="text-wrapper-2">ENTRY</div>
-      <img class="entry" alt="Entry" src="../../assets/Entry.png" />
-    </div> -->
   </div>
 </template>
 
 <script setup>
-import TableB from '../tables/TableB.vue'
-import Plant from '../Plant.vue'
+import TableB from '../tables/TableB.vue';
+import Garden from '../../assets/garden.svg?raw';
 
 defineProps({
   selectedTable: String
@@ -41,19 +30,45 @@ defineEmits(['selectTable'])
 </script>
 
 <style scoped>
-.out-tables-1 {
-  margin-top: -20px;
-  margin-left: -25px;
-  margin-bottom: 10px;
+.table-d-layout {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 917px;
+  width: 70%;
 }
 
-.out-tables-2 {
+.table-d-layout .out-tables-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
   margin-top: 10px;
-  margin-left: -30px;
-  margin-right: 30px;
-  margin-bottom: 10px;
 }
-.table-b-instance {
-  transform: rotate(-90deg);
+
+.table-d-layout .out-tables-2 > * {
+  margin: -20px 0;
+}
+
+.table-d-layout .table-b-instance {
+  transform: rotate(-90deg) scale(120%);
+}
+
+.table-d-layout .garden {
+  height: 80%;
+  transform: scale(110%) translateY(30px);
+}
+
+.table-d-layout .group {
+  position: absolute;
+  left: 40px;
+  bottom: 50px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 }
 </style>
+

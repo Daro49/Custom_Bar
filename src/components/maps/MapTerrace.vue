@@ -1,5 +1,5 @@
 <template>
-  <div class="table-layout-a">
+  <div class="table-a-layout">
     <div class="out-tables-1">
       <TableA class="table-a-instance" label="T2" :selected="selectedTable === 'T2'" @select="$emit('selectTable', $event)" />
       <TableA class="table-a-instance" label="T3" :selected="selectedTable === 'T3'" @select="$emit('selectTable', $event)" />
@@ -16,7 +16,7 @@
     </div>
 
     <div class="group" @click="$emit('navigate', 'entry'); $emit('close')" style="cursor: pointer;">
-      <div class="text-wrapper-2">ENTRY</div>
+      <div class="text-wrapper">ENTRY</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div>
   </div>
@@ -35,7 +35,7 @@ defineEmits(['selectTable', 'navigate', 'close'])
 </script>
 
 <style scoped>
-  .table-layout-a {
+  .table-a-layout {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -44,17 +44,17 @@ defineEmits(['selectTable', 'navigate', 'close'])
     width: 70%;
   }
 
-.table-layout-a .table-e-instance {
+.table-a-layout .table-e-instance {
   left: unset;
   position: relative;
   top: unset;
 }
 
-.table-layout-a .table-a-instance {
+.table-a-layout .table-a-instance {
   transform: rotate(-45deg);
 }
 
-.table-layout-a .plant-instance {
+.table-a-layout .plant-instance {
   align-items: unset;
   display: unset;
   height: 95.96px;
@@ -64,7 +64,7 @@ defineEmits(['selectTable', 'navigate', 'close'])
   width: 96.23px;
 }
 
-.table-layout-a .text-wrapper-2 {
+.table-a-layout .text-wrapper {
   color: #000000;
   font-family: "Josefin Slab-Bold", Helvetica;
   font-size: 16px;
@@ -76,34 +76,34 @@ defineEmits(['selectTable', 'navigate', 'close'])
   width: 55px;
 }
 
-.table-layout-a .out-tables-1 {
+.table-a-layout .out-tables-1 {
   display: flex;
   flex-direction: column;
-  height: 80%;
+  height: 90%;
   justify-content: space-between;
   width: 115px;
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 150px;
 }
 
-.table-layout-a .out-tables-2 {
+.table-a-layout .out-tables-2 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   width: 120px;
-  height: 80%;
-  margin-top: 50px;
+  height: 87%;
+  margin-top: 30px;
   margin-bottom: 150px;
 }
 
-.table-layout-a .group {
+.table-a-layout .group {
   position: absolute;
-  right: 110px;
-  top: 47%;
+  right: 80px;
+  top: 49%;
   transform: translateY(-50%);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 4px;
   cursor: pointer;
