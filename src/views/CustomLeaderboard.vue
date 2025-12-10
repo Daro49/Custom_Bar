@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar="Profile"/>
   <div class="app">
     
     <div>
@@ -35,6 +36,8 @@ import {
 } from "@/stores/CustomLeaderboard.js";
 
 import LeaderboardDrinkCard from "@/components/LeaderboardDrinkCard.vue";
+import Header from "@/components/Header.vue";
+import Profile from '@/assets/user.png';
 
 const router = useRouter();
 let intervalId = null;
@@ -89,7 +92,6 @@ onBeforeUnmount(() => {
   width: 70px;               /* a bit larger than small, still balanced */
   height: 70px;
   border-radius: 8px;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
   display: flex;
   flex-direction: column;
   gap: 8px;

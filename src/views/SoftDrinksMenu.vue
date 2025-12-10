@@ -1,5 +1,5 @@
-
-    <template>
+<template>
+  <Header :avatar="Profile"/>
   <div class="app">
     <div>
     <RouterLink to="/alcoholmenu" class="nav-btn"><-</RouterLink>
@@ -27,7 +27,8 @@ import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 
 import { drinks, loadDrinks } from "@/stores/MenuSoft.js";
-
+import Header from "@/components/Header.vue";
+import Profile from '@/assets/user.png'
 const router = useRouter();
 
 onMounted(() => {
@@ -48,12 +49,10 @@ function goToDrink(name) {
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
     display:flex;
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
     overflow-y: auto;
   }
 .drink-card {

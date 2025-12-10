@@ -14,8 +14,8 @@ function save() {
 </script>
 
 <template>
+  <Header :previous = "true"/>
   <div class="edit-profile">
-    <Header :right-icon="Check" :right-function="save" />
     <div class="frame">
       Username:
       <input class="input-frame" v-model="activeUser.username" />
