@@ -176,7 +176,7 @@ async function rate(value) {
     overflow-y: auto;
   }
 .drink-info-card {
-  width: 360px;
+  width: 90%;
   background: linear-gradient(180deg, #d7a84d 0%, #ab7e2e 100%);
   border-radius: 16px;
   padding: 12px;

@@ -1,4 +1,11 @@
+<script setup>
+import { RouterLink } from 'vue-router'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
+</script>
+
 <template>
+    <Header :avatar="Profile" :back-button="false"/>
   <div class = "button-group">
     <button class="btn">
       <RouterLink to="/menu">Menu</RouterLink>
@@ -36,7 +43,6 @@
   justify-content: center;
   align-items: center;
 }
-
 .btn {
   background-color: #D4AF37;
   border: none;

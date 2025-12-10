@@ -142,8 +142,8 @@ onMounted(() => {
 
 <style scoped>
 .order-container {
-  width: 412px;
-  height: 917px;
+  width: 90%;
+  height: 90%;
   background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 0.2) 0%,
@@ -302,7 +302,7 @@ onMounted(() => {
 
 /* Pay Button */
 .pay-button {
-  width: 382px;
+  width: 90%;
   height: 122px;
   align-self: center;
   background-color: #2d5f5f;

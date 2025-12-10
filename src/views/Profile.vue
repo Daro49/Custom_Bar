@@ -6,8 +6,9 @@ import { activeUser } from '@/stores/Login.js'
 </script>
 
 <template>
+      <Header :right-icon="Edit" :rightFunction="edit" />
+
   <div class="profile" v-if="activeUserRef!=null">
-    <Header :right-icon="Edit" :rightFunction="edit" />
 
     <img :src="ProfileImg" alt="Profile Picture" class="picture" />
 

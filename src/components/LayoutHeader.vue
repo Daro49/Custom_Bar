@@ -47,7 +47,7 @@ const goBack = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 412px;
+  width: 100%;
   box-sizing: border-box;
   padding: 0 14px;
   height: 76px;

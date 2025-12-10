@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar="Profile"/>
   <div class="app">
   <div>
 <button @click="$router.push('/customleaderboard')"><-</button >
@@ -24,6 +25,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
 
 const data = ref(null)
 const error = ref(null)
@@ -65,7 +68,6 @@ onBeforeUnmount(() => {
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
     display:flex;
     flex-direction: column;
     gap: 8px;
@@ -80,7 +82,7 @@ onBeforeUnmount(() => {
   background-color: #2e4c43; 
   border-radius: 12px;
   padding: 10px 16px;        /* from larger card */
-  width: 362px;              /* larger width */
+  width: 90%;              /* larger width */
   height: 121px;             /* larger height */
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   color: #f7d77c;

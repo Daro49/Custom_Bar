@@ -1,4 +1,5 @@
 <template>
+  <Header :avatar="Profile"/>
   <div class="jukebox"  v-if="!(showSearchPanel || showDetailSearch || showDetailQueue)" >
     <div class="current" v-if="currentSong">
       <SongButton
@@ -84,6 +85,8 @@
 <script setup>
 import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
 import SongButton from '../components/SongButton.vue'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
 const songs = ref([])
 const playlist = ref([])
 const currentSong = ref(null)

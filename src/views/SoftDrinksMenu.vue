@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <Header :avatar="Profile"/>
   <div>
   <button @click="$router.push('/alcoholmenu')"><-</button >
   <button @click="$router.push('/menu')">-></button >
@@ -18,6 +19,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
 const router = useRouter()
 
 const data = ref(null)
@@ -61,7 +64,7 @@ function goToDrink(name) {
   background-color: #2e4c43;
   border-radius: 12px;
   padding: 10px 16px;
-  width: 362px;
+  width: 90%;
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
