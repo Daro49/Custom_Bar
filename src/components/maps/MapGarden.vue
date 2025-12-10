@@ -26,15 +26,12 @@
       <div class="text-wrapper-2">ENTRY</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div> -->
-
-    <LayoutHeader class="layout-header-instance" label="garden" />
   </div>
 </template>
 
 <script setup>
 import TableB from '../tables/TableB.vue'
 import Plant from '../Plant.vue'
-import LayoutHeader from '../LayoutHeader.vue'
 
 defineProps({
   selectedTable: String

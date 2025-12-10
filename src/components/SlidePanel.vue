@@ -41,7 +41,7 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
   flex-direction: column;
   align-items: center;
   z-index: 100;
-  width: 380px; /* original compact width */
+  width: 90%;
   height: 607px;
   box-sizing: border-box;
   pointer-events: none;
@@ -50,7 +50,7 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
 .expanded-panel {
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 80%;
   height: 567px;
   transform-origin: bottom;
   pointer-events: auto;

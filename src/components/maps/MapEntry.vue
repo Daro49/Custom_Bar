@@ -18,7 +18,6 @@
       <div class="text-wrapper-2">TERRACE</div>
       <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div> -->
-    <LayoutHeader class="layout-header-instance" label="entry" />
   </div>
 </template>
 
@@ -26,7 +25,6 @@
 import TableD from '../tables/TableD.vue'
 import TableC from '../tables/TableC.vue'
 import Plant from '../Plant.vue'
-import LayoutHeader from '../LayoutHeader.vue'
 
 defineProps({
   selectedTable: String
