@@ -1,24 +1,28 @@
 
 <template>
-  <Header :rightIcon = "cart" :rightFunction = "order" />
-  <div class="app">
- <p v-if="drinkLoading && (!drinkData || drinkData.length === 0)">
-  Loading...
-</p>
+  <div v-bind="$attrs">
+    <Header :rightIcon="cart" :rightFunction="order" />
+    <div class="app">
+      <p v-if="drinkLoading && (!drinkData || drinkData.length === 0)">
+        Loading...
+      </p>
 
-    <DrinkInfoCard
-      v-else-if="drinkData"
-      :drink="drinkData"
-      @back="goBackToList"
-      @rate="rate"
-      @order="addDrinkToOrder"
-    />
+      <DrinkInfoCard
+        v-else-if="drinkData"
+        :drink="drinkData"
+        @back="goBackToList"
+        @rate="rate"
+        @order="addDrinkToOrder"
+      />
 
-    <p v-else>Error: {{ drinkError }}</p>
+      <p v-else>Error: {{ drinkError }}</p>
+    </div>
   </div>
 </template>
 
+
 <script setup>
+  
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
@@ -34,7 +38,6 @@ import {
   addToOrder
 } from "@/stores/DrinkInfo.js";
 
-import { activeUser } from "@/stores/Login.js";
 import Header from "@/components/Header.vue";
 
 const router = useRouter();
@@ -71,7 +74,10 @@ onBeforeUnmount(() => {
 function order(){
       router.push({ name: 'order' })
     };
-
+const props = defineProps({
+  drink: Object,
+  name: String
+});
 </script>
 
 <style scoped>

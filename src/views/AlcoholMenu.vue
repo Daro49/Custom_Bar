@@ -26,7 +26,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 
-import { drinks, loadDrinks } from "@/stores/MenuAlcohol.js";
+import { drinks, loadDrinks, drinksLoading } from "@/stores/MenuAlcohol.js";
 import Header from "@/components/Header.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
 const router = useRouter();
@@ -61,6 +61,7 @@ function order(){
     overflow-y: auto;
         box-sizing: border-box;
     height: 100%;
+    padding-bottom: 71px;
   }
 .drink-card {
   display: flex;
