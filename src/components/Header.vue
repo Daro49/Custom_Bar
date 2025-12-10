@@ -9,6 +9,10 @@
     <div class="right-content">
       <slot name="right">
         <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile" />
+        <PointsPresenterJukebox 
+          v-if="showPoints"
+          class="PointPresenterHeader"
+        />
         <button
           class="back-btn"
           @click="rightFunction"
@@ -22,10 +26,14 @@
 
 <script>
 import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
+import PointsPresenterJukebox from '@/components/PointsPresenterJukebox.vue'
 import router from '@/router'
 
 export default {
   name: 'Header',
+  components: {
+    PointsPresenterJukebox,
+  },
   props: {
     previous: { type: Boolean, default: false }, /* on true goes back to previous page, else goes to parent route */
     backButton: { type: Boolean, default: true }, /* show/hide back button */
@@ -33,6 +41,7 @@ export default {
     avatar: { type: String, default: null }, /* avatar icon on right */
     rightIcon: { type: String, default: null }, /* other icon on right */
     rightFunction: { type: Function, default: null }, /* function activating when clicking on icon on right */
+    showPoints: {type: Boolean, default: false}, 
   },
   setup() {
     return { ArrowLeftSvg }

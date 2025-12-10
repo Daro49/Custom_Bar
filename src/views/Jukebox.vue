@@ -1,5 +1,5 @@
 <template>
-  <Header :avatar="Profile"/>
+  <Header :showPoints="true"/>
   <div class="jukebox"  v-if="!(showSearchPanel)" >
     <div class="current" v-if="currentSong">
       <SongButton
