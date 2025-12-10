@@ -1,43 +1,44 @@
 <template>
   <div class="app">
-<div>
-  <button @click="$router.push('/custommenu')"><-</button >
-  <button @click="$router.push('/softdrinksmenu')">-></button >
-    </div>
-  <div class="drink-card" v-for="drink in data" :key="drink.id">
-    <img class="drink-image" :src="drink.image" alt="IMG" />
-    <div class="drink-info">
-      <div class="drink-name">{{ drink.name }}</div>
-      <div class="drink-price">{{ drink.price }}€</div>
-    </div>
-    <button class="info-button" @click="goToDrink(drink.name)">Info</button>
-  </div>
-  </div>
+    <div>
+    <RouterLink to="/custommenu" class="nav-btn"><-</RouterLink>
+    <RouterLink to="/softdrinksmenu" class="nav-btn">-></RouterLink>
+</div>
+
+<p v-if="drinksLoading && (!drinks || drinks.length === 0)">
+  Loading...
+</p>
+
+    <!-- Other drinks -->
+    <DrinkCard
+  v-for="drink in drinks"
+  :key="drink.id"
+  :drink="drink"
+  @info="goToDrink"
+/>
+</div>
+
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import DrinkCard from "@/components/MenuDrinkCard.vue";
 
-const data = ref(null)
-const error = ref(null)
+import { drinks, loadDrinks } from "@/stores/MenuAlcohol.js";
 
-onMounted(async () => {
-  try {
-    const response = await fetch('https://itu-wb12.onrender.com/alcohols')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    data.value = await response.json()
-    console.log(data.value)
-  } catch (err) {
-    error.value = err.message
-  }
-})
+const router = useRouter();
+
+onMounted(() => {
+  loadDrinks();
+});
 
 function goToDrink(name) {
-  router.push({ name: 'alcoholmenuitem', params: { name } })
+  router.push({
+    name: "menuitem",
+    params: { name },
+    query: { from: "/menu" }
+  });
 }
 </script>
 
@@ -52,7 +53,7 @@ function goToDrink(name) {
     gap: 8px;
     align-items: center;
     height: 917px;
-    overflow-y: auto;  
+    overflow-y: auto;
   }
 .drink-card {
   display: flex;
@@ -71,10 +72,10 @@ function goToDrink(name) {
    width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: contain; /* show the full image inside the circle */
-  background-color: #fff; /* optional: fill background */
+  object-fit: contain; 
+  background-color: #fff; 
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px; /* small inner margin if needed */
+  padding: 2px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -91,7 +92,7 @@ function goToDrink(name) {
   color: var(--gold, #d4af37);
   text-align: center;
 
-  /* Song name */
+
   font-family: 'Josefin Slab';
   font-size: 20px;
   font-style: normal;
@@ -104,19 +105,9 @@ function goToDrink(name) {
   color: var(--gold, #d4af37);
   text-align: center;
 
-  /* Song name */
+
   font-family: 'Josefin Slab';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  align-self: stretch;
-  color: var(--gold, #d4af37);
-  text-align: center;
-
-  /* Song name */
-  font-family: 'Josefin Slab';
-  font-size: 20px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -140,4 +131,67 @@ function goToDrink(name) {
 .info-button:hover {
   transform: scale(1.05);
 }
+
+.drinkCardFe {
+  width: 362px;
+  height: 121px;
+  background: linear-gradient(180deg, #d8a543 0%, #a8792b 100%);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-family: 'Georgia', serif;
+  color: #000;
+  overflow: hidden;
+   margin-bottom: 16px;
+}
+
+.drinkHeader {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 10px;
+  letter-spacing: 1px;
+}
+
+.drinkImage {
+  object-fit: contain;
+}
+
+.drinkFooter {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #2a1800;
+}
+.drinkCardFe:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+
+/* TODO -> still temporary*/
+.nav-btn { 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: #d8a543;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.featured-container {
+  display: flex;
+  justify-content: center; 
+  width: 100%;              
+  margin-bottom: 16px;
+}
+
 </style>
+
