@@ -1,25 +1,36 @@
+<!-- src/views/DrinksView.vue -->
 <template>
       <Header :avatar="Profile"/>
 
   <div class="app">
-<div>
-  <button @click="$router.push('/softdrinksmenu')"><-</button >
-  <button @click="$router.push('/custommenu')">-></button >
-    </div>
-  <button class="drinkCard" v-if="data && data.length > 0" @click="goToDrink(data[0].name)">
-    <div class="drinkHeader">POPULAR NOW</div>
-    <img :src="data[0].image" :alt="data[0].name" class="drinkImage" />
-    <div class="drinkFooter">{{ data[0].name }}</div>
-  </button>
+    <div>
+    <RouterLink to="/softdrinksmenu" class="nav-btn"><-</RouterLink>
+    <RouterLink to="/custommenu" class="nav-btn">-></RouterLink>
+</div>
 
-  <div class="drink-card" v-for="drink in data?.slice(1)" :key="drink.id">
-    <img class="drink-image" :src="drink.image" :alt="drink.name" />
-    <div class="drink-info">
-      <div class="drink-name">{{ drink.name }}</div>
-      <div class="drink-price">{{ drink.price }}€</div>
-    </div>
-    <button class="info-button" @click="goToDrink(drink.name)">Info</button>
-  </div>
+<p v-if="drinksLoading && (!drinks || drinks.length === 0)">
+  Loading...
+</p>
+
+    <!-- Featured drink -->
+    <div class="featured-container" v-if="drinks?.length">
+    <button 
+      class="drinkCardFe"
+      v-if="drinks?.length"
+      @click="goToDrink(drinks[0].name)"
+    >
+      <div class="drinkHeader">POPULAR NOW</div>
+      <img :src="drinks[0].image" :alt="drinks[0].name" class="drinkImage" />
+      <div class="drinkFooter">{{ drinks[0].name }}</div>
+    </button>
+</div>
+    <!-- Other drinks -->
+    <DrinkCard
+  v-for="drink in (drinks || []).slice(1)"  
+  :key="drink.id"
+  :drink="drink"
+  @info="goToDrink"
+/>
   </div>
 </template>
 
@@ -28,26 +39,23 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Profile from '@/assets/user.png'
-const router = useRouter()
 
-const data = ref(null)
-const error = ref(null)
+import DrinkCard from "@/components/MenuDrinkCard.vue";
 
-onMounted(async () => {
-  try {
-    const response = await fetch('https://itu-wb12.onrender.com/drinks')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    data.value = await response.json()
-    console.log(data.value)
-  } catch (err) {
-    error.value = err.message
-  }
-})
+import { drinks, drinksLoading, loadDrinks } from "@/stores/Menu.js";
+
+const router = useRouter();
+
+onMounted(() => {
+  loadDrinks();
+});
 
 function goToDrink(name) {
-  router.push({ name: 'menuitem', params: { name: name }, query: { from: '/menu' } })
+  router.push({
+    name: "menuitem",
+    params: { name },
+    query: { from: "/menu" }
+  });
 }
 </script>
 
@@ -80,10 +88,10 @@ function goToDrink(name) {
    width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: contain; /* show the full image inside the circle */
-  background-color: #fff; /* optional: fill background */
+  object-fit: contain; 
+  background-color: #fff; 
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px; /* small inner margin if needed */
+  padding: 2px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -140,8 +148,8 @@ function goToDrink(name) {
   transform: scale(1.05);
 }
 
-.drinkCard {
-  width: 250px;
+.drinkCardFe {
+  width: 362px;
   height: 300px;
   background: linear-gradient(180deg, #d8a543 0%, #a8792b 100%);
   border-radius: 15px;
@@ -175,13 +183,33 @@ function goToDrink(name) {
   margin-bottom: 10px;
   color: #2a1800;
 }
-.drinkCard:hover {
+.drinkCardFe:hover {
   transform: scale(1.05);
   transition: transform 0.2s ease-in-out;
 }
 .drink-card,
 .drinkCard {
   width: 90%;
+}
+
+/* TODO -> still temporary*/
+.nav-btn { 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: #d8a543;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.featured-container {
+  display: flex;
+  justify-content: center; 
+  width: 100%;              
+  margin-bottom: 16px;
 }
 
 </style>

@@ -1,45 +1,22 @@
 <template>
-  <div class="app">
-    <div>
-    <RouterLink to="/custommenu" class="nav-btn"><-</RouterLink>
-    <RouterLink to="/softdrinksmenu" class="nav-btn">-></RouterLink>
-</div>
+  <div class="drink-card">
+    <img class="drink-image" :src="drink.image" :alt="drink.name" />
 
-<p v-if="drinksLoading && (!drinks || drinks.length === 0)">
-  Loading...
-</p>
+    <div class="drink-info">
+      <div class="drink-name">{{ drink.name }}</div>
+      <div class="drink-price">{{ drink.price }}€</div>
+    </div>
 
-    <!-- Other drinks -->
-    <DrinkCard
-  v-for="drink in drinks"
-  :key="drink.id"
-  :drink="drink"
-  @info="goToDrink"
-/>
-</div>
-
+    <button class="info-button" @click="$emit('info', drink.name)">Info</button>
+  </div>
 </template>
 
 <script setup>
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-import DrinkCard from "@/components/MenuDrinkCard.vue";
+defineProps({
+  drink: { type: Object, required: true }
+})
 
-import { drinks, loadDrinks } from "@/stores/MenuAlcohol.js";
-
-const router = useRouter();
-
-onMounted(() => {
-  loadDrinks();
-});
-
-function goToDrink(name) {
-  router.push({
-    name: "menuitem",
-    params: { name },
-    query: { from: "/menu" }
-  });
-}
+defineEmits(["info"]);
 </script>
 
 <style scoped>
@@ -48,7 +25,6 @@ function goToDrink(name) {
     padding: 8px;
     border-radius: 8px;
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #0D564B;
-    display:flex;
     flex-direction: column;
     gap: 8px;
     align-items: center;
@@ -56,13 +32,14 @@ function goToDrink(name) {
     overflow-y: auto;
   }
 .drink-card {
+    flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: #2e4c43;
   border-radius: 12px;
   padding: 10px 16px;
-  width: 90%;
+  width: 362px;
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
@@ -72,10 +49,10 @@ function goToDrink(name) {
    width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: contain; 
-  background-color: #fff; 
+  object-fit: contain; /* show the full image inside the circle */
+  background-color: #fff; /* optional: fill background */
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px;
+  padding: 2px; /* small inner margin if needed */
   object-fit: cover;
   border-radius: 8px;
 }
@@ -132,22 +109,6 @@ function goToDrink(name) {
   transform: scale(1.05);
 }
 
-.drinkCardFe {
-  width: 362px;
-  height: 121px;
-  background: linear-gradient(180deg, #d8a543 0%, #a8792b 100%);
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  font-family: 'Georgia', serif;
-  color: #000;
-  overflow: hidden;
-   margin-bottom: 16px;
-}
-
 .drinkHeader {
   font-size: 18px;
   font-weight: bold;
@@ -167,31 +128,6 @@ function goToDrink(name) {
   margin-bottom: 10px;
   color: #2a1800;
 }
-.drinkCardFe:hover {
-  transform: scale(1.05);
-  transition: transform 0.2s ease-in-out;
-}
 
-
-/* TODO -> still temporary*/
-.nav-btn { 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background: #d8a543;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
-
-.featured-container {
-  display: flex;
-  justify-content: center; 
-  width: 100%;              
-  margin-bottom: 16px;
-}
 
 </style>
-

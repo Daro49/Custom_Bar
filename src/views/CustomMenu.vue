@@ -1,51 +1,56 @@
 <template>
   <div class="app">
-      <Header :avatar="Profile"/>
-  <div>
-  <button @click="$router.push('/menu')"><-</button >
-  <button @click="$router.push('/alcoholmenu')">-></button >
-  </div>
-     <button class="drinkCard" v-if="data && data.length > 0" @click="goToDrink(data[0].name)">
-    <div class="drinkHeader">POPULAR NOW</div>
-    <img :src="data[0].image" :alt="data[0].name" class="drinkImage" />
-    <div class="drinkFooter">{{ data[0].name }}</div>
-  </button>
-  <div class="drink-card" v-for="drink in data?.slice(1)" :key="drink.id">
-    <img class="drink-image" :src="drink.image" :alt="IMG" />
-    <div class="drink-info">
-      <div class="drink-name">{{ drink.name }}</div>
-      <div class="drink-price">{{ drink.price }}€</div>
-    </div>
-    <button class="info-button" @click="goToDrink(drink.name)">Info</button>
-  </div>
-  </div>
+    <div>
+    <RouterLink to="/menu" class="nav-btn"><-</RouterLink>
+    <RouterLink to="/alcoholmenu" class="nav-btn">-></RouterLink>
+</div>
+
+<p v-if="drinksLoading && (!drinks || drinks.length === 0)">
+  Loading...
+</p>
+
+    <!-- Featured drink -->
+    <div class="featured-container" v-if="drinks?.length">
+    <button 
+      class="drinkCardFe"
+      v-if="drinks?.length"
+      @click="goToDrink(drinks[0].name)"
+    >
+      <div class="drinkHeader">POPULAR NOW</div>
+      <img :src="drinks[0].image" :alt="drinks[0].name" class="drinkImage" />
+      <div class="drinkFooter">{{ drinks[0].name }}</div>
+    </button>
+</div>
+    <!-- Other drinks -->
+    <DrinkCard
+  v-for="drink in (drinks || []).slice(1)"
+  :key="drink.id"
+  :drink="drink"
+  @info="goToDrink"
+/>
+</div>
+
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import Header from '@/components/Header.vue'
-import Profile from '@/assets/user.png'
-const router = useRouter()
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import DrinkCard from "@/components/MenuDrinkCard.vue";
 
-const data = ref(null)
-const error = ref(null)
+import { drinks, loadDrinks } from "@/stores/MenuCustom.js";
 
-onMounted(async () => {
-  try {
-    const response = await fetch('https://itu-wb12.onrender.com/customDrinks')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    data.value = await response.json()
-    console.log(data.value)
-  } catch (err) {
-    error.value = err.message
-  }
-})
+const router = useRouter();
+
+onMounted(() => {
+  loadDrinks();
+});
 
 function goToDrink(name) {
-  router.push({ name: 'custommenuitem', params: { name }, query: { from: '/custommenu' } })
+  router.push({
+    name: "menuitem",
+    params: { name },
+    query: { from: "/menu" }
+  });
 }
 </script>
 
@@ -79,10 +84,10 @@ function goToDrink(name) {
    width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: contain; /* show the full image inside the circle */
-  background-color: #fff; /* optional: fill background */
+  object-fit: contain; 
+  background-color: #fff; 
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px; /* small inner margin if needed */
+  padding: 2px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -98,6 +103,7 @@ function goToDrink(name) {
 .drink-name {
   color: var(--gold, #d4af37);
   text-align: center;
+
 
   font-family: 'Josefin Slab';
   font-size: 20px;
@@ -118,7 +124,6 @@ function goToDrink(name) {
   font-weight: 700;
   line-height: normal;
   align-self: stretch;
-
 }
 
 .info-button {
@@ -164,10 +169,7 @@ function goToDrink(name) {
 }
 
 .drinkImage {
-  width: 90%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .drinkFooter {
@@ -177,7 +179,7 @@ function goToDrink(name) {
   margin-bottom: 10px;
   color: #2a1800;
 }
-.drinkCard:hover {
+.drinkCardFe:hover {
   transform: scale(1.05);
   transition: transform 0.2s ease-in-out;
 }
@@ -185,4 +187,25 @@ function goToDrink(name) {
 .drinkCard {
   width: 90%;
 }
+
+/* TODO -> still temporary*/
+.nav-btn { 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: #d8a543;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.featured-container {
+  display: flex;
+  justify-content: center; 
+  width: 100%;              
+  margin-bottom: 16px;
+}
+
 </style>
