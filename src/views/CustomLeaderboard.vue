@@ -82,13 +82,18 @@ function order(){
   background-color: #2e4c43; 
   border-radius: 12px;
   padding: 10px 16px;        /* from larger card */
-  width: 90%;              /* larger width */
+  width: 640px;              /* larger width */
   height: 121px;             /* larger height */
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   color: #f7d77c;
   font-family: 'Josefin Slab', serif;
   margin-bottom: 16px;
 }
+@media (max-width: 768px) {
+.drink-card,
+.drinkCard {
+  width: 90%;
+}}
 
 /* Keep smaller image look but proportionally nice in bigger card */
 .drink-image {

@@ -59,6 +59,8 @@ function order(){
     align-items: center;
     height: 917px;
     overflow-y: auto;
+        box-sizing: border-box;
+    height: 100%;
   }
 .drink-card {
   display: flex;
@@ -67,11 +69,16 @@ function order(){
   background-color: #2e4c43;
   border-radius: 12px;
   padding: 10px 16px;
-  width: 90%;
+  width: 640px;
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
 }
+@media (max-width: 768px) {
+.drink-card,
+.drinkCard {
+  width: 90%;
+}}
 
 .drink-image {
    width: 60px;

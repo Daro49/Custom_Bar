@@ -43,9 +43,11 @@ nav a:first-of-type {
 .wrapper {
   background-color: var(--background-green);
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 /* PC adjustment */
 @media (min-width: 768px) {
@@ -55,7 +57,8 @@ nav a:first-of-type {
     padding: 0 var(--section-gap);
     background-color: var(--background-green);
     height: 100%;
-
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
 }

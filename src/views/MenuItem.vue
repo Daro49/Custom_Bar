@@ -84,5 +84,6 @@ function order(){
     gap: 8px;
     align-items: center;
     overflow-y: auto;
+     height: 917px;
   }
 </style>

@@ -44,6 +44,8 @@ watch(
 
 
 <style scoped>
+
+@media (max-width: 768px) {
 .drink-card {
   display: flex;
   align-items: center;
@@ -57,7 +59,22 @@ watch(
   color: #f7d77c;
   font-family: 'Josefin Slab', serif;
   margin-bottom: 16px;
-}
+}}
+@media (min-width: 768px) {
+.drink-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2e4c43;
+  border-radius: 12px;
+  padding: 10px 16px;
+  width: 640px;
+  height: 121px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  margin-bottom: 16px;
+}}
 
 .drink-image {
   width: 70px;
