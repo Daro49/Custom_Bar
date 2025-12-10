@@ -1,11 +1,6 @@
 <template>
+  <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true"/>
   <div class="order-container">
-    <!-- Header -->
-    <div class="header">
-      <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/Order History.svg" class="header-icon order-history-icon" @click="goOrderHistory"/>
-    </div>
-
     <!-- Content -->
     <div class="content">
       <!-- Title with divider -->
@@ -59,15 +54,13 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
+import Header from '@/components/Header.vue'
+import pastOrders from "@/assets/OrderHistory.svg?raw";
 
 const router = useRouter()
 const orderItems = ref([])
 const isLoading = ref(true)
 const error = ref(null)
-
-const goBack = () => {
-  router.back()
-}
 
 const goOrderHistory = () => {
   router.push('/orders')
@@ -142,43 +135,15 @@ onMounted(() => {
 
 <style scoped>
 .order-container {
-  width: 90%;
+  width: 100%;
   height: 90%;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  border: 2px solid black;
+  position: absolute;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  bottom: 0;
 }
 
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 76px;
-  padding: 0 14px;
-  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
-  border-bottom: 1px solid #a37d25;
-  box-sizing: border-box;
-}
-
-.header-icon {
-  width: 59px;
-  height: 59px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.header-icon:hover {
-  transform: scale(1.05);
-}
-
-/* Content */
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
@@ -206,7 +171,6 @@ onMounted(() => {
   height: 20px;
   transform: rotate(180deg);
 }
-
 
 .order-title h2 {
   margin: 0;

@@ -6,7 +6,7 @@ import { activeUser } from '@/stores/Login.js'
 </script>
 
 <template>
-      <Header :right-icon="Edit" :rightFunction="edit" />
+      <Header :right-icon="Edit" :rightFunction="edit" :previous="true" />
 
   <div class="profile" v-if="activeUserRef!=null">
 
