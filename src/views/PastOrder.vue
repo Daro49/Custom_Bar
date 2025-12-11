@@ -1,10 +1,6 @@
 <template>
+    <Header :avatar="Profile" :previous="true"/>
   <div class="order-container">
-    <!-- Header -->
-    <div class="header">
-      <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/user.png" class="header-icon profile-icon" @click="goToProfile" />
-    </div>
 
     <!-- Content -->
     <div class="content">
@@ -53,20 +49,13 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
 
-const router = useRouter()
 const orderItems = ref([])
 const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
-
-const goBack = () => {
-  router.back()
-}
-
-const goToProfile = () => {
-  router.push('/profile')
-}
 
 const fetchOrder = async () => {
   try {
@@ -98,40 +87,13 @@ onMounted(() => {
 
 <style scoped>
 .order-container {
-  width: 90%;
-  height: 917px;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  border: 2px solid black;
+  width: 100%;
+  height: 90%;
+  position: absolute;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 76px;
-  padding: 0 14px;
-  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
-  border-bottom: 1px solid #a37d25;
-  box-sizing: border-box;
-}
-
-.header-icon {
-  width: 59px;
-  height: 59px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.header-icon:hover {
-  transform: scale(1.05);
+  bottom: 0;
 }
 
 /* Content */

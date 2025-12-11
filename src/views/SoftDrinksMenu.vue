@@ -1,10 +1,13 @@
 <template>
     <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
-    <div>
-    <RouterLink to="/alcoholmenu" class="nav-btn"><-</RouterLink>
-    <RouterLink to="/menu" class="nav-btn">-></RouterLink>
-</div>
+
+      <MenuNavigation
+  label="Soft drinks"
+  @prev="goToAlcoholMenu"
+  @next="goToMenu"
+/>
+
 
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
@@ -12,10 +15,11 @@
 
     <!-- Other drinks -->
     <DrinkCard
-  v-for="drink in drinks"
+  v-for="drink in (drinks || []).slice(1)"  
   :key="drink.id"
   :drink="drink"
   @info="goToDrink"
+  @addToOrder="handleOrder"
 />
 </div>
 
@@ -25,7 +29,7 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-
+import { addToOrder } from '@/stores/DrinkInfo';
 import { drinks, loadDrinks , drinksLoading} from "@/stores/MenuSoft.js";
 import Header from "@/components/Header.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
@@ -46,6 +50,26 @@ function goToDrink(name) {
 function order(){
       router.push({ name: 'order' })
     };
+
+import { addToast } from '@/stores/ToastStore.js';
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    console.error("Order failed:", err);
+  }
+}
+
+import MenuNavigation from "@/components/MenuNavigation.vue";
+function goToAlcoholMenu() {
+  router.push("/alcoholmenu");
+}
+
+function goToMenu() {
+  router.push("/menu");
+}
 
 </script>
 

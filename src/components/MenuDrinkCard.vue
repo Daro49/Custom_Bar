@@ -2,12 +2,12 @@
   <div class="drink-card">
     <img class="drink-image" :src="drink.image" :alt="drink.name" />
 
-    <div class="drink-info">
+    <div class="drink-info"  @click="$emit('info', drink.name)">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
     </div>
 
-    <button class="info-button" @click="$emit('info', drink.name)">Info</button>
+    <button class="info-button"  @click="$emit('addToOrder', drink)">+</button>
   </div>
 </template>
 
@@ -17,7 +17,8 @@ defineProps({
   drink: { type: Object, required: true }
 })
 
-defineEmits(["info"]);
+defineEmits(["info",  "addToOrder"]);
+
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@ defineEmits(['toggle'])
 
 <style scoped>
 .slide-up-handle {
-  width: 380px;
+  width: 80%;
   height: 40px;
   background-color: #552808;
   border: 2px solid black;
