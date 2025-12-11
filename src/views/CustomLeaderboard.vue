@@ -2,10 +2,11 @@
     <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
     
-    <div>
-      <button @click="$router.push('/leaderboard')"><-</button>
-      <button @click="$router.push('/leaderboard')">-></button>
-    </div>
+        <MenuNavigation
+  label="Custom drinks Leaderboard"
+  @prev="goToLeaderboard"
+  @next="goToLeaderboard"
+/>
 
     <!-- Loading / Error states -->
  <p v-if="leaderboardLoading && (!leaderboard || leaderboard.length === 0)">
@@ -61,6 +62,13 @@ onBeforeUnmount(() => {
 function order(){
       router.push({ name: 'order' })
     };
+
+import MenuNavigation from "@/components/MenuNavigation.vue";
+function goToLeaderboard() {
+  router.push("/leaderboard");
+}
+
+
 </script>
 
 <style scoped>

@@ -1,11 +1,12 @@
 
 <template>
   <div v-bind="$attrs">
-    <Header :rightIcon="cart" :rightFunction="order" />
+    <Header :previous="true" :rightIcon="cart" :rightFunction="order" />
     <div class="app">
-      <p v-if="drinkLoading && (!drinkData || drinkData.length === 0)">
-        Loading...
-      </p>
+      <p v-if="initialLoading">
+  Loading...
+</p>
+ <!-- TODO ADD TOAST TO MENUS AND CHECK ADDING TO SERVER + FIX PSOITION IN DETAIL-->
 
       <DrinkInfoCard
         v-else-if="drinkData"
@@ -22,7 +23,11 @@
 
 
 <script setup>
-  
+ import { ref } from "vue";
+
+const initialLoading = ref(true);
+ 
+
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
@@ -52,20 +57,24 @@ function goBackToList() {
 function rate(value) {
   rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular");
 }
-
+import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
   try {
     const result = await addToOrder(drinkData.value);
+        addToast(`${drinkData.value.name} added to cart!`);
     console.log("Order added:", result);
   } catch (err) {
     console.error("Failed to add order:", err);
   }
 }
 
-onMounted(() => {
-  loadDrink(route);
-  startDrinkAutoRefresh(route);
+onMounted(async () => {
+  initialLoading.value = true;
+  await loadDrink(route);       // initial fetch
+  initialLoading.value = false; // stop showing loading
+  startDrinkAutoRefresh(route); // start background refresh
 });
+
 
 onBeforeUnmount(() => {
   stopDrinkAutoRefresh();

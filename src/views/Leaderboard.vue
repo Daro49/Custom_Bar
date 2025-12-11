@@ -2,11 +2,11 @@
   <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
     
-    <div>
-      <button @click="$router.push('/customleaderboard')"><-</button>
-      <button @click="$router.push('/customleaderboard')">-></button>
-    </div>
-
+    <MenuNavigation
+  label="Leaderboard"
+  @prev="goToCustomLeaderboard"
+  @next="goToCustomLeaderboard"
+/>
     <!-- Loading / Error states -->
  <p v-if="leaderboardLoading && (!leaderboard || leaderboard.length === 0)">
   Loading...
@@ -29,7 +29,6 @@ import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
 import Header from "@/components/Header.vue";
-
 import {
   leaderboard,
   leaderboardError,
@@ -62,7 +61,11 @@ onBeforeUnmount(() => {
 function order(){
       router.push({ name: 'order' })
     };
+import MenuNavigation from "@/components/MenuNavigation.vue";
 
+function goToCustomLeaderboard() {
+  router.push("/customleaderboard");
+}
 </script>
 
 <style scoped>

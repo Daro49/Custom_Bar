@@ -1,6 +1,5 @@
 <template>
   <div class="drink-info-card">
-    <div class="arrow" @click="$emit('back')">⌄</div>
 
     <img v-if="drink.image" :src="drink.image" class="drink-info-image" />
 
