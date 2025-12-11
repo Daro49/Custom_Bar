@@ -1,7 +1,7 @@
 
 <template>
   <div v-bind="$attrs">
-    <Header :rightIcon="cart" :rightFunction="order" />
+    <Header :previous="true" :rightIcon="cart" :rightFunction="order" />
     <div class="app">
       <p v-if="initialLoading">
   Loading...
