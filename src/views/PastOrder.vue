@@ -6,22 +6,29 @@
     <div class="content">
       <!-- Title with divider -->
       <div class="order-title">
-        <svg 
-          class="chevron-icon"
-          viewBox="0 0 100 50"
-        >
-          <path 
-            d="M10 40 L50 10 L90 40" 
-            stroke="black" 
-            stroke-width="8" 
-            fill="none" 
-            stroke-linecap="round"
-          />
-        </svg>
-        <h2>ORDER</h2>
-        <!-- Date, TODO: change content to &lt; {{ orderDate }} &gt;-->
+        <h2>ORDER</h2> <br>
         <div class="order-date">
-            &lt; 11.11.2025 &gt;
+          <svg class="chevron-icon1" viewBox="0 0 100 50" @click="prevOrder">
+            <path 
+              d="M10 40 L50 10 L90 40" 
+              stroke="black" 
+              stroke-width="8" 
+              fill="none" 
+              stroke-linecap="round"
+            />
+          </svg>
+
+          {{ formatDate(order.date) }}
+
+          <svg class="chevron-icon2" viewBox="0 0 100 50" @click="nextOrder">
+            <path 
+              d="M10 40 L50 10 L90 40" 
+              stroke="black" 
+              stroke-width="8" 
+              fill="none" 
+              stroke-linecap="round"
+            />
+          </svg>
         </div>
         <div class="divider-line"></div>
       </div>
@@ -46,7 +53,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
 import Header from '@/components/Header.vue'
@@ -56,28 +62,53 @@ const orderItems = ref([])
 const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
+const orderIndex = ref(0)
+const orderCount = ref(0) 
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}.${month}.${year}`
+}
 
 const fetchOrder = async () => {
   try {
     isLoading.value = true
     const username = activeUser.value.username
-    const index = '0';
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${index}`)
+
+    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${orderIndex.value}`)
     
     if (!response.ok) {
       throw new Error('No past orders')
     }
     
     const data = await response.json()
-    orderItems.value = data
-    orderDate.value = new Date().toLocaleDateString()
-    console.log('Past order items fetched:', data)
+
+    orderItems.value = data.items ?? data
+    orderDate.value = data.date ?? new Date().toLocaleDateString()
+    orderCount.value = data.totalOrders ?? orderCount.value
+
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
   } finally {
     isLoading.value = false
   }
+}
+
+const nextOrder = () => {
+  if (orderCount.value === 0) return
+  orderIndex.value = (orderIndex.value + 1) % orderCount.value
+  fetchOrder()
+}
+
+const prevOrder = () => {
+  if (orderCount.value === 0) return
+  orderIndex.value =
+    (orderIndex.value - 1 + orderCount.value) % orderCount.value
+  fetchOrder()
 }
 
 onMounted(() => {
@@ -119,10 +150,15 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.chevron-icon {
-  width: 75px;
-  height: 20px;
-  transform: rotate(180deg);
+.chevron-icon1 {
+  width: 60px;
+  height: 15px;
+  transform: rotate(-90deg) translateX(-4px);
+}
+.chevron-icon2 {
+  width: 60px;
+  height: 15px;
+  transform: rotate(90deg) translateX(4px);
 }
 
 .order-title h2 {

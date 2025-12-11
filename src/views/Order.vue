@@ -1,11 +1,10 @@
 <template>
   <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true"/>
   <div class="order-container">
-    <!-- Content -->
     <div class="content">
       <!-- Title with divider -->
       <div class="order-title">
-        <svg 
+        <!-- <svg 
           class="chevron-icon"
           viewBox="0 0 100 50"
         >
@@ -16,7 +15,7 @@
             fill="none" 
             stroke-linecap="round"
           />
-        </svg>
+        </svg> -->
         <h2>ORDER</h2>
         <div class="divider-line"></div>
       </div>
@@ -110,7 +109,7 @@ const confirmOrder = async () => {
     
     // Optionally redirect back or to a success page
     setTimeout(() => {
-      router.back()
+      router.push('/')
     }, 1000)
   } catch (err) {
     console.error('Error confirming order:', err)
@@ -166,11 +165,11 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.chevron-icon {
+/* .chevron-icon {
   width: 75px;
   height: 20px;
   transform: rotate(180deg);
-}
+} */
 
 .order-title h2 {
   margin: 0;
