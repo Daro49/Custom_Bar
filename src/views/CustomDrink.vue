@@ -14,7 +14,18 @@
 		</div>
 
 		<div class="recipe">
-
+			<h2>Your Recipe</h2>
+			<div class="glass_box">
+				<Glass />
+			</div>
+			<div class="recipe_list">
+				<h3>Summary</h3>
+				<RecipeIngredientList :category_name="'Size'" />
+				<RecipeIngredientList :category_name="'Alcohol'" />
+				<RecipeIngredientList :category_name="'Non-Alcoholic'" />
+				<RecipeIngredientList :category_name="'Bitters'" />
+				<RecipeIngredientList :category_name="'Others'" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -26,14 +37,16 @@ import Header from '@/components/Header.vue';
 
 import Profile from '@/assets/user.png';
 import ProgressButton from '@/components/customdrink/ProgressButton.vue';
+import Glass from '@/components/customdrink/Glass.vue';
+import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
 </script>
 
 <style scoped>
 	.content {
 		display: flex;
-		padding: 71px 50px;
+		padding: 5px 50px;
 		justify-content: center;
-		align-items: center;
+		align-items: flex-start;
 		gap: 34px;
 		height: 100%;
 		box-sizing: border-box;
@@ -43,7 +56,7 @@ import ProgressButton from '@/components/customdrink/ProgressButton.vue';
 	.ingredient_progress {
 		display: flex;
 		width: 50%;
-		padding: 41px 76px;
+		padding: 25px 76px;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
@@ -68,11 +81,45 @@ import ProgressButton from '@/components/customdrink/ProgressButton.vue';
 		padding: 25px 30px;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
 		gap: 10px;
 		flex-shrink: 0;
 
 		border-radius: 50px;
 		background: #D4AF37;
+	}
+
+	h2 {
+		margin: 5px;
+
+		color: #552808;
+		font-family: "Josefin Slab", sans-serif;
+		font-size: 36px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
+
+	h3 {
+		margin: 2px;
+
+		color: #552808;
+		font-family: "Josefin Slab", sans-serif;
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+	}
+
+	.glass_box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.recipe_list {
+		display: flex;
+		position: sticky;
+		width: 100%;
+		flex-direction: column;
 	}
 </style>
