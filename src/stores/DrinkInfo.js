@@ -71,32 +71,34 @@ export async function rateDrink(value, name, type = "regular") {
 
 import { activeUser } from './Login.js';
 
+export const orderItems = ref([]);
+
 export async function addToOrder(drink) {
   if (!activeUser.value?.username || !activeUser.value?.table) {
+    
     throw new Error("User not logged in or table not set");
   }
 
-  const payload = {
-    drink,
-    tableCode: activeUser.value.table
-  };
+  // Hľadáme existujúci drink podľa ID v lokálnom stave
+  const existing = orderItems.value.find(i => i.id === drink.id);
 
+  if (existing) {
+    existing.quantity = (existing.quantity || 1) + 1;
+  } else {
+    orderItems.value.push({ ...drink, quantity: 1 });
+  }
+
+  // POST na server, ale NEPREPISUJ orderItems z fetchOrder
   try {
-    const res = await fetch(
+    await fetch(
       `https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ drink, tableCode: activeUser.value.table })
       }
     );
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const result = await res.json();
-    return result;
   } catch (err) {
-    console.error(err);
-    throw err;
+    console.error("Failed to add to server order:", err);
   }
 }
