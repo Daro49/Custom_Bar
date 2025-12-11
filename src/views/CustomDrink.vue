@@ -5,11 +5,11 @@
 		<div class="ingredient_progress">
 
 			<ProgressBar />
-			<IngredientChoose :category_name="'alcohols'" />
+			<IngredientChoose />
 
 			<div class="buttons">
-				<ProgressButton :button-name="'Back'" />
-				<ProgressButton :button-name="'Next'" />
+				<ProgressButton :button-name="'Back'" :next="false" />
+				<ProgressButton :button-name="'Next'" :next="true" />
 			</div>
 		</div>
 
@@ -34,11 +34,14 @@
 import IngredientChoose from '@/components/customdrink/IngredientChoose.vue';
 import ProgressBar from '@/components/customdrink/ProgressBar.vue';
 import Header from '@/components/Header.vue';
-
 import Profile from '@/assets/user.png';
 import ProgressButton from '@/components/customdrink/ProgressButton.vue';
 import Glass from '@/components/customdrink/Glass.vue';
 import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
+
+import { useDrinkRecipe } from '@/stores/drinkRecipe';
+
+const store = useDrinkRecipe();
 </script>
 
 <style scoped>
@@ -69,7 +72,7 @@ import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.
 
 	.buttons {
 		display: flex;
-		padding: 40px;
+		padding: 30px;
 		align-items: center;
 		align-self: stretch;
 		gap: 40px;

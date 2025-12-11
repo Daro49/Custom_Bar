@@ -1,29 +1,45 @@
 <template>
     <div class="ingredient_box">
-        <h2>{{ props.category_name }}</h2>
+        <h2>{{ headerText }}</h2>
 
         <IngredientListItem 
-            v-for="ingredient in ingredients"
+            v-for="ingredient in recipe.currentStepIngredients"
             :name="ingredient.name" 
+            :key="ingredient.id"
         />
     </div>
 </template>
 
 <script setup>
-    import { onMounted, ref } from 'vue';
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
     import IngredientListItem from './IngredientListItem.vue';
-
-    const props = defineProps({
-        category_name: String
-    })
+    import { computed, onMounted } from 'vue';
 
     const recipe = useDrinkRecipe();
 
-    const ingredients = ref([]);
+    onMounted(() => {
+        recipe.fetchStepIngredients(recipe.currentCategory)
+    })
 
-    onMounted(async () => {
-        ingredients.value = await recipe.fetchIngredients(props.category_name);
+    const headerText = computed(() => {
+        switch (recipe.currentStep) {
+            case 0:
+                return 'Size of Glass';
+        
+            case 1:
+                return 'Choose Alcohol';
+
+            case 2:
+                return 'Choose Non-Alcohol';
+
+            case 3:
+                return 'Choose Bitters';
+
+            case 4:
+                return 'Choose Other Addons';
+            default:
+                return 'Unkown Category';
+        }
     })
 </script>
 
@@ -42,6 +58,8 @@
     }
 
     h2 {
+        margin: 5px;
+
         color: #552808;
         font-family: "Josefin Slab", sans-serif;
         font-size: 24px;

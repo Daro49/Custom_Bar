@@ -1,13 +1,27 @@
 <template>
-    <div class="button">
+    <div class="button" @click="buttonAction">
         <p>{{ props.buttonName }}</p>
     </div>
 </template>
 
 <script setup>
+    import { useDrinkRecipe } from '@/stores/drinkRecipe';
+
     const props = defineProps({
-        buttonName: String
+        buttonName: String,
+        next: Boolean
     })
+
+    const store = useDrinkRecipe();
+
+    function buttonAction(){
+        if (props.next) {
+            store.nextStep();
+        }
+        else {
+            store.previousStep();
+        }
+    }
 </script>
 
 <style scoped>
@@ -22,6 +36,11 @@
 
         border-radius: 20px;
         background: #D9D9D9;
+    }
+
+    .button:hover {
+        background: #d9d9d976;
+        outline: 2px solid #552808;
     }
 
     p {
