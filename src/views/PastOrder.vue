@@ -18,7 +18,7 @@
             />
           </svg>
 
-          {{ formatDate(order.date) }}
+          {{ orderDate }}
 
           <svg class="chevron-icon2" viewBox="0 0 100 50" @click="nextOrder">
             <path 
@@ -43,9 +43,12 @@
             <span class="item-name">{{ item.name }}</span>
           </div>
           <div class="item-right">
-            <span class="price">{{ item.price }}€</span>
-            <img src="../assets/Info.svg" class="info-icon" />
+            <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
+            <button class="addButton" @click="handleOrder(item)">+</button>
           </div>
+        </div>
+        <div v-if="orderItems.length > 0" class="order-item2">
+          <span class="item-name">Order price: {{ orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) }}€</span>
         </div>
       </div>
     </div>
@@ -65,11 +68,11 @@ const error = ref(null)
 const orderIndex = ref(0)
 const orderCount = ref(0) 
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const year = date.getFullYear()
+const formatDate = (date) => {
+  const d = new Date(date)
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const year = d.getFullYear()
   return `${day}.${month}.${year}`
 }
 
@@ -87,7 +90,7 @@ const fetchOrder = async () => {
     const data = await response.json()
 
     orderItems.value = data.items ?? data
-    orderDate.value = data.date ?? new Date().toLocaleDateString()
+    orderDate.value = data.date ? formatDate(data.date) : ''
     orderCount.value = data.totalOrders ?? orderCount.value
 
   } catch (err) {
@@ -114,6 +117,49 @@ const prevOrder = () => {
 onMounted(() => {
   fetchOrder()
 })
+
+async function addToOrder(drink) {
+  if (!activeUser.value?.username || !activeUser.value?.table) {
+    throw new Error("User not logged in or table not set");
+  }
+  const username = activeUser.value.username;
+  const payload = {
+    drink,
+    tableCode: activeUser.value.table
+  };
+
+  try {
+    const res = await fetch(
+      `https://itu-wb12.onrender.com/users/${username}/order/add`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const result = await res.json();
+    return result;
+
+  } catch (err) {
+      console.error(err);
+    throw err;
+  }
+}
+
+import { addToast } from '@/stores/ToastStore.js';
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`);
+    console.error("Order failed:", err);
+  }
+}
 </script>
 
 <style scoped>
@@ -220,6 +266,18 @@ onMounted(() => {
   border-radius: 8px;
 }
 
+.order-item2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 12px 16px;
+  border-radius: 8px;
+  width: 30%; 
+  margin: 10px auto;
+}
+
 .item-left {
   display: flex;
   align-items: center;
@@ -250,4 +308,5 @@ onMounted(() => {
   height: 24px;
   cursor: pointer;
 }
+
 </style>
