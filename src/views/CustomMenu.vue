@@ -1,33 +1,31 @@
 <template>
   <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
-    <div>
-    <RouterLink to="/menu" class="nav-btn"><-</RouterLink>
-    <RouterLink to="/alcoholmenu" class="nav-btn">-></RouterLink>
-</div>
+
+    <MenuNavigation
+  label="custom drinks"
+  @prev="goToMenu"
+  @next="goToAlcoholMenu"
+/>
 
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
     <!-- Featured drink -->
-    <div class="featured-container" v-if="drinks?.length">
-    <button 
-      class="drinkCard"
-      v-if="drinks?.length"
-      @click="goToDrink(drinks[0].name)"
-    >
-      <div class="drinkHeader">POPULAR NOW</div>
-      <img :src="drinks[0].image" :alt="drinks[0].name" class="drinkImage" />
-      <div class="drinkFooter">{{ drinks[0].name }}</div>
-    </button>
-</div>
+    <FeaturedDrink 
+  v-if="drinks?.length"
+  :drink="drinks[0]"
+  @select="goToDrink"
+  @order="handleOrder"
+/>
+
     <!-- Other drinks -->
     <DrinkCard
-  v-for="drink in (drinks || []).slice(1)"
+  v-for="drink in (drinks || []).slice(1)"  
   :key="drink.id"
   :drink="drink"
   @info="goToDrink"
+  @addToOrder="handleOrder"
 />
 </div>
 
@@ -38,7 +36,8 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
-
+import FeaturedDrink from "@/components/FeaturedDrink.vue";
+import { addToOrder } from '@/stores/DrinkInfo';
 
 import { drinks, loadDrinks,drinksLoading } from "@/stores/MenuCustom.js";
 import Header from "@/components/Header.vue";
@@ -59,6 +58,26 @@ function goToDrink(name) {
 function order(){
       router.push({ name: 'order' })
     };
+
+import { addToast } from '@/stores/ToastStore.js';
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    console.error("Order failed:", err);
+  }
+}
+
+import MenuNavigation from "@/components/MenuNavigation.vue";
+function goToAlcoholMenu() {
+  router.push("/alcoholmenu");
+}
+
+function goToMenu() {
+  router.push("/menu");
+}
 </script>
 
 <style scoped>
