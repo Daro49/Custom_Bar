@@ -42,6 +42,7 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
+import User from '@/stores/User.js'
 import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
 
@@ -91,8 +92,29 @@ const confirmOrder = async () => {
     
     const data = await response.json()
     console.log('Order confirmed:', data)
+
+    const newExpirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    await fetch(`https://itu-wb12.onrender.com/users/${username}/table/select`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            tableCode: activeUser.value.table, 
+            expirationTime: newExpirationTime
+        })
+    });
+
+    const newUser = new User(
+        activeUser.value.username,
+        activeUser.value.points,
+        activeUser.value.email,
+        activeUser.value.table,
+        newExpirationTime
+    );
+
+    activeUser.value = newUser.toJSON();
+    localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
     
-    // Clear the order items and show success
     orderItems.value = []
     alert('Order confirmed! Thank you for your purchase.')
     
@@ -105,10 +127,8 @@ const confirmOrder = async () => {
 
 const handleButtonClick = () => {
   if (orderItems.value.length === 0) {
-    // Route to menu if no items
     router.push('/menu')
   } else {
-    // Confirm order if items exist
     confirmOrder()
   }
 }

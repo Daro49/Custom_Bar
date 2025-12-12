@@ -45,9 +45,14 @@ export default defineComponent({
   flex-direction: column;
   gap: 10px;
   padding: 12px 20px;
-  border: 10px dashed var(--gold);
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.7), 
+    inset 0 0 0 4px var(--gold);
+  outline: 10px solid var(--wood-dark, #5a3200);
+  outline-offset: 5px;
+  border: 1px solid var(--gold);
 }
 
 .points .div {
@@ -60,8 +65,9 @@ export default defineComponent({
 .points .text-wrapper {
   color: #ffffff;
   font-family: 'Century Schoolbook', Helvetica;
-  font-size: 24px;
+  font-size: 34px;
   text-align: center;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); 
 }
 
 .points .text-wrapper-2 {
@@ -69,7 +75,7 @@ export default defineComponent({
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: 'Century Schoolbook', Helvetica;
-  font-size: 24px;
+  font-size: 38px;
   text-align: center;
 }
 </style>

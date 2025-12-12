@@ -4,18 +4,17 @@
 </script>
 
 <template>
-  <div class="points">
-    <div class="frame-wrapper">
+  <div class="points-jukebox">
+    <div class="pointer-wrapper">
       <div class="div">
         <div class="text-wrapper">Points: {{ activeUserRef.points }}</div>
-        
       </div>
     </div>
   </div>
 </template>
 
 <style>
-.points{
+.points-jukebox{
     padding: 4px 10px;
     border-radius: 9999px;      
     background: white;          

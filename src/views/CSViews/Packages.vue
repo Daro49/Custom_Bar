@@ -1,18 +1,30 @@
 <script setup>
 import Profile from '@/assets/user.png'
-import Img from '@/assets/alpa-francovka.jpg'
+import { packages } from '@/stores/CSModels/Packages'
+import { onMounted } from 'vue'
+import { getPackages } from '@/stores/CSModels/Packages'
+
+onMounted(() => {
+  getPackages()
+})
+
 </script>
 
 <template>
   <div class="packages">
-    <Header :avatar="Profile" />
+    <Header :avatar="Profile" :previous="true"/>
     <PointsPresenter/>
     <div class="package-list">
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
-      <PackageCard :img="Img" name="Prelet nad alpami" price="1500 Points" />
+      <PackageCard
+        v-for="packageItem in packages"
+        :pkgId="packageItem.id"
+        :name="packageItem.name"
+        :img="packageItem.imgurl"
+        :price="packageItem.price"
+        :description="packageItem.description"
+      />
     </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -40,19 +52,6 @@ export default {
   width: 100%;
 }
 
-.packages .header-child-instance {
-  height: 76px !important;
-  left: unset !important;
-  top: unset !important;
-}
-
-.packages .component {
-  left: unset !important;
-  margin-left: 28px !important;
-  margin-top: 23px !important;
-  position: unset !important;
-  top: unset !important;
-}
 
 .packages .package-list {
   display: flex;
@@ -64,15 +63,4 @@ export default {
   width: 100%;
 }
 
-.packages .package-instance {
-  align-self: stretch !important;
-  flex: 0 0 auto !important;
-  left: unset !important;
-  top: unset !important;
-  width: 100% !important;
-}
-
-.packages .package-2 {
-  top: 0 !important;
-}
 </style>

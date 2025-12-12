@@ -54,6 +54,7 @@ export default {
   flex-direction: column;
   gap: 16px;
   height: 814px;
+  width: 80%;
   position: relative;
   background: var(--background-green);
 }

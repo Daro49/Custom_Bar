@@ -1,28 +1,32 @@
 <script setup>
 import Profile from '@/assets/user.png'
-import drinksImg from '@/assets/bottles.jpg'
-import { coupons } from '@/stores/Coupons'
+import { coupons, userCoupons } from '@/stores/CSModels/Coupons'
 import { onMounted } from 'vue'
-import { getCoupons } from '@/stores/Coupons'
+import { getCoupons, getUserCoupons } from '@/stores/CSModels/Coupons'
+import { activeUser } from '@/stores/Login.js';
 
-onMounted(() => {
-  getCoupons()
+onMounted(async () => {
+  await Promise.all([
+    getUserCoupons(activeUser.value.username),
+    getCoupons()
+  ]);
 })
+
+const isActivated = (couponId) => {
+  return userCoupons.value.some(c => String(c.id) === String(couponId));
+}
 </script>
 
 <template>
   <div class="coupons">
-    <Header :avatar="Profile" />
+    <Header :avatar="Profile" :previous="true" />
     <PointsPresenter/>
     <div class="coupon-list">
       <CouponCard
         v-for="coupon in coupons"
-        :key="coupon.id"
-        :activationPoints="coupon.discount"
-        :image="drinksImg"
+        :couponData ="coupon"
         :validUntil="date"
-        :description="coupon.code"
-        details="Detailed description"
+        :activated="isActivated(coupon.id)"
       />
     </div>
   </div>

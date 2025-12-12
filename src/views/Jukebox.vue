@@ -1,74 +1,84 @@
 <template>
-  <Header :showPoints="true"/>
-  <div class="jukebox"  v-if="!(showSearchPanel)" >
-    <div class="current" v-if="currentSong">
-      <SongButton
-        :imageSrc="getCover(currentSong.title)"
-        :title="currentSong.title"
-        :artist="currentSong.artist"
-        :song="currentSong"
-        :showAdd="false"
-        :showCut="false"
-        :showPromote="false"
-      />
-      <div class="progress_wrapper">
-        <div class="progress_timer">
-          <span>{{ elapsedFormatted }}</span>
-          <span>{{ totalFormatted }}</span>
+  <div class="jukebox-page">
+    <Header :showPoints="true"/>
+    <div class="jukebox-content">
+      <div class="jukebox"  v-if="!(showSearchPanel)" >
+        <div class="current" v-if="currentSong">
+          <SongButton
+            :imageSrc="getCover(currentSong.title)"
+            :title="currentSong.title"
+            :artist="currentSong.artist"
+            :song="currentSong"
+            :showAdd="false"
+            :showCut="false"
+            :showPromote="false"
+          />
+          <div class="progress_wrapper">
+            <div class="progress_timer">
+              <span>{{ elapsedFormatted }}</span>
+              <span>{{ totalFormatted }}</span>
+            </div>
+            <div class="progress_bar">
+              <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+            </div>
+          </div>    
         </div>
-        <div class="progress_bar">
-          <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+        <h1 class="priecka"> -------------------------------------------</h1>
+        <div class="playlist-scroll">
+          <div class="playlist">
+            <SongButton
+            v-for="song in nextSongs"
+            :key="song.id"
+            :imageSrc="getCover(song.title)"
+            :title="song.title"
+            :artist="song.artist"
+             @promote="promoteSongHandler(song)"
+            :showAdd="false"
+            />
+            <h1 v-if="playlist.length===0"> Playlist je prazdny </h1>
+          </div>
         </div>
-      </div>    
-    </div>
-    <h1 class="priecka"> -------------------------------------------</h1>
-    <div class="playlist">
-      <SongButton
-      v-for="song in nextSongs"
-      :key="song.id"
-      :imageSrc="getCover(song.title)"
-      :title="song.title"
-      :artist="song.artist"
-       @promote="promoteSong(song)"
-      :showAdd="false"
-      />
-      <h1 v-if="playlist.length===0"> Playlist je prazdny </h1>
-    </div>
-    <button class="add-button" @click="switchAddToQueue">
-      ADD TO QUEUE
-    </button>
-  </div>
 
-  <div v-if="showSearchPanel" class="searchPanel">
-    <button class="back_btn" @click="ReturnBackQueue"> Spat </button>
-    <div class="searchbar">
-      <input
-        v-model="search"
-        class="search-input"
-        type="text"
-        placeholder="Vyhladaj piesen"
-      />
+        <button class="add-button" @click="switchAddToQueue">
+          ADD TO QUEUE
+        </button>
+      </div>
+
+      <div v-if="showSearchPanel" class="searchPanel">
+        <button class="back_btn" @click="ReturnBackQueue"> Spat </button>
+        <div class="searchbar">
+          <input
+            v-model="search"
+            class="search-input"
+            type="text"
+            placeholder="Vyhladaj piesen"
+          />
+        </div>
+        <div class="search-scroll">
+          <SongButton 
+            v-for="song in filteredSongs"
+            :key="song.id"
+            :imageSrc="getCover(song.title)"
+            :title="song.title"
+            :artist="song.artist"
+            :song="song"
+            @add="addToQueue(song)"
+            :showPromote="false"
+            :showCut="false"
+          />
+        </div>
+        
+      </div>
     </div>
-    
-    <SongButton 
-      v-for="song in filteredSongs"
-      :key="song.id"
-      :imageSrc="getCover(song.title)"
-      :title="song.title"
-      :artist="song.artist"
-      :song="song"
-      @add="addToQueue(song)"
-      :showPromote="false"
-      :showCut="false"
-    />
   </div>
+  
 </template>
 
 <script setup>
 import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
 import SongButton from '../components/SongButton.vue'
 import Header from '@/components/Header.vue'
-import Profile from '@/assets/user.png'
+import { addPoints } from '@/stores/AddPoints'
 const songs = ref([])
 const playlist = ref([])
 const currentSong = ref(null)
@@ -84,6 +94,7 @@ const songDuration = ref(0)
 const elapsedTime = ref(0)
 const progress = ref(0)
 
+// ak pojde progressionJukebox.js tak vymaz
 let progressTimer = null
 
 function formatTime (duration) {
@@ -91,6 +102,7 @@ function formatTime (duration) {
   const sec = Math.floor(duration%60)
   return `${String(mins).padStart(2, '0')}:${String(sec).padStart(2,'0')}`
 }
+// ******************************************************************************
 
 const elapsedFormatted = computed(() => formatTime(elapsedTime.value))
 const totalFormatted = computed(() => formatTime(songDuration.value))
@@ -193,6 +205,7 @@ onMounted(()=> {
   }, 3500);
 }) 
 
+//toto asi moze uz ist prec
 const ReturnBackSearch = () => {
   showDetailSearch.value = false;
   showSearchPanel.value = true;
@@ -247,6 +260,12 @@ async function addToQueue(song) {
   showSearchPanel.value = false;
 }
 
+async function promoteSongHandler(song) {
+  promoteSong(song)
+  addPoints(-10)
+}
+
+// toto dat do stores
 async function promoteSong(song) {
   try {
     const url = `https://itu-wb12.onrender.com/playlist/${encodeURIComponent(song.title)}/rate`
@@ -277,12 +296,14 @@ const filteredSongs = computed(() => {
   )
 })
 
+// toto prec
 function DetailSearch(song) {
   showDetailSearch.value = true
   showSearchPanel.value = false
   selectedSong.value = song
 }
 
+// toto prec
 function openDetailQueue(song) {
   showDetailQueue.value = true
   selectedSong.value = song
@@ -301,11 +322,24 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+  .jukebox-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .jukebox-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
   .add-button {
     background: #0D564B;
     color: #D4AF37;
   }
   .searchPanel {
+    flex: 1;
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
@@ -313,12 +347,19 @@ onUnmounted(() => {
     display:flex;
     flex-direction: column;
     gap: 8px;
+    min-height: 0;
+  }
+  .search-scroll{
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
   }
   .searchbar {
     display: flex;
     justify-content: center;
   }
   .jukebox {
+    flex: 1;
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
@@ -326,6 +367,12 @@ onUnmounted(() => {
     display:flex;
     flex-direction: column;
     gap: 8px;
+    min-height: 0;  
+  }
+  .playlist-scroll{
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
   }
   .currentSong {
     display: flex;
