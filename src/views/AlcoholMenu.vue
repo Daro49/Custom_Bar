@@ -14,7 +14,7 @@
 
     <!-- Other drinks -->
     <DrinkCard
-  v-for="drink in (drinks || []).slice(1)"  
+  v-for="drink in drinks "  
   :key="drink.id"
   :drink="drink"
   @info="goToDrink"
