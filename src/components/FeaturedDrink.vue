@@ -8,7 +8,7 @@
 
     <div class="status-badge" v-if="drink.liked || drink.disliked">
       <span v-if="drink.liked">❤️</span>
-      <span v-else-if="drink.disliked">💔</span>
+      <span v-else-if="drink.disliked">👎</span>
     </div>
 
     <div class="priceFloating">{{ drink.price }}€</div>

@@ -5,7 +5,7 @@
       class="status-badge" 
       :class="{ 'favorite': drink.isFavorite, 'disliked': drink.isFavorite === false }"
     >
-      {{ drink.liked ? '❤️' : '💔' }}
+      {{ drink.liked ? '❤️' : '👎' }}
     </div>
 
     <img class="drink-image" :src="drink.image" :alt="drink.name" />

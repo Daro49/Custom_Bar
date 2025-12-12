@@ -28,7 +28,6 @@ export default {
       currentMap: 'terrace',
       previousMap: 'terrace',
       cart,
-      // Kontrola vypršania rezervácie každú minútu
       expirationChecker: null, 
     }
   },
@@ -37,15 +36,12 @@ export default {
       this.selectedTable = activeUser.value.table;
       console.log('Restored selected table:', this.selectedTable);
     }
-    // Kontrola pri štarte
     this.checkTableExpiration();
   },
   mounted() {
-    // Spustenie intervalu (každú minútu)
     this.expirationChecker = setInterval(this.checkTableExpiration, 60000); 
   },
   beforeDestroy() {
-    // Zrušenie intervalu
     clearInterval(this.expirationChecker); 
   },
   methods: {
@@ -59,7 +55,6 @@ export default {
         
         if (now >= expiryTime) {
           console.log(`Table ${table} reservation expired. Releasing.`);
-          // Ak exspirovalo, uvoľníme stôl
           this.releaseTable(table); 
         }
       }
@@ -69,10 +64,8 @@ export default {
       this.selectedTable = null;
       activeUser.value.table = null;
       activeUser.value.tableExpiration = null; 
-      // Uložíme zmeny, aby sa null uložilo do localStorage
       localStorage.setItem('activeUser', JSON.stringify(activeUser.value)); 
 
-      // Serveru oznámime uvoľnenie 
       try {
         const username = activeUser.value.username;
         await fetch(`https://itu-wb12.onrender.com/users/${username}/table/release`, {
@@ -89,27 +82,20 @@ export default {
     async selectTable(label) {
       const isDeselecting = this.selectedTable === label;
       
-      // Ak odklikávame stôl, uvoľníme ho
       if (isDeselecting) {
         await this.releaseTable(label);
         return;
       }
 
-      // 1. Nastavenie nového stola
       this.selectedTable = label;
       activeUser.value.table = this.selectedTable;
       
-      // 🚀 NOVÁ LOGIKA PRE ČASOVAČ
-      // 2. Vypočítanie času vypršania (Aktuálny čas + 1 hodina)
       const expirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
       
-      // 3. Uloženie času exspirácie do activeUser (dáta sú teraz aktuálne)
       activeUser.value.tableExpiration = expirationTime; 
 
-      // 4. Perzistentné uloženie AKTUALIZOVANÉHO stavu (vrátane expirationTime)
       localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
 
-      // 5. Send POST request to server with expiration time
       try {
         const username = activeUser.value.username
         console.log('Sending table select request for:', label)
@@ -120,7 +106,7 @@ export default {
           },
           body: JSON.stringify({ 
             tableCode: label,
-            expirationTime: expirationTime // Posielame aj časovač na server
+            expirationTime: expirationTime
           }) 
         })
         
@@ -138,7 +124,6 @@ export default {
       }
     },
     
-    // ... existujúce metódy ...
     switchMap(name) {
       if (['terrace', 'entry', 'back', 'garden'].includes(name)) {
         this.previousMap = this.currentMap
