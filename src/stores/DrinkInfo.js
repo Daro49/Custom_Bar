@@ -1,17 +1,17 @@
 // /stores/DrinkInfo.js
 import { ref } from "vue";
-
 export const drinkData = ref(null);
 export const drinkError = ref(null);
 export const drinkLoading = ref(false);
+export const liked = ref(false);
+export const disliked = ref(false);
 
 let intervalId = null;
 
 export function stopDrinkAutoRefresh() {
   if (intervalId) clearInterval(intervalId);
 }
-
-export async function loadDrink(route) {
+export async function loadDrink(route, username) {
   drinkLoading.value = true;
 
   try {
@@ -28,10 +28,22 @@ export async function loadDrink(route) {
       url = `https://itu-wb12.onrender.com/drinks/${name}`;
     }
 
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username  
+      })
+    });
+
     if (!res.ok) throw new Error("HTTP " + res.status);
 
-    drinkData.value = await res.json();
+    let response = await res.json();
+    drinkData.value = response.drink;
+    liked.value = response.liked;
+    disliked.value = response.disliked;
     drinkError.value = null;
   } catch (err) {
     drinkError.value = err.message;
@@ -42,28 +54,34 @@ export async function loadDrink(route) {
 
 export function startDrinkAutoRefresh(route) {
   stopDrinkAutoRefresh();
-  intervalId = setInterval(() => loadDrink(route), 5000);
+  intervalId = setInterval(() => loadDrink(route, activeUser.value.username ), 5000);
 }
 
-export async function rateDrink(value, name, type = "regular") {
+export async function rateDrink(action, name, type = "regular", username) {
   try {
-    const endpoint =
+    // action = "like" alebo "dislike"
+    const endpointBase =
       type === "custom"
-        ? `https://itu-wb12.onrender.com/customDrinks/${encodeURIComponent(name)}/rate`
-        : `https://itu-wb12.onrender.com/drinks/${encodeURIComponent(name)}/rate`;
+        ? `https://itu-wb12.onrender.com/customDrinks/${encodeURIComponent(name)}`
+        : `https://itu-wb12.onrender.com/drinks/${encodeURIComponent(name)}`;
+
+    const endpoint = `${endpointBase}/${action}`;
 
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rating: value })
+      body: JSON.stringify({ username })
     });
 
     const result = await res.json();
 
-    // Update reactive data with server response
     if (result.drink) {
       drinkData.value = result.drink;
+      liked.value = result.liked;
+      disliked.value = result.disliked;
     }
+
+    return result; // ak chceš vedieť či je liked/disliked
   } catch (err) {
     console.error(err);
   }
