@@ -14,13 +14,13 @@ export default options;
 
 <div class="bottom-nav-container">
   <div class="nav-links">
-    <div class="nav-segment right-segment">
+    <div class="nav-segment left-segment">
       <RouterLink to="/map" class="nav-icon-link">
         <div class="icon-svg" v-html="mapIcon"></div>
       </RouterLink>
     </div>
 
-    <div class="nav-segment left-segment">
+    <div class="nav-segment right-segment">
       <RouterLink to="/menu/order" class="nav-icon-link">
         <div class="icon-svg" v-html="orderIcon"></div>
       </RouterLink>
@@ -77,7 +77,7 @@ export default options;
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 20%;
+    padding: 0 15%;
 }
 
 .center-overlay-btn {
