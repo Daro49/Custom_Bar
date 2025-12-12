@@ -19,8 +19,8 @@ export async function loadDrinks(username) {
     }
 
     const data = await response.json();
-
-    drinks.value = data.drinks;
+    console.log(data.customDrinks);
+    drinks.value = data.customDrinks;
 
     drinksError.value = null;
   } catch (err) {
