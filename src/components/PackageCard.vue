@@ -1,39 +1,45 @@
+<script setup>
+import SectionDivider from '@/components/SectionDivider.vue'
+import { useRouter } from 'vue-router'
+import { defineProps } from 'vue'
+
+const router = useRouter()
+
+const props = defineProps({
+  pkgId: { type: Number, required: true },
+  name: { type: String, required: true },
+  img: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String, required: true },
+})
+
+function goToDetails() {
+  router.push({
+    name: 'package_details',
+    params: { pkgId: props.pkgId }
+  })
+}
+</script>
+
 <template>
-  <div class="package-card">
+  <div class="package-card" @click="goToDetails">
     <div class="package-text-frame">
       <p class="package-text">{{ name }}</p>
     </div>
-
+    <SectionDivider/>
     <div class="package-img">
-      <img :src="img" />
+      <img :src="img"/>
     </div>
 
     <div class="package-price">
       <span class="price-label">Price:</span>
       <span class="price-value">{{ price }}</span>
     </div>
+    <button class="order-package">
+      Click to order
+    </button>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PackageCard',
-  props: {
-    name: {
-      type: String,
-      required: true,
-    },
-    img: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: String,
-      required: true,
-    },
-  },
-}
-</script>
 
 <style>
 .package-card {
@@ -44,32 +50,87 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin: 10px;
-  width: 280px;
+  width: 80%;
+  height: 750px;
+  max-height: 30%;
+  border: 3px solid;
+  border-color: black;
+  box-shadow:
+    -50px -50px 2px -40px var(--gold),
+    50px 50px 2px -40px var(--gold);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 33px;
 }
 
+
+.package-card:hover {
+  box-shadow: 0 0 10px var(--gold);
+  transform: scale(1.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 .package-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
-  height: 224px;
-  width: 100%;
+  width: 95%;
+  border-radius: 12px;
+  height: 100%;
+  padding: 3px;
+  background: conic-gradient(from 0deg, #ff7ab6, #7c5cff, #2dd4bf, #ff7ab6);
+  background-size: 800% 800%;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-grow: 0;       
+  flex-shrink: 0;     
+  flex-basis: 60%;
 }
 
-.package-img img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: 10px;
+.package-card .order-package {
+  font-family: var(--button-font-family);
+  font-size: 24px;
+  color: white;
+  background-color: #034909;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-top: auto;
+  border: solid 2px black;
+  box-shadow: 
+    2px 2px 0px 0px black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.package-card .order-package:hover {
+  box-shadow: 
+    4px 4px 0px 0px black;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.package-img:hover {
+  animation: gradientShift 2s ease infinite;
+}
+
+.package-img > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 9px;
+  background: #fff; 
 }
 
 .package-text-frame {
   text-align: center;
   font-family: var(--button-font-family);
-  font-size: 24px;
+  font-size: 34px;
   color: white;
   margin-bottom: 8px;
+  width:  100%;
+  border-radius: 6px;
+  background-color: #8f4101;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 50%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .package-price {
@@ -77,7 +138,7 @@ export default {
   justify-content: center;
   gap: 16px;
   font-family: var(--button-font-family);
-  font-size: 24px;
+  font-size: 34px;
   color: white;
 }
 
@@ -89,4 +150,5 @@ export default {
   font-weight: 700;
   color: var(--gold);
 }
+
 </style>

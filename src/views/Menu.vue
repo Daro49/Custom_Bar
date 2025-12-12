@@ -24,12 +24,12 @@
 
     <!-- Other drinks -->
     <DrinkCard
-  v-for="drink in (drinks || []).slice(1)"  
-  :key="drink.id"
-  :drink="drink"
-  @info="goToDrink"
-  @addToOrder="handleOrder"
-/>
+      v-for="drink in (drinks || []).slice(1)"  
+      :key="drink.id"
+      :drink="drink"
+      @info="goToDrink"
+      @addToOrder="handleOrder"
+    />
   </div>
 </template>
 
@@ -70,6 +70,7 @@ async function handleOrder(drink) {
     addToast(`${drink.name} added to cart!`);
     console.log("Added to order:", drink.name);
   } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`);
     console.error("Order failed:", err);
   }
 }

@@ -27,40 +27,118 @@ export default {
       selectedTable: null,
       currentMap: 'terrace',
       previousMap: 'terrace',
-      cart
+      cart,
+      // Kontrola vypršania rezervácie každú minútu
+      expirationChecker: null, 
     }
   },
+  created() {
+    if (activeUser.value && activeUser.value.table) {
+      this.selectedTable = activeUser.value.table;
+      console.log('Restored selected table:', this.selectedTable);
+    }
+    // Kontrola pri štarte
+    this.checkTableExpiration();
+  },
+  mounted() {
+    // Spustenie intervalu (každú minútu)
+    this.expirationChecker = setInterval(this.checkTableExpiration, 60000); 
+  },
+  beforeDestroy() {
+    // Zrušenie intervalu
+    clearInterval(this.expirationChecker); 
+  },
   methods: {
-    async selectTable(label) {
-      this.selectedTable = this.selectedTable === label ? null : label
-      activeUser.value.table = this.selectedTable
-      // Send POST request to server when table is selected
-      if (this.selectedTable) {
-        try {
-          const username = activeUser.value.username
-          console.log('Sending table select request for:', label)
-          const response = await fetch('https://itu-wb12.onrender.com/users/' + username + '/table/select', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ tableCode: label })
-          })
-          
-          console.log('Response status:', response.status)
-          const data = await response.json()
-          console.log('Response data:', data)
-          
-          if (!response.ok) {
-            console.error('Failed to select table:', data)
-          } else {
-            console.log('Table selected:', data)
-          }
-        } catch (error) {
-          console.error('Error selecting table:', error)
+    checkTableExpiration() {
+      const expiration = activeUser.value.tableExpiration;
+      const table = activeUser.value.table;
+      
+      if (table && expiration) {
+        const now = Date.now();
+        const expiryTime = new Date(expiration).getTime(); 
+        
+        if (now >= expiryTime) {
+          console.log(`Table ${table} reservation expired. Releasing.`);
+          // Ak exspirovalo, uvoľníme stôl
+          this.releaseTable(table); 
         }
       }
     },
+
+    async releaseTable(tableLabel) {
+      this.selectedTable = null;
+      activeUser.value.table = null;
+      activeUser.value.tableExpiration = null; 
+      // Uložíme zmeny, aby sa null uložilo do localStorage
+      localStorage.setItem('activeUser', JSON.stringify(activeUser.value)); 
+
+      // Serveru oznámime uvoľnenie 
+      try {
+        const username = activeUser.value.username;
+        await fetch(`https://itu-wb12.onrender.com/users/${username}/table/release`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tableCode: tableLabel })
+        });
+        console.log(`Server notified: Table ${tableLabel} released.`);
+      } catch (error) {
+          console.error('Error releasing table on server:', error);
+        }
+    },
+
+    async selectTable(label) {
+      const isDeselecting = this.selectedTable === label;
+      
+      // Ak odklikávame stôl, uvoľníme ho
+      if (isDeselecting) {
+        await this.releaseTable(label);
+        return;
+      }
+
+      // 1. Nastavenie nového stola
+      this.selectedTable = label;
+      activeUser.value.table = this.selectedTable;
+      
+      // 🚀 NOVÁ LOGIKA PRE ČASOVAČ
+      // 2. Vypočítanie času vypršania (Aktuálny čas + 1 hodina)
+      const expirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+      
+      // 3. Uloženie času exspirácie do activeUser (dáta sú teraz aktuálne)
+      activeUser.value.tableExpiration = expirationTime; 
+
+      // 4. Perzistentné uloženie AKTUALIZOVANÉHO stavu (vrátane expirationTime)
+      localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
+
+      // 5. Send POST request to server with expiration time
+      try {
+        const username = activeUser.value.username
+        console.log('Sending table select request for:', label)
+        const response = await fetch('https://itu-wb12.onrender.com/users/' + username + '/table/select', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            tableCode: label,
+            expirationTime: expirationTime // Posielame aj časovač na server
+          }) 
+        })
+        
+        console.log('Response status:', response.status)
+        const data = await response.json()
+        console.log('Response data:', data)
+        
+        if (!response.ok) {
+          console.error('Failed to select table:', data)
+        } else {
+          console.log('Table selected:', data)
+        }
+      } catch (error) {
+        console.error('Error selecting table:', error)
+      }
+    },
+    
+    // ... existujúce metódy ...
     switchMap(name) {
       if (['terrace', 'entry', 'back', 'garden'].includes(name)) {
         this.previousMap = this.currentMap

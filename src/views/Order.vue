@@ -1,27 +1,12 @@
 <template>
   <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true"/>
   <div class="order-container">
-    <!-- Content -->
     <div class="content">
-      <!-- Title with divider -->
       <div class="order-title">
-        <svg 
-          class="chevron-icon"
-          viewBox="0 0 100 50"
-        >
-          <path 
-            d="M10 40 L50 10 L90 40" 
-            stroke="black" 
-            stroke-width="8" 
-            fill="none" 
-            stroke-linecap="round"
-          />
-        </svg>
         <h2>ORDER</h2>
         <div class="divider-line"></div>
       </div>
 
-      <!-- Order Items -->
       <div class="order-items">
         <div v-if="isLoading" class="loading">Loading order...</div>
         <div v-else-if="error" class="error">Error: {{ error }}</div>
@@ -31,29 +16,33 @@
             <span class="item-name">{{ item.name }}</span>
           </div>
           <div class="item-right">
-            <span class="price">{{ item.price }}€</span>
-            <img src="../assets/Info.svg" class="info-icon" />
+            <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
+            <button class="addButton" @click="addToOrder(item)">+</button>
+            <button class="removeButton" @click="removeFromOrder(item)">-</button>
           </div>
         </div>
       </div>
 
-      <!-- Apply Coupons -->
       <div class="apply-coupons">
         <a href="#" @click.prevent="router.push('/coupons')">apply coupons</a>
       </div>
 
-      <!-- Pay Button -->
       <button class="pay-button" @click="handleButtonClick">
-        {{ orderItems.length === 0 ? 'ORDER SOMETHING' : 'PAY' }}
+        {{ orderItems.length === 0 
+          ? 'ORDER SOMETHING' 
+          : 'PAY ' + orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) + '€' 
+        }}
       </button>
     </div>
   </div>
 </template>
 
+
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
+import User from '@/stores/User.js'
 import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
 
@@ -103,15 +92,33 @@ const confirmOrder = async () => {
     
     const data = await response.json()
     console.log('Order confirmed:', data)
+
+    const newExpirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    await fetch(`https://itu-wb12.onrender.com/users/${username}/table/select`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            tableCode: activeUser.value.table, 
+            expirationTime: newExpirationTime
+        })
+    });
+
+    const newUser = new User(
+        activeUser.value.username,
+        activeUser.value.points,
+        activeUser.value.email,
+        activeUser.value.table,
+        newExpirationTime
+    );
+
+    activeUser.value = newUser.toJSON();
+    localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
     
-    // Clear the order items and show success
     orderItems.value = []
     alert('Order confirmed! Thank you for your purchase.')
     
-    // Optionally redirect back or to a success page
-    setTimeout(() => {
-      router.back()
-    }, 1000)
+    router.push('/')
   } catch (err) {
     console.error('Error confirming order:', err)
     alert('Failed to confirm order: ' + err.message)
@@ -120,10 +127,8 @@ const confirmOrder = async () => {
 
 const handleButtonClick = () => {
   if (orderItems.value.length === 0) {
-    // Route to menu if no items
     router.push('/menu')
   } else {
-    // Confirm order if items exist
     confirmOrder()
   }
 }
@@ -131,6 +136,63 @@ const handleButtonClick = () => {
 onMounted(() => {
   fetchOrder()
 })
+
+async function removeFromOrder(drink) {
+  const username = activeUser.value.username;
+  try {
+    console.log("Removing from order:", drink.name, "with ID:", drink);
+    const res = await fetch(
+    `https://itu-wb12.onrender.com/users/${username}/order/remove`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ drinkId: drink.id }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const result = await res.json();
+
+  orderItems.value = result.order;
+
+  } catch (err) {
+      console.error(err);
+    throw err;
+  }
+
+}
+
+async function addToOrder(drink) {
+  if (!activeUser.value?.username || !activeUser.value?.table) {
+    throw new Error("User not logged in or table not set");
+  }
+  const username = activeUser.value.username;
+  const payload = {
+    drink,
+    tableCode: activeUser.value.table
+  };
+
+  try {
+    const res = await fetch(
+      `https://itu-wb12.onrender.com/users/${username}/order/add`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const result = await res.json();
+    orderItems.value = result.order;
+    return result;
+
+  } catch (err) {
+      console.error(err);
+    throw err;
+  }
+}
 </script>
 
 <style scoped>
@@ -166,11 +228,11 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.chevron-icon {
+/* .chevron-icon {
   width: 75px;
   height: 20px;
   transform: rotate(180deg);
-}
+} */
 
 .order-title h2 {
   margin: 0;
