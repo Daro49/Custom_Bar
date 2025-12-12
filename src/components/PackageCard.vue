@@ -2,46 +2,56 @@
 import SectionDivider from '@/components/SectionDivider.vue'
 import { useRouter } from 'vue-router'
 import { defineProps } from 'vue'
+import { orderPackage } from '@/stores/CSModels/Packages'
 
 const router = useRouter()
 
 const props = defineProps({
-  pkgId: { type: Number, required: true },
-  name: { type: String, required: true },
-  img: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: { type: String, required: true },
+  pkg : {type: Object, required: true},
 })
 
 function goToDetails() {
   router.push({
     name: 'package_details',
-    params: { pkgId: props.pkgId }
+    params: { pkgId: props.pkg.id }
   })
 }
+
+const order = async () => {
+  const result = await orderPackage(activeUser.value.username, props.pkg.value);
+
+  if (!result.success) {
+    if (result.status === 440) {
+      alert("Package already in order");
+    } else {
+       errorMessage.value = result.message;
+       alert("Cannot order package");
+    }
+  }
+};
 </script>
 
 <template>
   <div class="package-card" @click="goToDetails">
     <div class="package-text-frame">
-      <p class="package-text">{{ name }}</p>
+      <p class="package-text">{{ pkg.name }}</p>
     </div>
     <SectionDivider/>
     <div class="package-img">
-      <img :src="img"/>
+      <img :src="pkg.imgurl"/>
     </div>
 
     <div class="package-price">
       <span class="price-label">Price:</span>
-      <span class="price-value">{{ price }}</span>
+      <span class="price-value">{{ pkg.price }}</span>
     </div>
-    <button class="order-package">
-      Click to order
+    <button class="order-package" @click = "order">
+      Click here to order
     </button>
   </div>
 </template>
 
-<style>
+<style scoped>
 .package-card {
   background: var(--wood);
   border-radius: 10px;
