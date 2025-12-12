@@ -6,10 +6,13 @@
 
     <div class="drinkFooter">{{ drink.name }}</div>
 
-    <div class="status-badge" v-if="drink.liked || drink.disliked">
-      <span v-if="drink.liked">❤️</span>
-      <span v-else-if="drink.disliked">👎</span>
-    </div>
+    <div 
+  v-if="drink.liked || drink.disliked" 
+  class="status-badge" 
+  :class="{ 'favorite': drink.liked, 'disliked': drink.disliked }"
+>
+  {{ drink.liked ? '❤️' : '💔' }}
+</div>
 
     <div class="priceFloating">{{ drink.price }}€</div>
 
@@ -95,7 +98,7 @@ defineEmits(["select", "order"]);
 
 .status-badge.disliked {
   border: 2px solid #808080;
-  filter: grayscale(1); /* Ak chceš, aby bolo neobľúbené menej výrazné */
+  filter: grayscale(1);
 }
 
 

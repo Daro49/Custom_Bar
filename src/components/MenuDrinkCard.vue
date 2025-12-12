@@ -1,12 +1,12 @@
 <template>
   <div class="drink-card" @click="$emit('info', drink.name)">
     <div 
-      v-if="drink.liked || drink.disliked " 
-      class="status-badge" 
-      :class="{ 'favorite': drink.isFavorite, 'disliked': drink.isFavorite === false }"
-    >
-      {{ drink.liked ? '❤️' : '👎' }}
-    </div>
+  v-if="drink.liked || drink.disliked" 
+  class="status-badge" 
+  :class="{ 'favorite': drink.liked, 'disliked': drink.disliked }"
+>
+  {{ drink.liked ? '❤️' : '💔' }}
+</div>
 
     <img class="drink-image" :src="drink.image" :alt="drink.name" />
 
@@ -140,8 +140,8 @@ defineEmits(["info",  "addToOrder"]);
 
 .status-badge {
   position: absolute;
-  top: -8px;    /* Mierne vysunuté nad kartu */
-  right: -8px;  /* Mierne vysunuté doprava */
+  top: -8px;    
+  right: -8px;  
   background: white;
   border-radius: 50%;
   width: 28px;
@@ -154,14 +154,13 @@ defineEmits(["info",  "addToOrder"]);
   z-index: 10;
 }
 
-/* Odlišné farby podľa stavu */
 .status-badge.favorite {
   border: 2px solid #ff4d4d;
 }
 
 .status-badge.disliked {
   border: 2px solid #808080;
-  filter: grayscale(1); /* Ak chceš, aby bolo neobľúbené menej výrazné */
+  filter: grayscale(1); 
 }
 
 </style>

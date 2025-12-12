@@ -52,8 +52,10 @@ function goToDrink(name) {
 }
 
 onMounted(() => {
-  loadLeaderboard();
-  intervalId = setInterval(loadLeaderboard, 5000);
+  loadLeaderboard(activeUser.value.username);
+  intervalId = setInterval(() => {
+    loadLeaderboard(activeUser.value.username);
+  }, 5000);
 });
 
 onBeforeUnmount(() => {
@@ -64,6 +66,7 @@ function order(){
     };
 
 import MenuNavigation from "@/components/MenuNavigation.vue";
+import { activeUser } from "@/stores/Login";
 function goToLeaderboard() {
   router.push("/leaderboard");
 }
@@ -76,12 +79,18 @@ function goToLeaderboard() {
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: center;
+    height: 100vh; 
     overflow-y: auto;
-    padding-bottom: 71px;
-  }
+    box-sizing: border-box;
+    padding-bottom: 100px;
+}
 
+.app > * {
+    flex-shrink: 0;
+    transition: all 0.3s ease-in-out;
+}
 </style>
