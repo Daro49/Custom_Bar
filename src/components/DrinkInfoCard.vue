@@ -9,7 +9,10 @@
       
     </div>
     <div class="drink-info-sub" v-if="drink.rating != null">
-        <span>#{{ drink.position }}</span>
+        <span>#{{ drink.position }}
+          <span v-if="drink.trend === 1">⭡</span>
+         <span v-else-if="drink.trend === 2">⭣</span>
+        </span>
         <span>rating: {{ drink.rating }}</span>
       </div>
 
