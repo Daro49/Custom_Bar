@@ -30,8 +30,6 @@ async function fetchAndInitializeUser() {
             }
             
             const userData = await response.json();
-
-            console.log("LOGIN DEBUG: Dáta zo servera:", userData);
             
             const userInstance = new User(
                 userData.username || '', 
@@ -61,9 +59,6 @@ async function initializeStore() {
     const initialUserObject = await fetchAndInitializeUser();
     
     activeUser.value = initialUserObject;
-    
-    console.log("LOGIN DEBUG: Final activeUser po inicializácii:", activeUser.value);
-    console.log("LOGIN DEBUG: Expiration:", activeUser.value.tableExpiration);
 }
 
 initializeStore();

@@ -25,12 +25,7 @@
         <button @click="openProfile" class="avatar-button" v-if="avatar">
           <img :src="avatar" class="avatar" />
         </button>
-        <button
-          class="back-btn"
-          @click="rightFunction"
-          v-if="rightIcon"
-          v-html="rightIcon"
-        ></button>
+        <button class="back-btn" @click="rightFunction" v-if="rightIcon" v-html="rightIcon"></button>
       </slot>
     </div>
   </header>
@@ -40,34 +35,34 @@
 import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
 import router from '@/router'
 import { activeUser } from '@/stores/Login.js';
-import { computed, ref, onBeforeUnmount, watch } from 'vue'; 
+import { computed, ref, onBeforeUnmount, watch } from 'vue';
 
 function formatTime(ms) {
-    if (ms <= 0) return '0 s'; 
-    
-    const totalSeconds = Math.floor(ms / 1000); 
+  if (ms <= 0) return '0 s';
 
-    if (totalSeconds < 60) {
-        const seconds = totalSeconds % 60;
-        return `${seconds} s`;
-    }
+  const totalSeconds = Math.floor(ms / 1000);
 
-    let totalMinutes = Math.floor(totalSeconds / 60); 
-    
-    if (totalMinutes === 60) {
-        return '59 min';
-    }
+  if (totalSeconds < 60) {
+    const seconds = totalSeconds % 60;
+    return `${seconds} s`;
+  }
 
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+  let totalMinutes = Math.floor(totalSeconds / 60);
 
-    const pad = (num) => String(num); 
-    
-    if (hours > 0) {
-        return `${pad(hours)}:${String(minutes).padStart(2, '0')}`;
-    } else {
-        return `${minutes} min`; 
-    }
+  if (totalMinutes === 60) {
+    return '59 min';
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const pad = (num) => String(num);
+
+  if (hours > 0) {
+    return `${pad(hours)}:${String(minutes).padStart(2, '0')}`;
+  } else {
+    return `${minutes} min`;
+  }
 }
 
 export default {
@@ -83,89 +78,65 @@ export default {
   setup() {
     const selectedTable = computed(() => activeUser.value?.table || 'N/A');
     const timeRemainingMs = ref(0);
-    let intervalId = null; 
+    let intervalId = null;
 
     const updateTimer = () => {
       const expiration = activeUser.value.tableExpiration;
-      
-      // 🛑 LOG: Aká hodnota expiration príde pri inicializácii (F5)?
-      console.log("HEADER DEBUG: 1. activeUser.tableExpiration po F5/zmene:", expiration);
 
       if (expiration) {
         const expiryTime = new Date(expiration).getTime();
         const now = Date.now();
         const remaining = expiryTime - now;
-        
-        // 🛑 LOG: Ako je vypočítaný zostávajúci čas?
-        console.log(`HEADER DEBUG: 2. expiryTime: ${expiryTime}, now: ${now}, remaining: ${remaining} ms`);
 
         timeRemainingMs.value = remaining > 0 ? remaining : 0;
       } else {
         timeRemainingMs.value = 0;
-        // 🛑 LOG: Ak je expiration null/undefined/''
-        console.log("HEADER DEBUG: 3. Expiration is falsey, timer set to 0.");
       }
     };
-    
+
     const startInterval = (duration) => {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = setInterval(updateTimer, duration);
-        console.log(`HEADER DEBUG: Interval nastavený na: ${duration / 1000} sekúnd.`);
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(updateTimer, duration);
     };
-
-    // 🔑 watch: Vytvára prvotnú inicializáciu (F5) a reaguje na všetky zmeny exspirácie (Objednávka)
     watch(() => activeUser.value.tableExpiration, (newExpiration) => {
-        
-        // 🛑 LOG: Watch sa spustil!
-        console.log("HEADER DEBUG: 4. WATCH TRIGGERED. New expiration value:", newExpiration);
+      updateTimer();
 
-        // Okamžite prepočítaj čas (rieši problém s Objednávkou a F5)
-        updateTimer(); 
-        
-        if (newExpiration) {
-            const expiryTime = new Date(newExpiration).getTime();
-            const remainingMs = expiryTime - Date.now();
-            
-            if (remainingMs > 0 && remainingMs < 60000) {
-                // Menej ako minúta: Sekundový interval
-                startInterval(1000);
-            } else if (remainingMs >= 60000) {
-                // Viac ako minúta: Minútový interval
-                startInterval(60000); 
-            }
-        } else {
-            // Žiadna rezervácia, zastavíme interval
-            if (intervalId) clearInterval(intervalId);
-            intervalId = null;
+      if (newExpiration) {
+        const expiryTime = new Date(newExpiration).getTime();
+        const remainingMs = expiryTime - Date.now();
+
+        if (remainingMs > 0 && remainingMs < 60000) {
+          startInterval(1000);
+        } else if (remainingMs >= 60000) {
+          startInterval(60000);
         }
-    }, { immediate: true }); // 🚀 KĽÚČOVÉ: Spustí sa hneď po načítaní!
-    
-    // watch: Dynamická zmena intervalu (z minútového na sekundový)
+      } else {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = null;
+      }
+    }, { immediate: true });
+
     watch(timeRemainingMs, (newVal) => {
-        if (newVal > 0 && newVal < 60000) {
-            // Prechod na sekundový interval
-            if (intervalId && intervalId._idleTimeout !== 1000) { 
-                 console.log("HEADER DEBUG: 5. Prepínam interval na 1 sekundu.");
-                 startInterval(1000);
-            }
-        } else if (newVal >= 60000) {
-             // Návrat na minútový interval (ak došlo k predĺženiu, ktoré bežalo na sekundách)
-             if (intervalId && intervalId._idleTimeout === 1000) {
-                 console.log("HEADER DEBUG: 6. Prepínam interval na 60 sekúnd.");
-                 startInterval(60000);
-             }
+      if (newVal > 0 && newVal < 60000) {
+        if (intervalId && intervalId._idleTimeout !== 1000) {
+          startInterval(1000);
         }
+      } else if (newVal >= 60000) {
+        if (intervalId && intervalId._idleTimeout === 1000) {
+          startInterval(60000);
+        }
+      }
     });
 
     onBeforeUnmount(() => {
       if (intervalId) clearInterval(intervalId);
     });
-    
+
     const formattedTime = computed(() => formatTime(timeRemainingMs.value));
-    
-    return { 
-      ArrowLeftSvg, 
-      selectedTable, 
+
+    return {
+      ArrowLeftSvg,
+      selectedTable,
       formattedTime,
       timeRemainingMs
     }
@@ -186,10 +157,10 @@ export default {
     openProfile() {
       router.push({ name: 'profile' })
     },
-    menu()  {
+    menu() {
       router.push({ name: 'main' })
     },
-    
+
   },
 }
 </script>
@@ -223,17 +194,17 @@ export default {
 }
 
 .back-btn :deep(svg) {
-  width: 32px;  
+  width: 32px;
   height: 32px;
   display: block;
 }
 
 .center-content {
   flex: 1;
-  text-align: center; 
+  text-align: center;
   font-weight: 600;
   font-size: 18px;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -254,9 +225,9 @@ export default {
 }
 
 .default-table-text {
-  display: flex; 
+  display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 
 .table-id {
@@ -268,12 +239,12 @@ export default {
 .timer {
   font-weight: 400;
   font-size: 10px;
-  color: black; 
+  color: black;
   margin-top: -2px;
 }
 
 .expired-timer {
-  display: none; 
+  display: none;
 }
 
 .avatar-button {

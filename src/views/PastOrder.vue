@@ -60,13 +60,14 @@ import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
 import Header from '@/components/Header.vue'
 import Profile from '@/assets/user.png'
+import { addToast } from '@/stores/ToastStore.js';
 
 const orderItems = ref([])
 const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
 const orderIndex = ref(0)
-const orderCount = ref(0) 
+const orderCount = ref(0)
 
 const formatDate = (date) => {
   const d = new Date(date)
@@ -80,19 +81,14 @@ const fetchOrder = async () => {
   try {
     isLoading.value = true
     const username = activeUser.value.username
-
     const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${orderIndex.value}`)
-    
     if (!response.ok) {
       throw new Error('No past orders')
     }
-    
     const data = await response.json()
-
     orderItems.value = data.items ?? data
     orderDate.value = data.date ? formatDate(data.date) : ''
     orderCount.value = data.totalOrders ?? orderCount.value
-
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
@@ -109,8 +105,7 @@ const nextOrder = () => {
 
 const prevOrder = () => {
   if (orderCount.value === 0) return
-  orderIndex.value =
-    (orderIndex.value - 1 + orderCount.value) % orderCount.value
+  orderIndex.value = (orderIndex.value - 1 + orderCount.value) % orderCount.value
   fetchOrder()
 }
 
@@ -127,7 +122,6 @@ async function addToOrder(drink) {
     drink,
     tableCode: activeUser.value.table
   };
-
   try {
     const res = await fetch(
       `https://itu-wb12.onrender.com/users/${username}/order/add`,
@@ -137,19 +131,15 @@ async function addToOrder(drink) {
         body: JSON.stringify(payload)
       }
     );
-
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     const result = await res.json();
     return result;
-
   } catch (err) {
-      console.error(err);
+    console.error(err);
     throw err;
   }
 }
 
-import { addToast } from '@/stores/ToastStore.js';
 async function handleOrder(drink) {
   try {
     await addToOrder(drink);

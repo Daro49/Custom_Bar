@@ -1,12 +1,6 @@
-<script setup>
-import { RouterLink } from 'vue-router'
-import Header from '@/components/Header.vue'
-import Profile from '@/assets/user.png'
-import MenuButton from '@/components/MenuButton.vue'
-
-import orderIcon from '@/assets/order.svg?raw'; 
-import shakerIcon from '@/assets/shaker.svg?raw'; 
-import mapIcon from '@/assets/map.svg?raw';
+<script>
+import options from '@/stores/MainMenuView.js';
+export default options;
 </script>
 
 <template>
