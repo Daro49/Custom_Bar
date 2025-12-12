@@ -6,8 +6,6 @@
       <p v-if="initialLoading">
   Loading...
 </p>
- <!-- TODO ADD TOAST TO MENUS AND CHECK ADDING TO SERVER + FIX PSOITION IN DETAIL-->
-
       <DrinkInfoCard
         v-else-if="drinkData"
         :drink="drinkData"
@@ -75,9 +73,9 @@ async function addDrinkToOrder() {
 
 onMounted(async () => {
   initialLoading.value = true;
-  await loadDrink(route, activeUser.value.username );       // initial fetch
-  initialLoading.value = false; // stop showing loading
-  startDrinkAutoRefresh(route); // start background refresh
+  await loadDrink(route, activeUser.value.username );       
+  initialLoading.value = false; 
+  startDrinkAutoRefresh(route); 
 });
 
 

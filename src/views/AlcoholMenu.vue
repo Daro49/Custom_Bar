@@ -12,7 +12,6 @@
   Loading...
 </p>
 
-    <!-- Other drinks -->
     <DrinkCard
   v-for="drink in drinks "  
   :key="drink.id"
@@ -206,19 +205,6 @@ function goToCustomMenu() {
   transition: transform 0.2s ease-in-out;
 }
 
-
-/* TODO -> still temporary*/
-.nav-btn { 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background: #d8a543;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
 
 .featured-container {
   display: flex;
