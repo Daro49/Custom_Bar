@@ -17,8 +17,8 @@
           </div>
           <div class="item-right">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
-            <button class="addButton" @click="addToOrder(item)">+</button>
             <button class="removeButton" @click="removeFromOrder(item)">-</button>
+            <button class="addButton" @click="addToOrder(item)">+</button>
           </div>
         </div>
       </div>
@@ -227,12 +227,6 @@ async function addToOrder(drink) {
   gap: 8px;
   margin-bottom: 20px;
 }
-
-/* .chevron-icon {
-  width: 75px;
-  height: 20px;
-  transform: rotate(180deg);
-} */
 
 .order-title h2 {
   margin: 0;
