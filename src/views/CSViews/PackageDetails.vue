@@ -5,6 +5,7 @@ import Profile from '@/assets/user.png';
 import { getPackageById } from '@/stores/CSModels/Packages'
 import { ref, onMounted } from 'vue';
 import { pkg } from '@/stores/CSModels/Packages'
+import PointsPresenter from '@/components/PointsPresenter.vue';
 
 const route = useRoute();
 const packageId = route.params.pkgId;
@@ -19,25 +20,28 @@ onMounted(async () => {
 <template>
     <div class="package-details-root">
         <Header :previous="true" :avatar="Profile"/>
-        <div class="package-details" v-if="loaded">
-        <div class="card">
-            <div class="details-content">
-                <div class="package-name">{{ pkg.name }}</div>
-                <div class="package-image">
-                    <img :src="pkg.imgurl" alt="Package Image" />
-                </div>
-                    <div class="package-price">Price: {{ pkg.price }}</div>
-                <div class="package-description" >{{ pkg.description }}</div>
-            </div>
-        </div>
+        <PointsPresenter/>
+        <div class="package-details" >
+          <div class="card" v-if="loaded">
+              <div class="details-content">
+                  <div class="package-name">{{ pkg.name }}</div>
+                  <div class="package-image">
+                      <img :src="pkg.imgurl" alt="Package Image" />
+                  </div>
+                      <span class="price-label">Price:</span>
+                      <span class="price-value">{{ pkg.price }}</span>
+                  <div class="package-description" >{{ pkg.description }}</div>
+                  
+              </div>
+          </div>
+          <div v-else class = "package-loading">
+              <div>Loading...</div>
+          </div>
         </div> 
-        <div v-else class = "package-loading">
-            <div>Loading...</div>
-        </div>
     </div> 
 </template>
 
-<style>
+<style scoped>
 * {
   box-sizing: border-box; 
 }
@@ -45,11 +49,13 @@ onMounted(async () => {
 .package-details-root {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 .package-details {
+  flex: 1;
   background: var(--background-green);
   display: flex;
   flex-direction: column;
@@ -85,9 +91,12 @@ onMounted(async () => {
   width: 80%; 
   height: 100%;
   margin: 0 auto;
-
+  font-family: var(--button-font-family);
+  font-size: 50px;
+  color: white;
   outline: 1px solid #c9c3b8; 
   outline-offset: -5px;
+  text-align: center;
 }
 
 .package-name {
@@ -129,13 +138,13 @@ onMounted(async () => {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
-.details-content .package-price {
-    font-size: 32px; 
-    margin-bottom: 10px;
-    color: #ffc107; 
-    font-family: Georgia, serif; 
-    font-weight: bold;
-    text-align: center;
+.details-content .price-label {
+  font-weight: 500;
+}
+
+.details-content .price-value {
+  font-weight: 700;
+  color: var(--gold);
 }
 
 .details-content .package-description {

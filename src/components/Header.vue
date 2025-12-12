@@ -72,7 +72,7 @@ export default {
   justify-content: space-between;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 10px 14px;
-
+  height: 60px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -87,6 +87,12 @@ export default {
   border: none;
   cursor: pointer;
   color: black;
+}
+
+.back-btn :deep(svg) {
+  width: 32px;  
+  height: 32px;
+  display: block;
 }
 
 .center-content {

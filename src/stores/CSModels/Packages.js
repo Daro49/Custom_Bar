@@ -38,7 +38,6 @@ export async function getPackageById(id) {
     }
 
     const data = await response.json();
-
     pkg.value = data;
 
     return true;
@@ -48,3 +47,50 @@ export async function getPackageById(id) {
     return false;
   }
 } 
+ 
+export async function orderPackage(username, pkg) {
+  try {
+    const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pkg: pkg }) 
+    });
+
+    const data = await response.json(); 
+    if (!response.ok) {
+      return { 
+        success: false, 
+        status: response.status, 
+        message: data.error || 'Unkown error' 
+      };
+    }
+
+    return { success: true };
+  }
+  catch (error) {
+    return { 
+      success: false, 
+      message: 'Network error: ' + error.message 
+    };
+  }
+}
+
+export async function removePackageFromOrder(username, pkgId)
+{
+  try {
+    const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/remove/${pkgId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error('Ordering package failed');
+    }
+    return true;
+    } catch (error) {
+      console.error('Order package error:', error);
+      alert('Error occured while ordering package: ' + error.message);
+      return false;
+    }  
+  
+}
