@@ -10,14 +10,14 @@
 />
 <div class="filter-section">
   <div class="toggle-wrapper">
-    <span class="toggle-label">Všetky</span>
+    <span class="toggle-label">All drinks</span>
     
     <label class="switch">
       <input type="checkbox" v-model="showOnlyLiked">
       <span class="slider round"></span>
     </label>
     
-    <span class="toggle-label">Obľúbené ❤️</span>
+    <span class="toggle-label">Favourite drinks ❤️</span>
   </div>
 </div>
 
@@ -41,7 +41,7 @@
 />
 
 <p v-if="!drinksLoading && secondaryDrinks.length === 0 && (!featuredDrink || !featuredDrink.liked && showOnlyLiked)" class="empty-msg">
-  Žiadne drinky na zobrazenie. ❤️
+  No liked drinks yet ❤️
 </p>
   </div>
 </template>
