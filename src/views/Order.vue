@@ -58,7 +58,6 @@ export default options
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  /* overflow: hidden; */
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;

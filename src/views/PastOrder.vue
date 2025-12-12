@@ -163,21 +163,18 @@ async function handleOrder(drink) {
   bottom: 0;
 }
 
-/* Content */
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;
   margin-top: 30px;
 }
 
-/* Order Title */
 .order-title {
   display: flex;
   flex-direction: column;
@@ -215,7 +212,6 @@ async function handleOrder(drink) {
   margin-top: 8px;
 }
 
-/* Order Date */
 .order-date {
   text-align: center;
   font-family: "Georgia", "Times New Roman", serif;
@@ -224,12 +220,12 @@ async function handleOrder(drink) {
   margin-bottom: 16px;
 }
 
-/* Order Items */
 .order-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 130px;
 }
 
 .loading,
