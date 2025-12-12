@@ -87,39 +87,24 @@ export default {
 
     const updateTimer = () => {
       const expiration = activeUser.value.tableExpiration;
-      
-      // 🛑 LOG: Aká hodnota expiration príde pri inicializácii (F5)?
-      console.log("HEADER DEBUG: 1. activeUser.tableExpiration po F5/zmene:", expiration);
 
       if (expiration) {
         const expiryTime = new Date(expiration).getTime();
         const now = Date.now();
         const remaining = expiryTime - now;
-        
-        // 🛑 LOG: Ako je vypočítaný zostávajúci čas?
-        console.log(`HEADER DEBUG: 2. expiryTime: ${expiryTime}, now: ${now}, remaining: ${remaining} ms`);
 
         timeRemainingMs.value = remaining > 0 ? remaining : 0;
       } else {
         timeRemainingMs.value = 0;
-        // 🛑 LOG: Ak je expiration null/undefined/''
-        console.log("HEADER DEBUG: 3. Expiration is falsey, timer set to 0.");
       }
     };
     
     const startInterval = (duration) => {
         if (intervalId) clearInterval(intervalId);
         intervalId = setInterval(updateTimer, duration);
-        console.log(`HEADER DEBUG: Interval nastavený na: ${duration / 1000} sekúnd.`);
     };
 
-    // 🔑 watch: Vytvára prvotnú inicializáciu (F5) a reaguje na všetky zmeny exspirácie (Objednávka)
-    watch(() => activeUser.value.tableExpiration, (newExpiration) => {
-        
-        // 🛑 LOG: Watch sa spustil!
-        console.log("HEADER DEBUG: 4. WATCH TRIGGERED. New expiration value:", newExpiration);
-
-        // Okamžite prepočítaj čas (rieši problém s Objednávkou a F5)
+    watch(() => activeUser.value.tableExpiration, (newExpiration) => {        
         updateTimer(); 
         
         if (newExpiration) {

@@ -15,10 +15,13 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right">
+          <div class="item-right" v-if="item.quantity">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="removeButton" @click="removeFromOrder(item)">-</button>
             <button class="addButton" @click="addToOrder(item)">+</button>
+          </div>
+          <div v-else class = "package-item">
+            <button class="removeButton" @click="removePackage(item)">-</button>
           </div>
         </div>
       </div>
@@ -45,6 +48,8 @@ import { activeUser } from '@/stores/Login.js'
 import User from '@/stores/User.js'
 import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
+import { removePackageFromOrder } from '@/stores/CSModels/Packages'
+import { addPoints } from '@/stores/AddPoints'
 
 const router = useRouter()
 const orderItems = ref([])
@@ -53,6 +58,19 @@ const error = ref(null)
 
 const goOrderHistory = () => {
   router.push('/orders')
+}
+
+async function removePackage(pkg) {
+  const result = await removePackageFromOrder(activeUser.value.username, pkg.id);
+  if (!result) {
+    alert("Cannot remove package");
+    return;
+  }
+  const result2 = await addPoints(pkg.price);
+  if (!result2) {
+    alert("Error occured while removing package");
+  }
+  fetchOrder();
 }
 
 const fetchOrder = async () => {
