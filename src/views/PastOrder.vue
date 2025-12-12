@@ -190,11 +190,13 @@ async function handleOrder(drink) {
   width: 60px;
   height: 15px;
   transform: rotate(-90deg) translateX(-4px);
+  display: inline-block;
 }
 .chevron-icon2 {
   width: 60px;
   height: 15px;
   transform: rotate(90deg) translateX(4px);
+  display: inline-block;
 }
 
 .order-title h2 {
@@ -297,6 +299,19 @@ async function handleOrder(drink) {
   width: 24px;
   height: 24px;
   cursor: pointer;
+}
+
+.chevron-icon1:hover{
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(-90deg) translateX(-4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.chevron-icon2:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(90deg) translateX(4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 </style>

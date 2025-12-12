@@ -83,6 +83,12 @@ export default {
 
     async function removeFromOrder(drink) {
       const username = activeUser.value.username;
+
+      if (!drink.id || !drink.class) {
+        console.error("Chyba: Objekty drinku chýba ID alebo CLASS. Server nemôže položku jednoznačne odstrániť.");
+        return; 
+      }
+
       try {
         console.log("Removing from order:", drink.name, "with ID:", drink);
         const res = await fetch(
@@ -90,7 +96,7 @@ export default {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ drinkId: drink.id }),
+            body: JSON.stringify({ drinkId: drink.id, drinkClass: drink.class }),
           }
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

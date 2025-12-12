@@ -58,14 +58,13 @@ export default options
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;
   margin-top: 30px;
 }
 
-/* Order Title */
 .order-title {
   display: flex;
   flex-direction: column;
@@ -90,12 +89,13 @@ export default options
   margin-top: 8px;
 }
 
-/* Order Items */
 .order-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;
+  /* flex: 1; */
+  overflow-y: auto;
+  padding-bottom: 130px;
 }
 
 .loading,
