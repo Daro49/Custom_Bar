@@ -22,8 +22,8 @@
     </div>
 
     <div class="drink-actions" v-if="drink.rating != null">
-      <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">❤ </button>
-      <button class="action-button" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">💔</button>
+      <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">❤</button>
+      <button class="action-button" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">👎</button>
     </div>
 
     <button class="order-section" @click="$emit('order')">
