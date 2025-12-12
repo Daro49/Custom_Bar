@@ -45,7 +45,7 @@ import Header from "@/components/Header.vue";
 const router = useRouter();
 
 onMounted(() => {
-  loadDrinks();
+  loadDrinks(activeUser.value.username);
 });
 
 function goToDrink(name) {
@@ -71,6 +71,7 @@ async function handleOrder(drink) {
 }
 
 import MenuNavigation from "@/components/MenuNavigation.vue";
+import { activeUser } from "@/stores/Login";
 function goToAlcoholMenu() {
   router.push("/alcoholmenu");
 }
