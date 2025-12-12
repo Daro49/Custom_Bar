@@ -11,11 +11,13 @@
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-meta">
-        <span>#{{ drink.position }}</span>
-       <span>
-        rating: {{ drink.rating }}
+        <span>#{{ drink.position }}
         <span v-if="drink.trend === 1">⭡</span>
          <span v-else-if="drink.trend === 2">⭣</span>
+        </span>
+       <span>
+        rating: {{ drink.rating }}
+        
         </span>
       </div>
     </div>
