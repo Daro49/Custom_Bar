@@ -20,28 +20,20 @@
 			</div>
 			<div class="recipe_list">
 				<h3>Summary</h3>
-				<RecipeIngredientList :category_name="'Size'" />
-				<RecipeIngredientList :category_name="'Alcohol'" />
-				<RecipeIngredientList :category_name="'Non-Alcoholic'" />
-				<RecipeIngredientList :category_name="'Bitters'" />
-				<RecipeIngredientList :category_name="'Others'" />
+				<RecipeIngredientList />
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import IngredientChoose from '@/components/customdrink/IngredientChoose.vue';
-import ProgressBar from '@/components/customdrink/ProgressBar.vue';
-import Header from '@/components/Header.vue';
-import Profile from '@/assets/user.png';
-import ProgressButton from '@/components/customdrink/ProgressButton.vue';
-import Glass from '@/components/customdrink/Glass.vue';
-import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
-
-import { useDrinkRecipe } from '@/stores/drinkRecipe';
-
-const store = useDrinkRecipe();
+	import IngredientChoose from '@/components/customdrink/IngredientChoose.vue';
+	import ProgressBar from '@/components/customdrink/ProgressBar.vue';
+	import Header from '@/components/Header.vue';
+	import Profile from '@/assets/user.png';
+	import ProgressButton from '@/components/customdrink/ProgressButton.vue';
+	import Glass from '@/components/customdrink/Glass.vue';
+	import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
 </script>
 
 <style scoped>

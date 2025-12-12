@@ -1,14 +1,30 @@
 <template>
     <div class="progress_in_recipe">
-        <div class="circle"></div>
+        <div :class="['circle', circleClass]"></div>
 
-        <p>{{ progress_category.categoryName }}</p>
+        <p>{{ props.categoryName }}</p>
     </div>
 </template>
 
 <script setup>
-    const progress_category = defineProps({
-        categoryName: String
+import { computed } from 'vue';
+
+    const props = defineProps({
+        categoryName: String,
+        isDone: Boolean,
+        isActive: Boolean
+    })
+
+    const circleClass = computed(() => {
+        if (props.isActive) {
+            return 'circle--active';
+        }
+        else if (props.isDone) {
+            return 'circle--done';
+        }
+        else {
+            return 'circle';
+        }
     })
 </script>
 
@@ -24,9 +40,18 @@
     .circle {
         width: 50px;
         height: 50px;
+        box-sizing: border-box;
 
         border-radius: 50px;
         background: #D9D9D9;
+    }
+
+    .circle--active {
+        border: 3px solid #552808;
+    }
+
+    .circle--done {
+        background-color: #552808;
     }
 
     p {

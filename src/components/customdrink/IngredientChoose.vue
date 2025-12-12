@@ -4,8 +4,10 @@
 
         <IngredientListItem 
             v-for="ingredient in recipe.currentStepIngredients"
-            :name="ingredient.name" 
             :key="ingredient.id"
+            :ingredient="ingredient.name"
+            :current-category="recipe.currentCategory"
+            :amount="ingredient.amount"
         />
     </div>
 </template>
@@ -38,7 +40,7 @@
             case 4:
                 return 'Choose Other Addons';
             default:
-                return 'Unkown Category';
+                return 'Unknown Category';
         }
     })
 </script>

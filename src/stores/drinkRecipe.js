@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 
-const STEPS = ['sizes', 'alcohols', 'softDrinks', 'bitters', 'others'];
+const ML_AMOUNT = 20;
+export const STEPS = ['sizes', 'alcohols', 'softDrinks', 'bitters', 'others'];
 
 export const useDrinkRecipe = defineStore("recipe", {
 
@@ -13,7 +14,64 @@ export const useDrinkRecipe = defineStore("recipe", {
 
     getters: {
         currentCategory: (state) => STEPS[state.currentStep],
-        currentStepIngredients: (state) => state.ingredientsCache[STEPS[state.currentStep]] || []
+        currentStepIngredients: (state) => state.ingredientsCache[STEPS[state.currentStep]] || [],
+
+        getSelectedIngredients: (state) => (category) => {
+            const selected = state.selectedIngredients[category];
+
+            // No selected ingredients in this category
+            if (!selected) {
+                return [];
+            }
+
+            const ingredientsArray = Object.values(selected);
+
+            return ingredientsArray.map(item => {
+                if (category === 'bitters' || category === 'others') {
+                    return item.name;
+                }
+                return `${item.name} (${item.amount} ml)`;
+            })
+        },
+
+        maxCapacity: (state) => {
+            const sizes = state.selectedIngredients['sizes'];
+
+            if (!sizes) {
+                return 0;
+            }
+
+            const value = Object.values(sizes)[0];
+
+            return value ? value.amount : 0;
+        },
+
+        currentVolume: (state) => {
+            let totalVolume = 0;
+            const include = ['alcohols', 'softDrinks'];
+
+            for (const category in state.selectedIngredients) {
+                if (include.includes(category)) {
+                    const ingredients = state.selectedIngredients[category]
+
+                    for (const ingredient in ingredients) {
+                        totalVolume += ingredients[ingredient].amount;
+                    }
+                }
+            }
+            return totalVolume;
+        },
+
+        remainingVolume() {
+            const max = this.maxCapacity;
+            const current = this.currentVolume;
+
+            return Math.max(0, max - current);
+        },
+
+        maxSliderValue() {
+            return Math.floor(this.remainingVolume / ML_AMOUNT);
+        }
     },
 
     actions: {
@@ -40,17 +98,36 @@ export const useDrinkRecipe = defineStore("recipe", {
             }
         },
 
-        toggleIngredient(id) {
-            const category = this.currentStep;
-            const selected = this.selectedIngredients[category];
-            const index = selected.index(id);
+        updateIngredient({ category, ingredient, amount, isSelected }) {
+            if (!this.selectedIngredients[category]) {
+                this.selectedIngredients[category] = {};
+            }
 
-            if (index > -1) {
-                selected.splice(index, 1);
+            const selectedCategory = this.selectedIngredients[category];
+
+            if (isSelected) {
+                selectedCategory[ingredient] = { name: ingredient, amount: amount };
             }
             else {
-                selected.push(id);
+                delete selectedCategory[ingredient];
+
+                if (Object.keys(selectedCategory).length == 0) {
+                    delete this.selectedIngredients[category];
+                }
             }
+        },
+
+        selectSingleSize({ category, ingredient, amount }) {
+            this.selectedIngredients[category] = {}
+
+            this.selectedIngredients[category][ingredient] = {
+                name: ingredient,
+                amount: amount
+            }
+        },
+
+        deselectSingleSize(category) {
+            delete this.selectedIngredients[category];
         },
 
         nextStep() {
@@ -67,45 +144,3 @@ export const useDrinkRecipe = defineStore("recipe", {
         },
     },
 });
-
-
-/*     const ingredientsCache = ref({})
-    const ingredients = ref({});
-
-    function addIngredient(ingredient) {
-        this.ingredients.push(ingredient);
-    }
-
-    function removeIngredient(index) {
-        this.ingredients.splice(index, 1);
-    }
-
-    function clearRecipe() {
-        this.ingredients = [];
-    }
-
-    async function fetchIngredients(category) {
-        if (ingredientsCache.value[category]) {
-            return ingredientsCache.value[category]
-        }
-
-        try {
-            const response = await fetch(`https://itu-wb12.onrender.com/${category}`)
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
-            }
-
-            const data = await response.json()
-            console.log(`${category} ingredients loaded`)
-            for (const items of data) {
-                console.log(items.name)
-            }
-            ingredientsCache.value[category] = data
-            return data
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    return { ingredients, ingredientsCache, addIngredient, removeIngredient, clearRecipe, fetchIngredients }; */
