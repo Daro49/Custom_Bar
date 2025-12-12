@@ -11,6 +11,8 @@
       <DrinkInfoCard
         v-else-if="drinkData"
         :drink="drinkData"
+        :liked="liked"
+        :disliked="disliked"
         @back="goBackToList"
         @rate="rate"
         @order="addDrinkToOrder"
@@ -32,10 +34,13 @@ import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
 import DrinkInfoCard from "@/components/DrinkInfoCard.vue";
+import { activeUser } from "@/stores/Login";
 import {
   drinkData,
   drinkError,
   drinkLoading,
+  liked,
+  disliked,
   loadDrink,
   startDrinkAutoRefresh,
   stopDrinkAutoRefresh,
@@ -55,7 +60,7 @@ function goBackToList() {
 
 
 function rate(value) {
-  rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular");
+  rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular", activeUser.value.username);
 }
 import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
@@ -70,7 +75,7 @@ async function addDrinkToOrder() {
 
 onMounted(async () => {
   initialLoading.value = true;
-  await loadDrink(route);       // initial fetch
+  await loadDrink(route, activeUser.value.username );       // initial fetch
   initialLoading.value = false; // stop showing loading
   startDrinkAutoRefresh(route); // start background refresh
 });
@@ -85,7 +90,9 @@ function order(){
     };
 const props = defineProps({
   drink: Object,
-  name: String
+  name: String,
+  liked: Boolean,
+  disliked: Boolean
 });
 </script>
 

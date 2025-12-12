@@ -42,13 +42,13 @@ import Header from '@/components/Header.vue'
 import cart from "@/assets/OrderHistory.svg?raw";
 import { addToOrder } from '@/stores/DrinkInfo';
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-
+import { activeUser } from "@/stores/Login";
 import { drinks, drinksLoading, loadDrinks } from "@/stores/Menu.js";
 
 const router = useRouter();
 
 onMounted(() => {
-  loadDrinks();
+  loadDrinks(activeUser.value.username);
 });
 
 function order(){
@@ -76,6 +76,7 @@ async function handleOrder(drink) {
 }
 
 import MenuNavigation from "@/components/MenuNavigation.vue";
+
 function goToSoftDrinks() {
   router.push("/softdrinksmenu");
 }

@@ -6,6 +6,10 @@
 
     <div class="drinkFooter">{{ drink.name }}</div>
 
+    <div class="status-badge" v-if="drink.liked || drink.disliked">
+      <span v-if="drink.liked">❤️</span>
+      <span v-else-if="drink.disliked">👎</span>
+    </div>
 
     <div class="priceFloating">{{ drink.price }}€</div>
 
@@ -17,7 +21,7 @@
 
 <script setup>
 defineProps({
-  drink: { type: Object, required: true }
+  drink: { type: Object, required: true },
 });
 
 defineEmits(["select", "order"]);
@@ -36,10 +40,10 @@ defineEmits(["select", "order"]);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   font-family: 'Georgia', serif;
   color: #000;
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 16px;
   cursor: pointer;
-  position: relative; /* for floating elements */
+  position: relative;
 }
 
 .drinkCard:hover {
@@ -67,7 +71,34 @@ defineEmits(["select", "order"]);
   color: #2a1800;
 }
 
-/* Floating Order Button */
+.status-badge {
+  position: absolute;
+  top: 8px;    
+  right: 8px;  
+  background: white;
+  border-radius: 50%;
+  width: 34px; 
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  z-index: 20;
+  transition: all 0.2s ease;
+}
+
+
+.status-badge.favorite {
+  border: 2px solid #ff4d4d;
+}
+
+.status-badge.disliked {
+  border: 2px solid #808080;
+  filter: grayscale(1); /* Ak chceš, aby bolo neobľúbené menej výrazné */
+}
+
+
 .orderFloating {
   position: absolute;
   bottom: 12px;
@@ -91,10 +122,9 @@ defineEmits(["select", "order"]);
   transform: scale(1.1);
 }
 
-/* Price floating above button */
 .priceFloating {
   position: absolute;
-  bottom: 64px; /* 12px + 44px button height + 8px spacing */
+  bottom: 64px; 
   right: 12px;
   font-size: 18px;
   font-weight: bold;

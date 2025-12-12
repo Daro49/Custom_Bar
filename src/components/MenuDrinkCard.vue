@@ -1,16 +1,23 @@
 <template>
-  <div class="drink-card">
+  <div class="drink-card" @click="$emit('info', drink.name)">
+    <div 
+      v-if="drink.liked || drink.disliked " 
+      class="status-badge" 
+      :class="{ 'favorite': drink.isFavorite, 'disliked': drink.isFavorite === false }"
+    >
+      {{ drink.liked ? '❤️' : '👎' }}
+    </div>
+
     <img class="drink-image" :src="drink.image" :alt="drink.name" />
 
-    <div class="drink-info"  @click="$emit('info', drink.name)">
+    <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
     </div>
 
-    <button class="info-button"  @click="$emit('addToOrder', drink)">+</button>
+    <button class="info-button" @click.stop="$emit('addToOrder', drink)">+</button>
   </div>
 </template>
-
 <script setup>
 
 defineProps({
@@ -23,6 +30,7 @@ defineEmits(["info",  "addToOrder"]);
 
 <style scoped>
 .drink-card {
+  position: relative;
     flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -34,16 +42,20 @@ defineEmits(["info",  "addToOrder"]);
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
+  transition: 0.2s ease;
+}
+.drink-card:hover{
+  transform: scale(1.1);
 }
 
 .drink-image {
    width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-fit: contain; /* show the full image inside the circle */
-  background-color: #fff; /* optional: fill background */
+  object-fit: contain; 
+  background-color: #fff; 
   border: 2px solid rgba(255, 255, 255, 0.2);
-  padding: 2px; /* small inner margin if needed */
+  padding: 2px; 
   object-fit: cover;
   border-radius: 8px;
 }
@@ -125,5 +137,31 @@ defineEmits(["info",  "addToOrder"]);
 .drinkCard {
   width: 90%;
 }}
+
+.status-badge {
+  position: absolute;
+  top: -8px;    /* Mierne vysunuté nad kartu */
+  right: -8px;  /* Mierne vysunuté doprava */
+  background: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+/* Odlišné farby podľa stavu */
+.status-badge.favorite {
+  border: 2px solid #ff4d4d;
+}
+
+.status-badge.disliked {
+  border: 2px solid #808080;
+  filter: grayscale(1); /* Ak chceš, aby bolo neobľúbené menej výrazné */
+}
 
 </style>

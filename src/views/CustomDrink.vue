@@ -49,7 +49,7 @@ import CustomDrink_Button from '@/components/CustomDrink_Button.vue';
 import CustomDrink_Glass from '@/components/CustomDrink_Glass.vue';
 import CustomDrink_Ingredient from '@/components/CustomDrink_Ingredient.vue';
 import RecipeMenu from '@/components/RecipeMenu.vue';
-
+import { activeUser } from "@/stores/Login";
 import { useDrinkRecipe } from '@/stores/drinkRecipe';
 import Header from '@/components/Header.vue';
 import Profile from '@/assets/user.png';

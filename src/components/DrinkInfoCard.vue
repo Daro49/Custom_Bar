@@ -22,8 +22,8 @@
     </div>
 
     <div class="drink-actions" v-if="drink.rating != null">
-      <button class="action-button" @click="$emit('rate', 1)">❤</button>
-      <button class="action-button" @click="$emit('rate', -1)">💔</button>
+      <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">❤</button>
+      <button class="action-button" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">👎</button>
     </div>
 
     <button class="order-section" @click="$emit('order')">
@@ -37,7 +37,9 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  drink: { type: Object, required: true }
+  drink: { type: Object, required: true },
+  liked: { type: Boolean, default: false },
+  disliked: { type: Boolean, default: false }
 });
 
 defineEmits(["back", "rate", "order"]);
@@ -170,5 +172,15 @@ const ingredientsLine = computed(() => {
 
 .order-price {
   color: #f7d77c;
+}
+
+.activeLike {
+  background-color: #c43d3d !important; /* červené srdce */
+  transform: scale(1.1);
+}
+
+.activeDislike {
+  background-color: #4b1b1b !important; /* tmavé "zlomené" srdce */
+  transform: scale(1.1);
 }
 </style>
