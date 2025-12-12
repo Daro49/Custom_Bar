@@ -8,7 +8,9 @@
 
     <div class="right-content">
       <slot name="right">
-        <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile" />
+        <button @click="openProfile" class="avatar-button" v-if="avatar">
+          <img :src="avatar" class="avatar" />
+        </button>
         <button
           class="back-btn"
           @click="rightFunction"
@@ -98,5 +100,11 @@ export default {
   width: 34px;
   height: 34px;
   border-radius: 50%;
+}
+.avatar-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 </style>

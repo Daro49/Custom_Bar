@@ -12,7 +12,8 @@ async function loginHandle() {
     error.value = '';
     router.push({ name: 'main' });
   } else {
-    error.value = 'Login zlyhal.';
+    error.value = 'Login failed.';
+    alert('Login failed. Please try again.');
   }
 }
 </script>

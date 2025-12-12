@@ -20,9 +20,12 @@ export default {
   name: 'ActivateButton',
   props: {
     activation_points: { type: [String, Number], default: null },
+    isActiveProp: { type: Boolean, default: false }
   },
-  setup(props) {
-    const isActive = ref(false)
+  emits: ['toggle'],
+
+  setup(props, {emit}) {
+    const isActive = ref(props.isActiveProp)
     const txt = computed(() =>
       isActive.value ? 'Activated' : `Activate for ${props.activation_points}`,
     )
@@ -32,6 +35,7 @@ export default {
           const success = await addPoints(-props.activation_points)
           if (!success) return
           isActive.value = true
+          emit('toggle', isActive.value)
         } else {
           return
         }
@@ -39,6 +43,7 @@ export default {
         const success = await addPoints(props.activation_points)
         if (!success) return
         isActive.value = false
+        emit('toggle', isActive.value)
       }
     }
     return { isActive, txt, toggle }

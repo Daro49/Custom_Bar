@@ -128,7 +128,12 @@ const router = createRouter({
       name: 'my_drinks',
       component: () => import('../views/CSViews/MyDrinks.vue'),
     },
-    
+    {
+      path: '/package_details/:pkgId',
+      name: 'package_details',
+      component: () => import('../views/CSViews/PackageDetails.vue'),
+      props: true,
+    },
   ],
 })
 
