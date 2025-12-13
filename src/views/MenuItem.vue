@@ -76,9 +76,10 @@ import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
   try {
     const result = await addToOrder(drinkData.value);
-        addToast(`${drinkData.value.name} added to cart!`);
+    addToast(`${drinkData.value.name} added to cart!`);
     console.log("Order added:", result);
   } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`);
     console.error("Failed to add order:", err);
   }
 }

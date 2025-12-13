@@ -44,7 +44,7 @@
           </div>
           <div class="item-right">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
-            <button class="addButton" @click="handleOrder(item)">+</button>
+            <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
@@ -60,13 +60,14 @@ import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
 import Header from '@/components/Header.vue'
 import Profile from '@/assets/user.png'
+import { addToast } from '@/stores/ToastStore.js';
 
 const orderItems = ref([])
 const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
 const orderIndex = ref(0)
-const orderCount = ref(0) 
+const orderCount = ref(0)
 
 const formatDate = (date) => {
   const d = new Date(date)
@@ -80,19 +81,14 @@ const fetchOrder = async () => {
   try {
     isLoading.value = true
     const username = activeUser.value.username
-
     const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${orderIndex.value}`)
-    
     if (!response.ok) {
       throw new Error('No past orders')
     }
-    
     const data = await response.json()
-
     orderItems.value = data.items ?? data
     orderDate.value = data.date ? formatDate(data.date) : ''
     orderCount.value = data.totalOrders ?? orderCount.value
-
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
@@ -109,8 +105,7 @@ const nextOrder = () => {
 
 const prevOrder = () => {
   if (orderCount.value === 0) return
-  orderIndex.value =
-    (orderIndex.value - 1 + orderCount.value) % orderCount.value
+  orderIndex.value = (orderIndex.value - 1 + orderCount.value) % orderCount.value
   fetchOrder()
 }
 
@@ -127,7 +122,6 @@ async function addToOrder(drink) {
     drink,
     tableCode: activeUser.value.table
   };
-
   try {
     const res = await fetch(
       `https://itu-wb12.onrender.com/users/${username}/order/add`,
@@ -137,26 +131,22 @@ async function addToOrder(drink) {
         body: JSON.stringify(payload)
       }
     );
-
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     const result = await res.json();
     return result;
-
   } catch (err) {
-      console.error(err);
+    console.error(err);
     throw err;
   }
 }
 
-import { addToast } from '@/stores/ToastStore.js';
 async function handleOrder(drink) {
   try {
     await addToOrder(drink);
     addToast(`${drink.name} added to cart!`);
     console.log("Added to order:", drink.name);
   } catch (err) {
-    addToast(`Failed to add to cart. Please select table first.`);
+    addToast(`Failed to add to cart. Please select table first.`, 5000);
     console.error("Order failed:", err);
   }
 }
@@ -173,21 +163,18 @@ async function handleOrder(drink) {
   bottom: 0;
 }
 
-/* Content */
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;
   margin-top: 30px;
 }
 
-/* Order Title */
 .order-title {
   display: flex;
   flex-direction: column;
@@ -200,11 +187,13 @@ async function handleOrder(drink) {
   width: 60px;
   height: 15px;
   transform: rotate(-90deg) translateX(-4px);
+  display: inline-block;
 }
 .chevron-icon2 {
   width: 60px;
   height: 15px;
   transform: rotate(90deg) translateX(4px);
+  display: inline-block;
 }
 
 .order-title h2 {
@@ -223,7 +212,6 @@ async function handleOrder(drink) {
   margin-top: 8px;
 }
 
-/* Order Date */
 .order-date {
   text-align: center;
   font-family: "Georgia", "Times New Roman", serif;
@@ -232,12 +220,12 @@ async function handleOrder(drink) {
   margin-bottom: 16px;
 }
 
-/* Order Items */
 .order-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 130px;
 }
 
 .loading,
@@ -306,6 +294,30 @@ async function handleOrder(drink) {
 .info-icon {
   width: 24px;
   height: 24px;
+  cursor: pointer;
+}
+
+.chevron-icon1:hover{
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(-90deg) translateX(-4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.chevron-icon2:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(90deg) translateX(4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.add-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  border: black 2px solid;
+  font-size: 20px;
+  font-weight: bold;
   cursor: pointer;
 }
 

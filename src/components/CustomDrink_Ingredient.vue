@@ -68,7 +68,6 @@ function addToRecipe(ingredient){
         display: flex;
         width: 125px;
         height: 175px;
-        /* flex-direction: column; */
         justify-content: center;
         align-items: center;
         gap: 25px;

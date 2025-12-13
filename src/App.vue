@@ -51,7 +51,7 @@ nav a:first-of-type {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* PC adjustment */
+
 @media (min-width: 768px) {
   .wrapper {
     max-width: 100%;

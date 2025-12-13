@@ -112,7 +112,7 @@ async function handleOrder(drink) {
     addToast(`${drink.name} added to cart!`);
     console.log("Added to order:", drink.name);
   } catch (err) {
-    addToast(`Failed to add to cart. Please select table first.`);
+    addToast(`Failed to add to cart. Please select table first.`, 5000);
     console.error("Order failed:", err);
   }
 }

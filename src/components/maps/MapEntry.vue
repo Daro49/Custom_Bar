@@ -42,7 +42,7 @@ defineProps({
   selectedTable: String
 })
 
-defineEmits(['selectTable'])
+defineEmits(['selectTable', 'navigate', 'close'])
 </script>
 
 <style scoped>
@@ -53,6 +53,11 @@ defineEmits(['selectTable'])
   justify-content: space-between;
   height: 917px;
   width: 70%;
+}
+@media (max-width: 768px) {
+  .table-b-layout {
+    width: 100%;
+  }
 }
 
 .table-b-layout .table-a-instance {

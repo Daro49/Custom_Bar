@@ -1,18 +1,25 @@
 <script setup>
 import Profile from '@/assets/user.png'
 import { coupons, userCoupons } from '@/stores/CSModels/Coupons'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getCoupons, getUserCoupons } from '@/stores/CSModels/Coupons'
 import { activeUser } from '@/stores/Login.js';
 
+let isLoading = ref(false);
+
 onMounted(async () => {
-  await Promise.all([
-    getUserCoupons(activeUser.value.username),
-    getCoupons()
-  ]);
+  try {
+    await Promise.all([
+      getUserCoupons(activeUser.value.username),
+      getCoupons()
+    ]);
+  } finally {
+    isLoading.value = false;
+  }
 })
 
 const isActivated = (couponId) => {
+  if (!userCoupons.value) return false;
   return userCoupons.value.some(c => String(c.id) === String(couponId));
 }
 </script>
@@ -21,7 +28,10 @@ const isActivated = (couponId) => {
   <div class="coupons">
     <Header :avatar="Profile" :previous="true" />
     <PointsPresenter/>
-    <div class="coupon-list">
+    <div v-if="isLoading" class="loading-state">
+
+    </div>
+    <div v-else class="coupon-list">
       <CouponCard
         v-for="coupon in coupons"
         :couponData ="coupon"
@@ -64,6 +74,10 @@ export default {
   width: 100%;
 }
 
+.coupons .loading-state {
+  font-size: 24px;
+  color: white;
+}
 .coupons .coupon-list {
   align-items: center;
   align-self: center;

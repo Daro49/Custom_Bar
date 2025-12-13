@@ -1,16 +1,11 @@
-<script setup>
-import { RouterLink } from 'vue-router'
-import Header from '@/components/Header.vue'
-import Profile from '@/assets/user.png'
-import MenuButton from '@/components/MenuButton.vue'
-
-import orderIcon from '@/assets/order.svg?raw'; 
-import shakerIcon from '@/assets/shaker.svg?raw'; 
-import mapIcon from '@/assets/map.svg?raw';
+<script>
+import options from '@/stores/MainMenuView.js';
+export default options;
 </script>
 
 <template>
   <Header :avatar="Profile" :back-button="false"/>
+<div> <img :src="photo" class="photo" /> </div>
   <div class = "button-group">
     <MenuButton txt="Menu" :to="{ name: 'menu' }" />
     <MenuButton txt="Leaderboard" :to="{ name: 'leaderboard' }" />
@@ -20,13 +15,13 @@ import mapIcon from '@/assets/map.svg?raw';
 
 <div class="bottom-nav-container">
   <div class="nav-links">
-    <div class="nav-segment right-segment">
+    <div class="nav-segment left-segment">
       <RouterLink to="/map" class="nav-icon-link">
         <div class="icon-svg" v-html="mapIcon"></div>
       </RouterLink>
     </div>
 
-    <div class="nav-segment left-segment">
+    <div class="nav-segment right-segment">
       <RouterLink to="/menu/order" class="nav-icon-link">
         <div class="icon-svg" v-html="orderIcon"></div>
       </RouterLink>
@@ -83,7 +78,7 @@ import mapIcon from '@/assets/map.svg?raw';
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 20%;
+    padding: 0 15%;
 }
 
 .center-overlay-btn {
@@ -142,4 +137,12 @@ import mapIcon from '@/assets/map.svg?raw';
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+.photo {
+  display: block;
+  margin: 20px auto;
+  width: 49%;
+  height: 300px;
+  object-fit: cover;
+  border: var(--gold) 5px solid;
+}
 </style>

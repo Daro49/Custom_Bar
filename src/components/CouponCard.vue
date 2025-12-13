@@ -118,6 +118,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 0; 
+  overflow: hidden;
 }
 
 .coupon-header {
@@ -193,7 +194,7 @@ export default {
     margin-left: 10px;
     flex: 1;
     font-size: 24px;
-    color: white;
+    color: var(--background-green);
     word-break: break-word; 
     padding-right: 15px; 
 }
