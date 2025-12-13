@@ -5,6 +5,7 @@ import Profile from '@/assets/user.png';
 import { getPackageById } from '@/stores/CSModels/Packages'
 import { ref, onMounted } from 'vue';
 import { pkg } from '@/stores/CSModels/Packages'
+import { order } from '@/components/PackageCard.vue'
 import PointsPresenter from '@/components/PointsPresenter.vue';
 
 const route = useRoute();
@@ -23,17 +24,24 @@ onMounted(async () => {
         <PointsPresenter/>
         <div class="package-details" >
           <div class="card" v-if="loaded">
-              <div class="details-content">
-                  <div class="package-name">{{ pkg.name }}</div>
-                  <div class="package-image">
-                      <img :src="pkg.imgurl" alt="Package Image" />
-                  </div>
-                      <span class="price-label">Price:</span>
-                      <span class="price-value">{{ pkg.price }}</span>
-                  <div class="package-description" >{{ pkg.description }}</div>
-                  
+            <div class="details-content">
+              <div class="package-name">{{ pkg.name }}</div>
+              <div class="package-image">
+                  <img :src="pkg.imgurl" alt="Package Image" />
               </div>
-          </div>
+                  <span class="price-label">Price:</span>
+                  <span class="price-value">{{ pkg.price }}</span>
+              <div class="package-description" >{{ pkg.description }}</div>  
+              <button class="order-package" @click.stop = "order">
+                  Click here to order
+                </button>
+                <Transition name="fade">
+                  <p v-if="errorMessage" :class="{'error-message': isError, 'success-message': !isError}">
+                    {{ errorMessage }}
+                  </p>
+                </Transition>
+              </div>
+            </div>
           <div v-else class = "package-loading">
               <div>Loading...</div>
           </div>
@@ -53,6 +61,27 @@ onMounted(async () => {
   width: 100%;
   overflow: hidden;
 }
+
+.order-package {
+  font-family: var(--button-font-family);
+  font-size: 24px;
+  color: white;
+  background-color: #034909;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin-top: auto;
+  border: solid 2px black;
+  box-shadow: 
+    2px 2px 0px 0px black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-package:hover {
+  box-shadow: 
+    4px 4px 0px 0px black;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
 
 .package-details {
   flex: 1;

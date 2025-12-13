@@ -1,9 +1,11 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { activeUser } from '@/stores/Login.js'
 import User from '@/stores/User.js'
 import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
+import { addPoints } from './AddPoints'
+import { removePackageFromOrder } from './CSModels/Packages'
 
 export default {
     name: 'OrderView',
@@ -108,6 +110,19 @@ export default {
             }
         }
 
+        async function removePackage(pkg) {
+            const result = await removePackageFromOrder(activeUser.value.username, pkg.id);
+            if (!result) {
+                alert("Cannot remove package");
+                return;
+            }
+            const result2 = await addPoints(pkg.price);
+            if (!result2) {
+                alert("Error occured while removing package");
+            }
+            fetchOrder();
+        }
+
         async function addToOrder(drink) {
             if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
                 throw new Error("User not logged in or table not set");
@@ -136,6 +151,44 @@ export default {
             }
         }
 
+        /**
+         * Calculates totals for drinks and packages
+         * @param {Array} items - The array of items in the order
+         * @returns {Object} - Object containing euroTotal and pointsTotal
+         */
+        function calculateOrderTotals(items) {
+            if (!items || items.length === 0) {
+                return { euroTotal: 0, pointsTotal: 0 };
+            }
+
+            return items.reduce((acc, item) => {
+                // If item has quantity, count drink value
+                if (item.quantity !== undefined && item.quantity !== null) {
+                    acc.euroTotal += item.quantity * item.price;
+                } 
+                // If not, count package value
+                else {
+                    acc.pointsTotal += item.price;
+                }
+                return acc;
+            }, { euroTotal: 0, pointsTotal: 0 });
+        }
+
+        // reactive var for order button
+        const buttonText = computed(() => {
+            if (!orderItems.value || orderItems.value.length === 0) {
+                return 'ORDER SOMETHING';
+            }
+
+            const { euroTotal, pointsTotal } = calculateOrderTotals(orderItems.value);
+
+            let parts = [];
+            if (euroTotal > 0) parts.push(`${euroTotal.toFixed(2)}€`);
+            if (pointsTotal > 0) parts.push(`${pointsTotal} pts`);
+
+            return 'PAY ' + parts.join(' & ');
+        });
+
         const exposed = {
             orderItems,
             isLoading,
@@ -144,7 +197,9 @@ export default {
             handleButtonClick,
             removeFromOrder,
             addToOrder,
-            pastOrders
+            pastOrders,
+            removePackage,
+            buttonText
         }
         expose(exposed)
         return exposed

@@ -20,8 +20,9 @@
             <button class="remove-button" @click="removeFromOrder(item)">-</button>
             <button class="add-button" @click="addToOrder(item)">+</button>
           </div>
-          <div v-else class = "package-item">
-            <button class="removeButton" @click="removePackage(item)">-</button>
+          <div v-else class = "item-right">
+            <span class = "price">{{ item.price }} pts</span>
+            <button class="remove-button" @click="removePackage(item)">-</button>
           </div>
         </div>
       </div>
@@ -31,10 +32,7 @@
       </div>
 
       <button class="pay-button" @click="handleButtonClick">
-        {{ orderItems.length === 0 
-          ? 'ORDER SOMETHING' 
-          : 'PAY ' + orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) + '€' 
-        }}
+        {{ buttonText }}
       </button>
     </div>
   </div>

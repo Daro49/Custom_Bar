@@ -22,6 +22,10 @@
         </span>
       </slot>
       <slot name="right">
+        <PointsPresenterJukebox 
+          v-if="showPoints"
+          class="PointPresenterHeader"
+        />
         <button @click="openProfile" class="avatar-button" v-if="avatar">
           <img :src="activeUser?.imgurl || avatar" class="avatar" />
         </button>

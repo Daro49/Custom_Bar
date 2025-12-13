@@ -1,4 +1,5 @@
 import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
+import PointsPresenterJukebox from '@/components/PointsPresenterJukebox.vue';
 import router from '@/router'
 import { activeUser, clearTable } from '@/stores/Login.js';
 import { computed, ref, onBeforeUnmount, watch } from 'vue';
@@ -26,7 +27,11 @@ function formatTime(ms) {
 
 export default {
     name: 'Header',
+    components: {
+        PointsPresenterJukebox,
+      },
     props: {
+        showPoints: {type: Boolean, default: false},
         previous: { type: Boolean, default: false },
         backButton: { type: Boolean, default: true },
         title: { type: String, default: '' },
