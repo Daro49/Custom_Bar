@@ -19,7 +19,7 @@
               <span>{{ totalFormatted }}</span>
             </div>
             <div class="progress_bar">
-              <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+              <div class="progress-fill" :style="{ width: progressState.progress + '%' }"></div>
             </div>
           </div>    
         </div>
@@ -75,13 +75,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import SongButton from '../components/SongButton.vue'
 import Header from '@/components/Header.vue'
 import { addPoints } from '@/stores/AddPoints'
+import { usePlaylist } from '@/stores/Playlist'
+import { useProgresionJukebox } from '@/stores/ProgresionJukebox'
+
+const { playlist, fetchPlaylist } = usePlaylist()
+
 const songs = ref([])
-const playlist = ref([])
-const currentSong = ref(null)
+const currentSong = computed(()=>progressState.currentSong)
 const showSearchPanel = ref(false)
 const search = ref('')
 const showDetailSearch = ref(false)
@@ -90,107 +94,33 @@ const selectedSong = ref(null)
 let refreshTimer = null;
 const isPlaying =ref(false)
 
-const songDuration = ref(0)
-const elapsedTime = ref(0)
-const progress = ref(0)
 
-// ak pojde progressionJukebox.js tak vymaz
-let progressTimer = null
+const {
+  state: progressState,
+  startProgress,
+  stopProgress,
+  elapsedFormatted,
+  totalFormatted,
+} = useProgresionJukebox()
 
-function formatTime (duration) {
-  const mins = Math.floor(duration/60)
-  const sec = Math.floor(duration%60)
-  return `${String(mins).padStart(2, '0')}:${String(sec).padStart(2,'0')}`
-}
-// ******************************************************************************
-
-const elapsedFormatted = computed(() => formatTime(elapsedTime.value))
-const totalFormatted = computed(() => formatTime(songDuration.value))
-
-async function current_song_update() {
-  console.log('Piesen skoncila')
-  isPlaying.value = false
-  try {
-    const request = await fetch('https://itu-wb12.onrender.com/playlist/remove', {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json',
-      }, 
-      body: JSON.stringify({ 
-        songTitle: currentSong.value.title 
-      }),
-    })
-    if(!request.ok) {
-      throw new Error(`Server error: ${request.status}`);
-    }
-    const data = await request.json()
-    console.log('Song removed successfully', data)
-  } catch(e) {
-    console.log('Song remove failed', e)
-  }
+// ready for refactor
+async function fetchSongHandler() {
   await fetchPlaylist()
-}
 
-function stopProgress() {
-  if(progressTimer) {
-    clearInterval(progressTimer)
-    progressTimer = null
+  if(progressState.isPlaying && progressState.currentSong)
+  {
+    console.log('už sa hrá:', progressState.currentSong.title)
+    return
   }
-}
 
-function startProgress() {
-  if (!currentSong.value) return
-  stopProgress()
-  elapsedTime.value = 0
-  progress.value = 0
-
-  songDuration.value = currentSong.value.duration
-
-  const tick = 0.5
-
-  progressTimer = setInterval(()=> {
-    elapsedTime.value += tick
-    if(elapsedTime.value >= songDuration.value) {
-      elapsedTime.value = songDuration.value
-      progress.value = 100
-      stopProgress() 
-      current_song_update()
-    } else {
-      progress.value = (elapsedTime.value / songDuration.value) * 100
-    }
-  }, tick * 1000)
-}
-
-watch (currentSong, (newSong, oldSong) => {
-  if(newSong) {
-    startProgress()
-  } else {
+  else if (playlist.value.length === 0){
+    console.log('current song sa nenacital')
     stopProgress()
+    return
   }
-})
-
-async function fetchPlaylist() {
-  try {
-    const response = await fetch('https://itu-wb12.onrender.com/playlist')
-    if(!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
-    const data = await response.json();
-    playlist.value = data;
-    console.log('Playlist loaded successfully', playlist.value)
-    
-    if(playlist.value.length > 0 && isPlaying.value === false) {
-      currentSong.value = playlist.value[0];
-      isPlaying.value = true;
-      console.log('current song: ', currentSong.value)
-    }
-    else if (playlist.value.length === 0 && isPlaying.value === false){
-      console.log('current song sa nenacital')
-      currentSong.value = null;
-    }
-  } catch(e) {
-    console.log('Playlist loading failed', e)
-  }
+  const song = playlist.value[0];
+  console.log('song is:', song.title)
+  startProgress(song)
 }
 
 const nextSongs = computed(() => {
@@ -199,7 +129,7 @@ const nextSongs = computed(() => {
 })
 
 onMounted(()=> {
-  fetchPlaylist();
+  fetchSongHandler();
   refreshTimer = setInterval( async () => {
     await fetchPlaylist()
   }, 3500);
@@ -316,7 +246,6 @@ onUnmounted(() => {
   console.log('Unmounting')
 
   if (refreshTimer) clearInterval(refreshTimer)
-  if (progressTimer) clearInterval(progressTimer)
 })
 
 </script>

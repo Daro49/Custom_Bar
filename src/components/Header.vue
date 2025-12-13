@@ -22,17 +22,13 @@
         </span>
       </slot>
       <slot name="right">
-<<<<<<< HEAD
-        <img v-if="avatar" :src="avatar" class="avatar" @click="openProfile" />
         <PointsPresenterJukebox 
           v-if="showPoints"
           class="PointPresenterHeader"
         />
-=======
         <button @click="openProfile" class="avatar-button" v-if="avatar">
           <img :src="avatar" class="avatar" />
         </button>
->>>>>>> refs/remotes/origin/main
         <button
           class="back-btn"
           @click="rightFunction"
@@ -85,22 +81,13 @@ export default {
     PointsPresenterJukebox,
   },
   props: {
-<<<<<<< HEAD
-    previous: { type: Boolean, default: false }, /* on true goes back to previous page, else goes to parent route */
-    backButton: { type: Boolean, default: true }, /* show/hide back button */
-    title: { type: String, default: '' }, /* title text in middle */
-    avatar: { type: String, default: null }, /* avatar icon on right */
-    rightIcon: { type: String, default: null }, /* other icon on right */
-    rightFunction: { type: Function, default: null }, /* function activating when clicking on icon on right */
     showPoints: {type: Boolean, default: false}, 
-=======
     previous: { type: Boolean, default: false },
     backButton: { type: Boolean, default: true },
     title: { type: String, default: '' },
     avatar: { type: String, default: null },
     rightIcon: { type: String, default: null },
     rightFunction: { type: Function, default: null },
->>>>>>> refs/remotes/origin/main
   },
   setup() {
     const selectedTable = computed(() => activeUser.value?.table || 'N/A');
