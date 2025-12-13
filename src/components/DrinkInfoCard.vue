@@ -1,6 +1,16 @@
+<!--
+/**
+ * @file DrinkInfoCArd.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre detail drinku
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
   <div class="drink-info-card">
-
+    <!--obrazok-->
     <img v-if="drink.image" :src="drink.image" class="drink-info-image" />
 
     <div class="drink-info-header">
@@ -8,32 +18,33 @@
 
       
     </div>
+    <!--pozicia a hodnotenie-->
     <div class="drink-info-sub" v-if="drink.rating != null">
-        <span>#{{ drink.position }}
-          <span v-if="drink.trend === 1">⭡</span>
-         <span v-else-if="drink.trend === 2">⭣</span>
-        </span>
-        <span>rating: {{ drink.rating }}</span>
-      </div>
-
+      <span>#{{ drink.position }}
+        <span v-if="drink.trend === 1">⭡</span>
+        <span v-else-if="drink.trend === 2">⭣</span>
+      </span>
+      <span>rating: {{ drink.rating }}</span>
+    </div>
+    <!--popis-->
     <p class="drink-description" v-if="drink.description">
       {{ drink.description }}
     </p>
-
+    <!--ingrediencie-->
     <div class="drink-ingredients" v-if="drink.ingredients">
       {{ ingredientsLine }}
     </div>
-
+    <!--hodnotenie-->
     <div class="drink-actions" v-if="drink.rating != null">
-  <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">
+    <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">
     ❤️
-  </button>
+    </button>
   
-  <button class="action-button-dislike" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">
-    <span class="emoji">💔</span>
-  </button>
-</div>
-
+    <button class="action-button-dislike" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">
+     <span class="emoji">💔</span>
+    </button>
+    </div>
+    <!--objednanie-->
     <button class="order-section" @click="$emit('order')">
       <span>ORDER:</span>
       <span class="order-price">{{ drink.price }}€</span>

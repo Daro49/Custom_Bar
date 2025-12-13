@@ -1,20 +1,31 @@
+<!--
+/**
+ * @file CustomLeaderboard.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre rebricek vlastnych napojov
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
+  <!--hlavicka-->
     <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
-    
+    <!--sipky-->
         <MenuNavigation
   label="Custom drinks Leaderboard"
   @prev="goToLeaderboard"
   @next="goToLeaderboard"
 />
 
-    <!-- Loading / Error states -->
+    <!-- nacitanie -->
  <p v-if="leaderboardLoading && (!leaderboard || leaderboard.length === 0)">
   Loading...
 </p>
     <p v-if="leaderboardError">{{ leaderboardError }}</p>
 
-    <!-- Drink Cards -->
+    <!-- Jednotlive napoje-->
     <LeaderboardDrinkCard
       v-for="(drink, i) in leaderboard"
       :key="drink.id"

@@ -1,3 +1,13 @@
+<!--
+/**
+ * @file FeaturedDrink.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre zobrazenie drinku tyzdna 
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
   <div class="drinkCard" @click="$emit('select', drink.name)">
     <div class="drinkHeader">POPULAR NOW</div>
@@ -5,7 +15,7 @@
     <img :src="drink.image" :alt="drink.name" class="drinkImage" />
 
     <div class="drinkFooter">{{ drink.name }}</div>
-
+    <!--zobrazenie ci je oblubeny/neoblubeny-->
     <div 
   v-if="drink.liked || drink.disliked" 
   class="status-badge" 
@@ -15,7 +25,7 @@
 </div>
 
     <div class="priceFloating">{{ drink.price }}€</div>
-
+    <!--objednanie-->
     <button class="orderFloating" @click.stop="$emit('order', drink)">
       +
     </button>

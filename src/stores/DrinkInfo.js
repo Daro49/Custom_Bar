@@ -1,3 +1,9 @@
+/**
+ * @file CustomLeaderboard.js
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia dotazu na zobrazenie detailu drinku, hodnotenie driku a pridania do objednavky
+ * @date 2023-10-27
+ */
 
 import { ref } from "vue";
 export const drinkData = ref(null);
@@ -7,7 +13,9 @@ export const liked = ref(false);
 export const disliked = ref(false);
 
 let intervalId = null;
-
+/**
+ * @brief odosle pozadavok a ziska odpoved pre zobrazenie podrobnosti o napoji
+ */
 export function stopDrinkAutoRefresh() {
   if (intervalId) clearInterval(intervalId);
 }
@@ -51,20 +59,31 @@ export async function loadDrink(route, username) {
     drinkLoading.value = false;
   }
 }
-
+/**
+ * 
+ * @brief 
+ */
 export function startDrinkAutoRefresh(route) {
   stopDrinkAutoRefresh();
   intervalId = setInterval(() => loadDrink(route, activeUser.value.username ), 5000);
 }
-
+/**
+ * 
+ * @param {like, dislike} action 
+ * @param {nazov drinku} name 
+ * @param { typ drinku } type 
+ * @param {uzivatelske meno} username 
+ * @brief odosle dotaz na zmenu hodnotenia a prijme nove hodnotenie a poziciu
+ */
 export async function rateDrink(action, name, type = "regular", username) {
   try {
-
+    
     const endpointBase =
       type === "custom"
         ? `https://itu-wb12.onrender.com/customDrinks/${encodeURIComponent(name)}`
         : `https://itu-wb12.onrender.com/drinks/${encodeURIComponent(name)}`;
 
+    // bud like alebo dislike
     const endpoint = `${endpointBase}/${action}`;
 
     const res = await fetch(endpoint, {
@@ -90,7 +109,11 @@ export async function rateDrink(action, name, type = "regular", username) {
 import { activeUser } from './Login.js';
 
 export const orderItems = ref([]);
-
+/**
+ * 
+ * @param {drink} drink 
+ * @brief prida drink do objednavky uzivatela
+ */
 export async function addToOrder(drink) {
   if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
     
