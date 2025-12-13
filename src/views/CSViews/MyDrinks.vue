@@ -6,6 +6,7 @@ import { getUserDrinks, mydrinks } from '@/stores/CSModels/MyDrinks';
 import MenuDrinkCard from '@/components/MenuDrinkCard.vue';
 import { addToOrder } from '@/stores/DrinkInfo';
 import { addToast } from '@/stores/ToastStore';
+import router from '@/router';
 
 let loaded = ref(false);
 
@@ -76,6 +77,17 @@ async function handleOrder(drink) {
   margin-top: 21px;
   width: 80%;
   padding: 0 10px; 
+}
+
+@media (max-width: 768px) {
+.drink-card,
+.drinkCard {
+  width: 90%;
+}}
+
+.drinkCard:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
 }
 
 .my-drinks-banner {
