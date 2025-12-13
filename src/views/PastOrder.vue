@@ -44,7 +44,7 @@
           </div>
           <div class="item-right">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
-            <button class="addButton" @click="handleOrder(item)">+</button>
+            <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
@@ -308,6 +308,17 @@ async function handleOrder(drink) {
   box-shadow: 0 0 10px var(--gold);
   transform: rotate(90deg) translateX(4px) scale(1.3);
   transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.add-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  border: black 2px solid;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 </style>

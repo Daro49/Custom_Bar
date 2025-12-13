@@ -193,18 +193,14 @@ export default options
 
 .remove-button,
 .add-button {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  border: black 2px solid;
   font-size: 20px;
   font-weight: bold;
-  color: black;
-  background-color: #d39e30;
-  border: 1px solid black;
-  border-radius: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 </style>
