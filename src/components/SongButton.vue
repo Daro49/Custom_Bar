@@ -63,20 +63,26 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
+    min-width: 72px;
     color: black;
     outline: black; 
-    border: black;
-    background: yellow;
+    border: 2px solid;
+    border-radius: 999px;
+    background: var(--headerv2);
+    display: inline-flex;
 }
 .SongButton {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 10px;
-    color: black;
-    background: #D4AF37;
+    color: #0D564B;
+    font-family: var(--button-font-family);
+    background: transparent;
     outline: none; 
     border: none;
+    justify-content: center;
+    line-height: 1;
 }
 .songInfo{
     display: flex;
@@ -92,14 +98,20 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     text-align: left !important;
 }
 .actionButtons{
+    appearance: none;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    color: #0D564B;
+    cursor: pointer;
+    font-family: var(--button-font-family);
     gap: 6px;
     margin-left: 16px;
 }
 .secondariActions{
     display: flex;
+    cursor: pointer;
+    color: #0D564B;
+    font-family: var(--button-font-family);
     gap: 8px;
 }
 </style>

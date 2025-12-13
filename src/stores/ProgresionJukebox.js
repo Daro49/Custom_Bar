@@ -35,7 +35,7 @@ function startProgress(song) {
 
   const tick = 500
 
-  progressTimer = setInterval(()=> {
+  progressTimer = setInterval(async ()=> {
       
       if(!state.startedAt) return
       const elapsedSec = (Date.now() - state.startedAt) / 1000
@@ -45,7 +45,7 @@ function startProgress(song) {
       {
         state.elapsedTime = state.songDuration
         stopProgress()
-        current_song_update(state.currentSong) // toho by malo mat await 
+        await current_song_update(state.currentSong) 
 
         if(playlist.value.length > 0) {
           const next = playlist.value[0]

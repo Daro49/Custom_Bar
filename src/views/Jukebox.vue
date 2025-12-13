@@ -92,7 +92,6 @@ const showDetailSearch = ref(false)
 const showDetailQueue = ref(false)
 const selectedSong = ref(null)
 let refreshTimer = null;
-const isPlaying =ref(false)
 
 
 const {
@@ -135,11 +134,6 @@ onMounted(()=> {
   }, 3500);
 }) 
 
-//toto asi moze uz ist prec
-const ReturnBackSearch = () => {
-  showDetailSearch.value = false;
-  showSearchPanel.value = true;
-}
 
 const ReturnBackQueue = () => {
   showDetailSearch.value = false;
@@ -226,19 +220,6 @@ const filteredSongs = computed(() => {
   )
 })
 
-// toto prec
-function DetailSearch(song) {
-  showDetailSearch.value = true
-  showSearchPanel.value = false
-  selectedSong.value = song
-}
-
-// toto prec
-function openDetailQueue(song) {
-  showDetailQueue.value = true
-  selectedSong.value = song
-}
-
 function getCover ()
 {}
 
@@ -265,7 +246,10 @@ onUnmounted(() => {
   }
   .add-button {
     background: #0D564B;
+    font-family: var(--button-font-family);
+    border-radius: 999px;
     color: #D4AF37;
+    height: 50px;
   }
   .searchPanel {
     flex: 1;
@@ -282,6 +266,9 @@ onUnmounted(() => {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .searchbar {
     display: flex;
@@ -302,6 +289,9 @@ onUnmounted(() => {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   .currentSong {
     display: flex;
@@ -310,6 +300,7 @@ onUnmounted(() => {
   .playlist {
     display: flex;
     flex-direction: column;
+    gap: 10px;
   }
   .showDetailAdd {
     margin-top: 8px;
