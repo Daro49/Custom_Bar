@@ -84,13 +84,12 @@ export async function removePackageFromOrder(username, pkgId)
     });
 
     if (!response.ok) {
-      throw new Error('Ordering package failed');
+      throw new Error('Removing package failed.');
     }
     return true;
     } catch (error) {
-      console.error('Order package error:', error);
-      alert('Error occured while ordering package: ' + error.message);
+      console.error('Pakcage removal error:', error);
+      alert('Error occured while removing package from order: ' + error.message);
       return false;
     }  
-  
 }

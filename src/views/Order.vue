@@ -15,10 +15,13 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right">
+          <div class="item-right" v-if="item.quantity">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="remove-button" @click="removeFromOrder(item)">-</button>
             <button class="add-button" @click="addToOrder(item)">+</button>
+          </div>
+          <div v-else class = "package-item">
+            <button class="removeButton" @click="removePackage(item)">-</button>
           </div>
         </div>
       </div>
