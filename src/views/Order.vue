@@ -1,32 +1,12 @@
 <template>
+  <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true"/>
   <div class="order-container">
-    <!-- Header -->
-    <div class="header">
-      <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/Order History.svg" class="header-icon order-history-icon" @click="goOrderHistory"/>
-    </div>
-
-    <!-- Content -->
     <div class="content">
-      <!-- Title with divider -->
       <div class="order-title">
-        <svg 
-          class="chevron-icon"
-          viewBox="0 0 100 50"
-        >
-          <path 
-            d="M10 40 L50 10 L90 40" 
-            stroke="black" 
-            stroke-width="8" 
-            fill="none" 
-            stroke-linecap="round"
-          />
-        </svg>
         <h2>ORDER</h2>
         <div class="divider-line"></div>
       </div>
 
-      <!-- Order Items -->
       <div class="order-items">
         <div v-if="isLoading" class="loading">Loading order...</div>
         <div v-else-if="error" class="error">Error: {{ error }}</div>
@@ -35,164 +15,56 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right">
-            <span class="price">{{ item.price }}€</span>
-            <img src="../assets/Info.svg" class="info-icon" />
+          <div class="item-right" v-if="item.quantity">
+            <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
+            <button class="remove-button" @click="removeFromOrder(item)">-</button>
+            <button class="add-button" @click="addToOrder(item)">+</button>
+          </div>
+          <div v-else class = "item-right">
+            <span class = "price">{{ item.price }} pts</span>
+            <button class="remove-button" @click="removePackage(item)">-</button>
           </div>
         </div>
       </div>
 
-      <!-- Apply Coupons -->
       <div class="apply-coupons">
-        <a href="#" @click.prevent="router.push('/coupons')">apply coupons</a>
+        <a href="#" @click.prevent="$router.push('/coupons')">apply coupons</a>
       </div>
 
-      <!-- Pay Button -->
       <button class="pay-button" @click="handleButtonClick">
-        {{ orderItems.length === 0 ? 'ORDER SOMETHING' : 'PAY' }}
+        {{ buttonText }}
       </button>
     </div>
   </div>
 </template>
-
-<script setup>
-import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
-import { activeUser } from '@/stores/Login.js'
-
-const router = useRouter()
-const orderItems = ref([])
-const isLoading = ref(true)
-const error = ref(null)
-
-const goBack = () => {
-  router.back()
-}
-
-const goOrderHistory = () => {
-  router.push('/orders')
-}
-
-const fetchOrder = async () => {
-  try {
-    isLoading.value = true
-    const username = activeUser.value.username
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order`)
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch order')
-    }
-    
-    const data = await response.json()
-    orderItems.value = data
-    console.log('Order items fetched:', data)
-  } catch (err) {
-    console.error('Error fetching order:', err)
-    error.value = err.message
-  } finally {
-    isLoading.value = false
-  }
-}
-
-const confirmOrder = async () => {
-  try {
-    const username = activeUser.value.username
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to confirm order')
-    }
-    
-    const data = await response.json()
-    console.log('Order confirmed:', data)
-    
-    // Clear the order items and show success
-    orderItems.value = []
-    alert('Order confirmed! Thank you for your purchase.')
-    
-    // Optionally redirect back or to a success page
-    setTimeout(() => {
-      router.back()
-    }, 1000)
-  } catch (err) {
-    console.error('Error confirming order:', err)
-    alert('Failed to confirm order: ' + err.message)
-  }
-}
-
-const handleButtonClick = () => {
-  if (orderItems.value.length === 0) {
-    // Route to menu if no items
-    router.push('/menu')
-  } else {
-    // Confirm order if items exist
-    confirmOrder()
-  }
-}
-
-onMounted(() => {
-  fetchOrder()
-})
+<script>
+import options from '@/stores/Order.js'
+export default options
 </script>
 
 <style scoped>
 .order-container {
-  width: 90%;
+  width: 100%;
   height: 90%;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  border: 2px solid black;
+  position: absolute;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  bottom: 0;
 }
 
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 76px;
-  padding: 0 14px;
-  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
-  border-bottom: 1px solid #a37d25;
-  box-sizing: border-box;
-}
-
-.header-icon {
-  width: 59px;
-  height: 59px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.header-icon:hover {
-  transform: scale(1.05);
-}
-
-/* Content */
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;
   margin-top: 30px;
 }
 
-/* Order Title */
 .order-title {
   display: flex;
   flex-direction: column;
@@ -200,13 +72,6 @@ onMounted(() => {
   gap: 8px;
   margin-bottom: 20px;
 }
-
-.chevron-icon {
-  width: 75px;
-  height: 20px;
-  transform: rotate(180deg);
-}
-
 
 .order-title h2 {
   margin: 0;
@@ -224,12 +89,12 @@ onMounted(() => {
   margin-top: 8px;
 }
 
-/* Order Items */
 .order-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 130px;
 }
 
 .loading,
@@ -286,7 +151,6 @@ onMounted(() => {
   cursor: pointer;
 }
 
-/* Apply Coupons */
 .apply-coupons {
   text-align: center;
   margin: 16px 0;
@@ -300,7 +164,6 @@ onMounted(() => {
   cursor: pointer;
 }
 
-/* Pay Button */
 .pay-button {
   width: 90%;
   height: 122px;
@@ -325,4 +188,17 @@ onMounted(() => {
 .pay-button:active {
   transform: translateY(-1px);
 }
+
+.remove-button,
+.add-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  border: black 2px solid;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>

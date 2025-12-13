@@ -1,28 +1,42 @@
 <script setup>
 import Profile from '@/assets/user.png'
-import drinksImg from '@/assets/bottles.jpg'
-import { coupons } from '@/stores/Coupons'
-import { onMounted } from 'vue'
-import { getCoupons } from '@/stores/Coupons'
+import { coupons, userCoupons } from '@/stores/CSModels/Coupons'
+import { onMounted, ref } from 'vue'
+import { getCoupons, getUserCoupons } from '@/stores/CSModels/Coupons'
+import { activeUser } from '@/stores/Login.js';
 
-onMounted(() => {
-  getCoupons()
+let isLoading = ref(false);
+
+onMounted(async () => {
+  try {
+    await Promise.all([
+      getUserCoupons(activeUser.value.username),
+      getCoupons()
+    ]);
+  } finally {
+    isLoading.value = false;
+  }
 })
+
+const isActivated = (couponId) => {
+  if (!userCoupons.value) return false;
+  return userCoupons.value.some(c => String(c.id) === String(couponId));
+}
 </script>
 
 <template>
   <div class="coupons">
-    <Header :avatar="Profile" />
+    <Header :avatar="Profile" :previous="true" />
     <PointsPresenter/>
-    <div class="coupon-list">
+    <div v-if="isLoading" class="loading-state">
+
+    </div>
+    <div v-else class="coupon-list">
       <CouponCard
         v-for="coupon in coupons"
-        :key="coupon.id"
-        :activationPoints="coupon.discount"
-        :image="drinksImg"
+        :couponData ="coupon"
         :validUntil="date"
-        :description="coupon.code"
-        details="Detailed description"
+        :activated="isActivated(coupon.id)"
       />
     </div>
   </div>
@@ -60,6 +74,10 @@ export default {
   width: 100%;
 }
 
+.coupons .loading-state {
+  font-size: 24px;
+  color: white;
+}
 .coupons .coupon-list {
   align-items: center;
   align-self: center;

@@ -1,19 +1,22 @@
 <template>
   <div class="coupon-card">
     <div v-if="!detailsEnabled" class="coupon-header">
-      <img :src="image" alt="Coupon image" class="coupon-image" />
+      <img :src="couponData.imgurl" alt="Coupon image" class="coupon-image" />
       <div class="coupon-info">
         <div class="valid-date">Valid until {{ validUntil }}</div>
-        <div class="coupon-text">{{ description }}</div>
-        <ActivateButton :activation_points="activationPoints" />
+        <ActivateButton 
+          :activation_points="couponData.price" 
+          :is-active-prop="isActive"  @toggle="handleToggle"/>
+        <div class="coupon-text">{{ couponData.code }}</div>
       </div>
       <button class="btns" @click="showDetails" v-html="Info"></button>
     </div>
 
     <div v-if="detailsEnabled" class="coupon-details">
-      {{ details }}
-      <button class="btns" @click="showDetails" v-html="Close"></button>
-    </div>
+        <div class="details-content">{{ couponData.description }}</div>
+    
+        <button class="btns" @click="showDetails" v-html="Close"></button>
+</div>
   </div>
 </template>
 
@@ -21,6 +24,8 @@
 import Info from '@/assets/info.svg?raw'
 import Close from '@/assets/cancel-x.svg?raw'
 import ActivateButton from './ActivateButton.vue'
+import { activateCoupon, deactivateCoupon, getUserCoupons } from '@/stores/CSModels/Coupons';
+import { activeUser } from '@/stores/Login';
 
 export default {
   name: 'CouponCard',
@@ -28,27 +33,54 @@ export default {
     ActivateButton,
   },
   props: {
-    image: String,
     validUntil: String,
-    description: String,
-    details: { type: String, default: '' },
-    activationPoints: Number,
+    couponData: { type: Object, required: true },
+    activated: { type: Boolean, default: false, required: true },
   },
 
   data() {
     return {
-      isActive: false,
+      isActive: this.activated,
       detailsEnabled: false,
 
       Info,
       Close,
     }
   },
+  watch:{
+    activated(newVal) {
+      this.isActive = newVal;
+    }
+  },
+
+  mounted() {
+    if (this.activated) {
+      this.isActive = true
+    }
+  },
 
   methods: {
-    activate() {
-      this.isActive = !this.isActive
+    async handleToggle(newStatus) { 
+      this.isActive = newStatus;
+
+      const user = activeUser.value.username;
+      const couponObject = this.couponData; 
+      const couponId = this.couponData.id;
+      let success = false;
+
+      if (this.isActive) {
+        success = await activateCoupon(user, couponObject)
+      } else {
+        success = await deactivateCoupon(user, couponId)
+      }
+
+      if (success) {
+          await getUserCoupons(user); 
+      } else {
+          this.isActive = !newStatus; 
+      }
     },
+    
     showDetails() {
       this.detailsEnabled = !this.detailsEnabled
     },
@@ -57,16 +89,22 @@ export default {
 </script>
 
 <style scoped>
+*{
+  margin-top: 5px;
+  gap: 5px;
+}
+
 .btns {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 80px; 
+  height: 80px;  
   background: none;
   border: none;
   cursor: pointer;
   color: black;
+  padding: 0;
 }
 
 .coupon-card {
@@ -74,23 +112,36 @@ export default {
   border: 3px solid;
   border-color: #000000;
   border-radius: 10px;
-  height: auto;
+  height: 20vh; 
   position: relative;
-  width: 380px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  padding: 0; 
+  overflow: hidden;
 }
 
 .coupon-header {
+  margin-top: 0;
   display: flex;
   width: 100%;
   box-sizing: border-box;
   gap: 10px;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.coupon-header > .btns {
+    margin-left: auto;
 }
 
 .coupon-image {
-  width: 100px;
-  height: auto;
+  margin-top: 0;
+  width: 25%;
+  height: 100%;
   border-radius: 6px;
   object-fit: cover;
+  
 }
 
 .coupon-info {
@@ -106,12 +157,12 @@ export default {
   text-align: center;
   padding: 2px 4px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 24px;
 }
 
 .coupon-text {
   margin: 5px 0;
-  font-size: 16px;
+  font-size: 24px;
   color: #035f5c;
 }
 
@@ -126,20 +177,25 @@ export default {
 }
 
 .coupon-details {
-  margin-top: 10px;
-  background: var(--headerv2);
-  border-radius: 6px;
-  padding: 8px;
-  position: relative;
+    padding: 8px; 
+    position: relative;
+    
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    
+    width: 100%;
+    height: 100%; 
+    box-sizing: border-box;
 }
 
-.close-details {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-weight: bold;
+.details-content {
+    margin-left: 10px;
+    flex: 1;
+    font-size: 24px;
+    color: var(--background-green);
+    word-break: break-word; 
+    padding-right: 15px; 
 }
 </style>

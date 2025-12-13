@@ -4,7 +4,8 @@ import Profile from '@/assets/user.png'
 
 <template>
   <div class="customer-service">
-    <Header :avatar="Profile" />
+      <Header :avatar="Profile" />
+
     <div class="frame">
       <ShiningHeader />
 
@@ -38,7 +39,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .customer-service {
   background: var(--background-green);
   display: flex;
@@ -54,6 +55,7 @@ export default {
   flex-direction: column;
   gap: 16px;
   height: 814px;
+  width: 80%;
   position: relative;
   background: var(--background-green);
 }

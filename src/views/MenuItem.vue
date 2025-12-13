@@ -1,32 +1,54 @@
+<!--
+/**
+ * @file MenuItem.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacie viewu pre detail napoja
+ * @date 2023-10-27
+ */
+-->
 
 <template>
-  <Header :rightIcon = "cart" :rightFunction = "order" />
-  <div class="app">
- <p v-if="drinkLoading && (!drinkData || drinkData.length === 0)">
+  <div v-bind="$attrs">
+    <!--hlavicka-->
+    <Header :previous="true" :rightIcon="cart" :rightFunction="order" />
+    <div class="app">
+      <p v-if="initialLoading">
   Loading...
 </p>
+      <!--component detail s predanymi parametrami-->
+      <DrinkInfoCard
+        v-else-if="drinkData"
+        :drink="drinkData"
+        :liked="liked"
+        :disliked="disliked"
+        @back="goBackToList"
+        @rate="rate"
+        @order="addDrinkToOrder"
+      />
 
-    <DrinkInfoCard
-      v-else-if="drinkData"
-      :drink="drinkData"
-      @back="goBackToList"
-      @rate="rate"
-      @order="addDrinkToOrder"
-    />
-
-    <p v-else>Error: {{ drinkError }}</p>
+      <p v-else>Error: {{ drinkError }}</p>
+    </div>
   </div>
 </template>
 
+
 <script setup>
+ import { ref } from "vue";
+
+const initialLoading = ref(true);
+ 
+
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
 import DrinkInfoCard from "@/components/DrinkInfoCard.vue";
+import { activeUser } from "@/stores/Login";
 import {
   drinkData,
   drinkError,
   drinkLoading,
+  liked,
+  disliked,
   loadDrink,
   startDrinkAutoRefresh,
   stopDrinkAutoRefresh,
@@ -34,7 +56,6 @@ import {
   addToOrder
 } from "@/stores/DrinkInfo.js";
 
-import { activeUser } from "@/stores/Login.js";
 import Header from "@/components/Header.vue";
 
 const router = useRouter();
@@ -47,22 +68,29 @@ function goBackToList() {
 
 
 function rate(value) {
-  rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular");
+  rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular", activeUser.value.username);
 }
 
+
+import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
   try {
     const result = await addToOrder(drinkData.value);
+    addToast(`${drinkData.value.name} added to cart!`);
     console.log("Order added:", result);
   } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`);
     console.error("Failed to add order:", err);
   }
 }
 
-onMounted(() => {
-  loadDrink(route);
-  startDrinkAutoRefresh(route);
+onMounted(async () => {
+  initialLoading.value = true;
+  await loadDrink(route, activeUser.value.username );       
+  initialLoading.value = false; 
+  startDrinkAutoRefresh(route); 
 });
+
 
 onBeforeUnmount(() => {
   stopDrinkAutoRefresh();

@@ -1,19 +1,19 @@
 <template>
-  <div class="slide-panel-wrapper">
-    <Transition name="expand">
-        <SlideDownTable
-          v-show="isExpanded"
-          class="expanded-panel"
-          :currentMap="currentMap"
-          @navigate="$emit('navigate', $event)"
-          @close="toggleExpand"
-        />
-      </Transition>
+  <div 
+    class="slide-panel-wrapper"
+    :class="{ 'is-open': isExpanded }" 
+  >
     <SlideUpTable 
       class="handle-panel" 
       :class="{ rotated: isExpanded }" 
       :expanded="isExpanded"
       @toggle="toggleExpand" 
+    />
+    <SlideDownTable
+      class="expanded-panel"
+      :currentMap="currentMap"
+      @navigate="$emit('navigate', $event)"
+      @close="toggleExpand"
     />
   </div>
 </template>
@@ -36,54 +36,34 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
 
 <style scoped>
 .slide-panel-wrapper {
-  /* positioning handled by parent (.slide-up-table-layout) */
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 100;
-  width: 380px; /* original compact width */
+  width: 100%; 
   height: 607px;
   box-sizing: border-box;
   pointer-events: none;
+  position: fixed; 
+  bottom: 0; 
+  left: 0; 
+  transform: translateY(567px); 
+  transition: transform 0.4s ease; 
+}
+
+.slide-panel-wrapper.is-open {
+  transform: translateY(0); 
 }
 
 .expanded-panel {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  width: 80%;
   height: 567px;
-  transform-origin: bottom;
   pointer-events: auto;
-}
-
-.expand-enter-active,
-.expand-leave-active {
-  transition: all 0.4s ease;
-  transform-origin: bottom;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-  transform: scaleY(0);
-  opacity: 0;
-}
-
-.expand-enter-to,
-.expand-leave-from {
-  transform: scaleY(1);
-  opacity: 1;
 }
 
 .handle-panel {
-  position: absolute;
-  transition: transform 0.4s ease;
-  transform: translateY(0);
-  bottom: 0;
   z-index: 101;
   pointer-events: auto;
-}
-
-.handle-panel.rotated {
-  transform: translateY(-567px);
+  width: 80%; 
 }
 </style>

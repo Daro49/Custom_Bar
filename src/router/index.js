@@ -114,11 +114,6 @@ const router = createRouter({
       component: () => import('../views/CSViews/Milestones.vue'),
     },
     {
-      path: '/edit_profile',
-      name: 'edit_profile',
-      component: () => import('../views/CSViews/EditProfile.vue'),
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('../views/Login.vue'),
@@ -128,7 +123,12 @@ const router = createRouter({
       name: 'my_drinks',
       component: () => import('../views/CSViews/MyDrinks.vue'),
     },
-    
+    {
+      path: '/package_details/:pkgId',
+      name: 'package_details',
+      component: () => import('../views/CSViews/PackageDetails.vue'),
+      props: true,
+    },
   ],
 })
 

@@ -46,7 +46,7 @@ defineProps({
 
 <style scoped>
 .slide-up-content {
-  width: 380px;
+  width: 80%;
   height: 567px;
   background-color: #552808;
   border: 2px solid black;
@@ -67,7 +67,7 @@ defineProps({
 }
 
 .nav-button {
-  width: 350px;
+  width: 90%;
   height: 89px;
   background-color: #D4AF37;
   border: 2px solid black;
@@ -85,7 +85,6 @@ defineProps({
   background-color: #c49f32;
 }
 
-/* active state: vertical gradient lighter on top */
 .nav-button.active {
   background: linear-gradient(to bottom, #017579 0%, #013C3E 100%);
   color: black;

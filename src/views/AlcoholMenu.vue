@@ -1,21 +1,35 @@
+<!--
+/**
+ * @file AlcoholMenu.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre menu alkoholov
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
+  <!--hlavicka-->
   <Header :rightIcon = "cart" :rightFunction = "order" />
+  <!--sipky na zmenu pohladu-->
   <div class="app">
-    <div>
-    <RouterLink to="/custommenu" class="nav-btn"><-</RouterLink>
-    <RouterLink to="/softdrinksmenu" class="nav-btn">-></RouterLink>
-</div>
+      <MenuNavigation
+  label="Alcohol Menu"
+  @prev="goToCustomMenu"
+  @next="goToSoftDrinks"
+/>
+
 
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
-    <!-- Other drinks -->
+  <!-- jednotlive alkoholy-->
     <DrinkCard
-  v-for="drink in drinks"
+  v-for="drink in drinks "  
   :key="drink.id"
   :drink="drink"
   @info="goToDrink"
+  @addToOrder="handleOrder"
 />
 </div>
 
@@ -25,8 +39,8 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-
-import { drinks, loadDrinks } from "@/stores/MenuAlcohol.js";
+import { addToOrder } from '@/stores/DrinkInfo';
+import { drinks, loadDrinks, drinksLoading } from "@/stores/MenuAlcohol.js";
 import Header from "@/components/Header.vue";
 import cart from "@/assets/OrderHistory.svg?raw";
 const router = useRouter();
@@ -45,7 +59,25 @@ function goToDrink(name) {
 function order(){
       router.push({ name: 'order' })
     };
+import { addToast } from '@/stores/ToastStore.js';
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    console.error("Order failed:", err);
+  }
+}
 
+import MenuNavigation from "@/components/MenuNavigation.vue";
+function goToSoftDrinks() {
+  router.push("/softdrinksmenu");
+}
+
+function goToCustomMenu() {
+  router.push("/custommenu");
+}
 </script>
 
 <style scoped>
@@ -61,6 +93,7 @@ function order(){
     overflow-y: auto;
         box-sizing: border-box;
     height: 100%;
+    padding-bottom: 71px;
   }
 .drink-card {
   display: flex;
@@ -184,19 +217,6 @@ function order(){
   transition: transform 0.2s ease-in-out;
 }
 
-
-/* TODO -> still temporary*/
-.nav-btn { 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background: #d8a543;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
 
 .featured-container {
   display: flex;

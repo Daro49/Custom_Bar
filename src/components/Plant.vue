@@ -59,9 +59,9 @@ const innerLeaves = computed(() => {
 }
 
 .plant-svg {
-  width: 100px; /* Adjust size as needed */
-  height: 100px; /* Adjust size as needed */
-  display: block; /* Remove extra space below SVG */
+  width: 100px;
+  height: 100px;
+  display: block;
   margin: 0 auto;
 }
 </style>

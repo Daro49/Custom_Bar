@@ -1,31 +1,34 @@
 <template>
+    <Header :avatar="Profile" :previous="true"/>
   <div class="order-container">
-    <!-- Header -->
-    <div class="header">
-      <img src="../assets/Back.png" class="header-icon back-icon" @click="goBack" />
-      <img src="../assets/user.png" class="header-icon profile-icon" @click="goToProfile" />
-    </div>
 
     <!-- Content -->
     <div class="content">
       <!-- Title with divider -->
       <div class="order-title">
-        <svg 
-          class="chevron-icon"
-          viewBox="0 0 100 50"
-        >
-          <path 
-            d="M10 40 L50 10 L90 40" 
-            stroke="black" 
-            stroke-width="8" 
-            fill="none" 
-            stroke-linecap="round"
-          />
-        </svg>
-        <h2>ORDER</h2>
-        <!-- Date, TODO: change content to &lt; {{ orderDate }} &gt;-->
+        <h2>ORDER</h2> <br>
         <div class="order-date">
-            &lt; 11.11.2025 &gt;
+          <svg class="chevron-icon1" viewBox="0 0 100 50" @click="prevOrder">
+            <path 
+              d="M10 40 L50 10 L90 40" 
+              stroke="black" 
+              stroke-width="8" 
+              fill="none" 
+              stroke-linecap="round"
+            />
+          </svg>
+
+          {{ orderDate }}
+
+          <svg class="chevron-icon2" viewBox="0 0 100 50" @click="nextOrder">
+            <path 
+              d="M10 40 L50 10 L90 40" 
+              stroke="black" 
+              stroke-width="8" 
+              fill="none" 
+              stroke-linecap="round"
+            />
+          </svg>
         </div>
         <div class="divider-line"></div>
       </div>
@@ -40,9 +43,12 @@
             <span class="item-name">{{ item.name }}</span>
           </div>
           <div class="item-right">
-            <span class="price">{{ item.price }}€</span>
-            <img src="../assets/Info.svg" class="info-icon" />
+            <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
+            <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
+        </div>
+        <div v-if="orderItems.length > 0" class="order-item2">
+          <span class="item-name">Order price: {{ orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) }}€</span>
         </div>
       </div>
     </div>
@@ -50,39 +56,39 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { activeUser } from '@/stores/Login.js'
+import Header from '@/components/Header.vue'
+import Profile from '@/assets/user.png'
+import { addToast } from '@/stores/ToastStore.js';
 
-const router = useRouter()
 const orderItems = ref([])
 const orderDate = ref('')
 const isLoading = ref(true)
 const error = ref(null)
+const orderIndex = ref(0)
+const orderCount = ref(0)
 
-const goBack = () => {
-  router.back()
-}
-
-const goToProfile = () => {
-  router.push('/profile')
+const formatDate = (date) => {
+  const d = new Date(date)
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const year = d.getFullYear()
+  return `${day}.${month}.${year}`
 }
 
 const fetchOrder = async () => {
   try {
     isLoading.value = true
     const username = activeUser.value.username
-    const index = '0';
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${index}`)
-    
+    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/orders/${orderIndex.value}`)
     if (!response.ok) {
       throw new Error('No past orders')
     }
-    
     const data = await response.json()
-    orderItems.value = data
-    orderDate.value = new Date().toLocaleDateString()
-    console.log('Past order items fetched:', data)
+    orderItems.value = data.items ?? data
+    orderDate.value = data.date ? formatDate(data.date) : ''
+    orderCount.value = data.totalOrders ?? orderCount.value
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
@@ -91,64 +97,84 @@ const fetchOrder = async () => {
   }
 }
 
+const nextOrder = () => {
+  if (orderCount.value === 0) return
+  orderIndex.value = (orderIndex.value + 1) % orderCount.value
+  fetchOrder()
+}
+
+const prevOrder = () => {
+  if (orderCount.value === 0) return
+  orderIndex.value = (orderIndex.value - 1 + orderCount.value) % orderCount.value
+  fetchOrder()
+}
+
 onMounted(() => {
   fetchOrder()
 })
+
+async function addToOrder(drink) {
+  if (!activeUser.value?.username || !activeUser.value?.table) {
+    throw new Error("User not logged in or table not set");
+  }
+  const username = activeUser.value.username;
+  const payload = {
+    drink,
+    tableCode: activeUser.value.table
+  };
+  try {
+    const res = await fetch(
+      `https://itu-wb12.onrender.com/users/${username}/order/add`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`, 5000);
+    console.error("Order failed:", err);
+  }
+}
 </script>
 
 <style scoped>
 .order-container {
-  width: 90%;
-  height: 917px;
-  background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.2) 100%
-    ), linear-gradient(0deg, rgba(13, 86, 75, 1) 0%, rgba(13, 86, 75, 1) 100%);
-  border: 2px solid black;
+  width: 100%;
+  height: 90%;
+  position: absolute;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  bottom: 0;
 }
 
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 76px;
-  padding: 0 14px;
-  background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
-  border-bottom: 1px solid #a37d25;
-  box-sizing: border-box;
-}
-
-.header-icon {
-  width: 59px;
-  height: 59px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.header-icon:hover {
-  transform: scale(1.05);
-}
-
-/* Content */
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   box-sizing: border-box;
   border-top: 2px solid black;
   border-radius: 30px 30px 0px 0px;
   margin-top: 30px;
 }
 
-/* Order Title */
 .order-title {
   display: flex;
   flex-direction: column;
@@ -157,10 +183,17 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.chevron-icon {
-  width: 75px;
-  height: 20px;
-  transform: rotate(180deg);
+.chevron-icon1 {
+  width: 60px;
+  height: 15px;
+  transform: rotate(-90deg) translateX(-4px);
+  display: inline-block;
+}
+.chevron-icon2 {
+  width: 60px;
+  height: 15px;
+  transform: rotate(90deg) translateX(4px);
+  display: inline-block;
 }
 
 .order-title h2 {
@@ -179,7 +212,6 @@ onMounted(() => {
   margin-top: 8px;
 }
 
-/* Order Date */
 .order-date {
   text-align: center;
   font-family: "Georgia", "Times New Roman", serif;
@@ -188,12 +220,12 @@ onMounted(() => {
   margin-bottom: 16px;
 }
 
-/* Order Items */
 .order-items {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 130px;
 }
 
 .loading,
@@ -220,6 +252,18 @@ onMounted(() => {
   background-color: rgba(255, 255, 255, 0.3);
   padding: 12px 16px;
   border-radius: 8px;
+}
+
+.order-item2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 12px 16px;
+  border-radius: 8px;
+  width: 30%; 
+  margin: 10px auto;
 }
 
 .item-left {
@@ -252,4 +296,29 @@ onMounted(() => {
   height: 24px;
   cursor: pointer;
 }
+
+.chevron-icon1:hover{
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(-90deg) translateX(-4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.chevron-icon2:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--gold);
+  transform: rotate(90deg) translateX(4px) scale(1.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.add-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 30%;
+  background: rgba(255, 255, 255, 0.3);
+  border: black 2px solid;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 </style>

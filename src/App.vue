@@ -1,10 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import ToastContainer from '@/components/ToastContainer.vue';
 </script>
 
 <template>
   <div class="wrapper">
       <RouterView />
+      <ToastContainer />
   </div>
 </template>
 
@@ -49,7 +51,7 @@ nav a:first-of-type {
   box-sizing: border-box;
   overflow: hidden;
 }
-/* PC adjustment */
+
 @media (min-width: 768px) {
   .wrapper {
     width: 100%;

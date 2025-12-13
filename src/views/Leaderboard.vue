@@ -1,19 +1,30 @@
+<!--
+/**
+ * @file Leaderboard.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre rebricek najlepsich napojov
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
+  <!--hlavicka-->
   <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
-    
-    <div>
-      <button @click="$router.push('/customleaderboard')"><-</button>
-      <button @click="$router.push('/customleaderboard')">-></button>
-    </div>
-
-    <!-- Loading / Error states -->
+  <!--sipky-->
+    <MenuNavigation
+  label="Leaderboard"
+  @prev="goToCustomLeaderboard"
+  @next="goToCustomLeaderboard"
+/>
+    <!-- nacitanie -->
  <p v-if="leaderboardLoading && (!leaderboard || leaderboard.length === 0)">
   Loading...
 </p>
     <p v-if="leaderboardError">{{ leaderboardError }}</p>
 
-    <!-- Drink Cards -->
+    <!-- napoje -->
     <LeaderboardDrinkCard
       v-for="(drink, i) in leaderboard"
       :key="drink.id"
@@ -29,7 +40,6 @@ import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import cart from "@/assets/OrderHistory.svg?raw";
 import Header from "@/components/Header.vue";
-
 import {
   leaderboard,
   leaderboardError,
@@ -51,8 +61,10 @@ function goToDrink(name) {
 }
 
 onMounted(() => {
-  loadLeaderboard();
-  intervalId = setInterval(loadLeaderboard, 5000);
+  loadLeaderboard(activeUser.value.username);
+  intervalId = setInterval(() => {
+    loadLeaderboard(activeUser.value.username);
+  }, 5000);
 });
 
 onBeforeUnmount(() => {
@@ -62,19 +74,31 @@ onBeforeUnmount(() => {
 function order(){
       router.push({ name: 'order' })
     };
+import MenuNavigation from "@/components/MenuNavigation.vue";
+import { activeUser } from "@/stores/Login";
 
+function goToCustomLeaderboard() {
+  router.push("/customleaderboard");
+}
 </script>
 
 <style scoped>
 .app {
-  margin-top: 8px;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  height: 917px;
-  overflow-y: auto;
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    height: 100vh; 
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-bottom: 100px;
+}
+
+.app > * {
+    flex-shrink: 0;
+    transition: all 0.3s ease-in-out;
 }
 </style>

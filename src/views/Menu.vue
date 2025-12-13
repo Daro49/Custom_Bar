@@ -1,54 +1,101 @@
-<!-- src/views/DrinksView.vue -->
+<!--
+/**
+ * @file AlcoholMenu.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre menu drinkov
+ * @date 2023-10-27
+ */
+-->
+
 <template>
+  <!--hlavicka-->
   <Header :rightIcon = "cart" :rightFunction = "order" />
 
   <div class="app">
-    <div>
-    <RouterLink to="/softdrinksmenu" class="nav-btn"><-</RouterLink>
-    <RouterLink to="/custommenu" class="nav-btn">-></RouterLink>
+    <!--sipky-->
+  <MenuNavigation
+  label="Menu"
+  @prev="goToSoftDrinks"
+  @next="goToCustomMenu"
+/>
+<div class="filter-section">
+  <div class="toggle-wrapper">
+    <!--zobrazenie len oblubenych napojov-->
+    <span class="toggle-label">All drinks</span>
+    
+    <label class="switch">
+      <input type="checkbox" v-model="showOnlyLiked">
+      <span class="slider round"></span>
+    </label>
+    
+    <span class="toggle-label">Favourite drinks ❤️</span>
+  </div>
 </div>
-
+<!--nacitanie-->
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
-    <!-- Featured drink -->
-    <div class="featured-container" v-if="drinks?.length">
-    <button 
-      class="drinkCard"
-      v-if="drinks?.length"
-      @click="goToDrink(drinks[0].name)"
-    >
-      <div class="drinkHeader">POPULAR NOW</div>
-      <img :src="drinks[0].image" :alt="drinks[0].name" class="drinkImage" />
-      <div class="drinkFooter">{{ drinks[0].name }}</div>
-    </button>
-</div>
-    <!-- Other drinks -->
-    <DrinkCard
-  v-for="drink in (drinks || []).slice(1)"  
+<!--napoj tyzdna-->
+<FeaturedDrink 
+  v-if="featuredDrink && (!showOnlyLiked || featuredDrink.liked)"
+  :drink="featuredDrink"
+  @select="goToDrink"
+  @order="handleOrder"
+/>
+<!--zvysne napoje-->
+<DrinkCard
+  v-for="drink in secondaryDrinks"  
   :key="drink.id"
   :drink="drink"
   @info="goToDrink"
+  @addToOrder="handleOrder"
 />
+<!--sprava ak nie je ziaden drink oblubeny-->
+<p v-if="!drinksLoading && secondaryDrinks.length === 0 && (!featuredDrink || !featuredDrink.liked && showOnlyLiked)" class="empty-msg">
+  No liked drinks yet ❤️
+</p>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import FeaturedDrink from "@/components/FeaturedDrink.vue";
+
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import cart from "@/assets/OrderHistory.svg?raw";
-
+import { addToOrder } from '@/stores/DrinkInfo';
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-
+import { activeUser } from "@/stores/Login";
 import { drinks, drinksLoading, loadDrinks } from "@/stores/Menu.js";
+
+const showOnlyLiked = ref(false); 
+
+
+
+const featuredDrink = computed(() => {
+  return (drinks.value || []).find(d => d.position === 1);
+});
+
+const secondaryDrinks = computed(() => {
+  let list = (drinks.value || []).filter(d => d.position !== 1);
+  
+  if (showOnlyLiked.value) {
+    list = list.filter(d => d.liked === true);
+  }
+  
+  return list;
+});
 
 const router = useRouter();
 
 onMounted(() => {
-  loadDrinks();
+  loadDrinks(activeUser.value.username);
 });
+
+function order(){
+  router.push({ name: 'order' })
+};
 
 function goToDrink(name) {
   router.push({
@@ -58,9 +105,27 @@ function goToDrink(name) {
   });
 }
 
-function order(){
-      router.push({ name: 'order' })
-    };
+import { addToast } from '@/stores/ToastStore.js';
+async function handleOrder(drink) {
+  try {
+    await addToOrder(drink);
+    addToast(`${drink.name} added to cart!`);
+    console.log("Added to order:", drink.name);
+  } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`, 5000);
+    console.error("Order failed:", err);
+  }
+}
+
+import MenuNavigation from "@/components/MenuNavigation.vue";
+
+function goToSoftDrinks() {
+  router.push("/softdrinksmenu");
+}
+
+function goToCustomMenu() {
+  router.push("/custommenu");
+}
 
 </script>
 
@@ -69,15 +134,20 @@ function order(){
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
+    height: 100vh; 
     overflow-y: auto;
-        box-sizing: border-box;
-    height: 100%;
-  }
+    box-sizing: border-box;
+    padding-bottom: 100px;
+}
+
+.app > * {
+    flex-shrink: 0;
+    transition: all 0.3s ease-in-out;
+}
 .drink-card {
   display: flex;
   align-items: center;
@@ -201,24 +271,118 @@ function order(){
 }
 
 
-/* TODO -> still temporary*/
-.nav-btn { 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background: #d8a543;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
-
 .featured-container {
   display: flex;
   justify-content: center; 
   width: 100%;              
   margin-bottom: 16px;
 }
+.filter-container {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 8px 16px;
+}
 
+.checkbox-label {
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: #d8a543;
+}
+
+.empty-msg {
+  color: #f7d77c;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+.filter-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  margin-bottom: 10px;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(46, 76, 67, 0.5); 
+  padding: 8px 20px;
+  border-radius: 25px;
+  border: 1px solid #d4af37; 
+}
+
+.toggle-label {
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1a2e28;
+  transition: .4s;
+  border: 1px solid #d4af37;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: linear-gradient(135deg, #f7c244, #c98f00); 
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2e4c43;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
