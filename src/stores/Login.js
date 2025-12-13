@@ -81,7 +81,8 @@ export async function login(username) {
             data.user.points,
             data.user.email,
             data.user.table,
-            data.user.tableExpiration
+            data.user.tableExpiration,
+            data.user.imgurl
         );
 
         activeUser.value = newUser.toJSON();
