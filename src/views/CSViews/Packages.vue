@@ -14,9 +14,8 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Header :avatar="Profile" />
   <div class="packages">
-      <Header :avatar="Profile" />
-
     <PointsPresenter/>
     <div class="package-list" v-if="loaded">
       <PackageCard
