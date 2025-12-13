@@ -1,17 +1,14 @@
 <template>
   <div class="table-d-component" :class="{ active: selected }" @click.stop="$emit('select', label)">
     <div class="layout">
-      <!-- Left couch -->
       <div class="couch-wrapper left">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
       
-      <!-- Center table -->
       <div class="main-table">
         <span class="table-label">{{ label }}</span>
       </div>
       
-      <!-- Right couch (flipped) -->
       <div class="couch-wrapper right">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
@@ -47,7 +44,7 @@ const props = defineProps({
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
 }
 
 .couch-wrapper {

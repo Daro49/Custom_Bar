@@ -22,8 +22,7 @@ function goToDetails() {
 
 const order = async () => {
   await processPackageOrder(
-    props.pkg, 
-    { errorMsg: errorMessage, isErr: isError }
+    props.pkg
   );
 };
 </script>

@@ -103,15 +103,10 @@ export async function removePackageFromOrder(username, pkgId)
  * @param {Object} stateRefs Object containing errorMsg and isErr refs for UI feedback
  * @returns {Promise<boolean>} True if order was successful, false otherwise
  */
-export async function processPackageOrder(currentPkg, stateRefs) {
-  const { errorMsg, isErr } = stateRefs;
-
-  errorMsg.value = '';
-  isErr.value = false;
+export async function processPackageOrder(currentPkg) {
 
   if (activeUser.value.points < currentPkg.price) {
-    errorMsg.value = "Not enough points!";
-    isErr.value = true;
+    addToast("Failed to add to cart. Not enough points!");
     return false;
   }
 
@@ -122,11 +117,10 @@ export async function processPackageOrder(currentPkg, stateRefs) {
 
   const result = await orderPackage(activeUser.value.username, currentPkg);
   if (!result.success) {
-    isErr.value = true;
     if (result.status === 440) {
-      errorMsg.value = "Package already in order!";
+      addToast("Failed to add to cart. Package already in order!");
     } else {
-      errorMsg.value = "Cannot order package!";
+      addToast("Error adding package to order!");
     }
     return false;
   }
@@ -138,8 +132,7 @@ export async function processPackageOrder(currentPkg, stateRefs) {
     return false;
   }
 
-  errorMsg.value = "Package successfully added to order!";
-  isErr.value = false;
+  addToast("Package successfully added to order!");
   
   setTimeout(() => { errorMsg.value = ''; }, 3000);
   

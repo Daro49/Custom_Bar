@@ -38,6 +38,11 @@ defineEmits(['selectTable', 'navigate', 'close'])
   height: 917px;
   width: 70%;
 }
+@media (max-width: 768px) {
+  .table-d-layout {
+    width: 100%;
+  }
+}
 
 .table-d-layout .out-tables-2 {
   display: flex;
