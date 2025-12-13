@@ -109,7 +109,7 @@ const props = defineProps({
 
 .table-a-component.active .main-table,
 .table-a-component.active .seat {
-  background-color: #513C2C !important;
+  background-color: #513C2C;
 }
 .table-a-component:hover {
   filter: brightness(1.1);

@@ -93,8 +93,8 @@ const props = defineProps({
 }
 
 .table-d-component.active .main-table {
-  background-color: #513C2C !important;
-  border-color: #000 !important;
+  background-color: #513C2C;
+  border-color: #000;
 }
 
 .table-d-component:hover {

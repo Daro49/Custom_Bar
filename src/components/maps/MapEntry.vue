@@ -42,7 +42,7 @@ defineProps({
   selectedTable: String
 })
 
-defineEmits(['selectTable'])
+defineEmits(['selectTable', 'navigate', 'close'])
 </script>
 
 <style scoped>
