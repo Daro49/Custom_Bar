@@ -1,22 +1,35 @@
 <template>
     <div class="button" @click="buttonAction">
-        <p>{{ props.buttonName }}</p>
+        <p>{{ buttonText }}</p>
     </div>
 </template>
 
 <script setup>
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
+    import { computed } from 'vue';
 
     const props = defineProps({
-        buttonName: String,
         next: Boolean
     })
 
     const store = useDrinkRecipe();
 
+    const buttonText = computed(() => {
+        if (props.next) return store.isLastStep ? 'Order' : 'Next';
+        return 'Back';
+    })
+
     function buttonAction(){
         if (props.next) {
-            store.nextStep();
+            if (store.isLastStep) {
+                /* modalVisible.value = true; */
+                /**
+                 * CHECK IF NAME IS CORRECTLY ASSIGNED, DESCRIPTION DOESNT HAVE TO BE AND SEND THE RECIPE
+                 */
+            }
+            else {
+                store.nextStep();
+            }
         }
         else {
             store.previousStep();

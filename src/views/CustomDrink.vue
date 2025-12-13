@@ -8,13 +8,13 @@
 			<IngredientChoose />
 
 			<div class="buttons">
-				<ProgressButton :button-name="'Back'" :next="false" />
-				<ProgressButton :button-name="'Next'" :next="true" />
+				<ProgressButton :next="false" />
+				<ProgressButton :next="true" />
 			</div>
 		</div>
 
 		<div class="recipe">
-			<h2>Your Recipe</h2>
+			<DrinkDetail />
 			<div class="glass_box">
 				<Glass />
 			</div>
@@ -34,6 +34,7 @@
 	import ProgressButton from '@/components/customdrink/ProgressButton.vue';
 	import Glass from '@/components/customdrink/Glass.vue';
 	import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
+import DrinkDetail from '@/components/customdrink/DrinkDetail.vue';
 </script>
 
 <style scoped>
@@ -77,7 +78,7 @@
 		flex-direction: column;
 		justify-content: center;
 		gap: 10px;
-		flex-shrink: 0;
+		position: sticky;
 
 		border-radius: 50px;
 		background: #D4AF37;
@@ -113,7 +114,6 @@
 
 	.recipe_list {
 		display: flex;
-		position: sticky;
 		width: 100%;
 		flex-direction: column;
 	}

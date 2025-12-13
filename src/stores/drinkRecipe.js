@@ -8,6 +8,8 @@ export const useDrinkRecipe = defineStore("recipe", {
     state: () => ({
         currentStep: 0,
         isLoading: false,
+        drinkName: '',
+        drinkDescription: '',
         ingredientsCache: {},
         selectedIngredients: {}
     }),
@@ -15,6 +17,10 @@ export const useDrinkRecipe = defineStore("recipe", {
     getters: {
         currentCategory: (state) => STEPS[state.currentStep],
         currentStepIngredients: (state) => state.ingredientsCache[STEPS[state.currentStep]] || [],
+
+        isLastStep: (state) => {
+            return state.currentStep === STEPS.length - 1;
+        },
 
         getSelectedIngredients: (state) => (category) => {
             const selected = state.selectedIngredients[category];
@@ -32,6 +38,10 @@ export const useDrinkRecipe = defineStore("recipe", {
                 }
                 return `${item.name} (${item.amount} ml)`;
             })
+        },
+
+        sizeSelected: (state) => {
+            return Object.keys(state.selectedIngredients['sizes'] || {}).length === 1;
         },
 
         maxCapacity: (state) => {
@@ -63,10 +73,7 @@ export const useDrinkRecipe = defineStore("recipe", {
         },
 
         remainingVolume() {
-            const max = this.maxCapacity;
-            const current = this.currentVolume;
-
-            return Math.max(0, max - current);
+            return Math.max(0, this.maxCapacity - this.currentVolume);
         },
 
         maxSliderValue() {
@@ -118,6 +125,10 @@ export const useDrinkRecipe = defineStore("recipe", {
         },
 
         selectSingleSize({ category, ingredient, amount }) {
+            if (this.sizeSelected) {
+                this.resetWithSize();
+            }
+
             this.selectedIngredients[category] = {}
 
             this.selectedIngredients[category][ingredient] = {
@@ -130,7 +141,22 @@ export const useDrinkRecipe = defineStore("recipe", {
             delete this.selectedIngredients[category];
         },
 
+        resetWithSize() {
+            const currentSize = this.selectedIngredients['sizes'] || {};
+
+            this.selectedIngredients = {};
+
+            this.selectedIngredients['sizes'] = currentSize;
+        },
+
         nextStep() {
+            if (this.currentCategory === 'sizes') {
+                if (!this.sizeSelected) {
+                    console.warn("Size has to be selected!");
+                    return;
+                }
+            }
+
             if (this.currentStep < STEPS.length - 1) {
                 this.currentStep++;
                 this.fetchStepIngredients(this.currentCategory);
@@ -142,5 +168,13 @@ export const useDrinkRecipe = defineStore("recipe", {
                 this.currentStep--;
             }
         },
+
+        setName(name) {
+            this.drinkName = name;
+        },
+
+        setDescription(desc) {
+            this.drinkDescription = desc;
+        }
     },
 });
