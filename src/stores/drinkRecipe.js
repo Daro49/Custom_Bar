@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
+import { useNotificationStore } from "./notificationStore";
+import { activeUser } from "./Login";
 
 const ML_AMOUNT = 20;
+const API_URL = "https://itu-wb12.onrender.com";
+
 export const STEPS = ['sizes', 'alcohols', 'softDrinks', 'bitters', 'others'];
 
 export const useDrinkRecipe = defineStore("recipe", {
@@ -78,6 +82,25 @@ export const useDrinkRecipe = defineStore("recipe", {
 
         maxSliderValue() {
             return Math.floor(this.remainingVolume / ML_AMOUNT);
+        },
+
+        customDrinkRecipePayload: (state) => {
+            let ingredients = [];
+
+            for (const category in state.selectedIngredients) {
+                if (category !== 'sizes') {
+                    const ing = state.selectedIngredients[category]
+
+                    ingredients = ingredients.concat(Object.keys(ing));
+                }
+            }
+
+            return {
+                name: state.drinkName,
+                description: state.drinkDescription,
+                ingredients: ingredients,
+                username: activeUser.value.username
+            }
         }
     },
 
@@ -86,7 +109,7 @@ export const useDrinkRecipe = defineStore("recipe", {
             this.isLoading = true;
 
             try {
-                const response = await fetch(`https://itu-wb12.onrender.com/${category}`)
+                const response = await fetch(`${API_URL}/${category}`)
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
@@ -102,6 +125,45 @@ export const useDrinkRecipe = defineStore("recipe", {
             }
             finally {
                 this.isLoading = false;
+            }
+        },
+
+        async postDrinkRecipe() {
+            const notification = useNotificationStore();
+
+            const payload = this.customDrinkRecipePayload;
+
+            if (!payload.name) {
+                notification.showNotification("Your drink has to have a name!", 'warning');
+                return false;
+            }
+            else if (payload.ingredients.length === 0) {
+                notification.showNotification("Choose at least one ingredient!", 'warning');
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/addcustomDrinks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                notification.showNotification(`Drink '${data.name}' was successfully saved!`, 'success');
+
+                return true;
+            }
+            catch (error) {
+                notification.showNotification(error, 'warning');
+                return false;
             }
         },
 
@@ -152,7 +214,10 @@ export const useDrinkRecipe = defineStore("recipe", {
         nextStep() {
             if (this.currentCategory === 'sizes') {
                 if (!this.sizeSelected) {
-                    console.warn("Size has to be selected!");
+                    const store = useNotificationStore();
+
+                    store.showNotification("Size must be chosen", 'warning');
+
                     return;
                 }
             }
@@ -175,6 +240,10 @@ export const useDrinkRecipe = defineStore("recipe", {
 
         setDescription(desc) {
             this.drinkDescription = desc;
+        },
+
+        resetRecipe() {
+            this.$reset();
         }
     },
 });

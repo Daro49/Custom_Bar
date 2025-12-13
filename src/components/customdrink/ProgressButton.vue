@@ -19,13 +19,14 @@
         return 'Back';
     })
 
-    function buttonAction(){
+    async function buttonAction(){
         if (props.next) {
             if (store.isLastStep) {
-                /* modalVisible.value = true; */
-                /**
-                 * CHECK IF NAME IS CORRECTLY ASSIGNED, DESCRIPTION DOESNT HAVE TO BE AND SEND THE RECIPE
-                 */
+                const success = await store.postDrinkRecipe();
+
+                if (success) {
+                    store.resetRecipe();
+                }
             }
             else {
                 store.nextStep();

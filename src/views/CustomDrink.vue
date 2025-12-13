@@ -1,6 +1,8 @@
 <template>
 	<Header :avatar="Profile" ></Header>
 
+	<Notification />
+
 	<div class="content">
 		<div class="ingredient_progress">
 
@@ -34,7 +36,8 @@
 	import ProgressButton from '@/components/customdrink/ProgressButton.vue';
 	import Glass from '@/components/customdrink/Glass.vue';
 	import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
-import DrinkDetail from '@/components/customdrink/DrinkDetail.vue';
+	import DrinkDetail from '@/components/customdrink/DrinkDetail.vue';
+	import Notification from '@/components/customdrink/Notification.vue';
 </script>
 
 <style scoped>
