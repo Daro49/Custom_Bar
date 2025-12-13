@@ -35,14 +35,19 @@ defineEmits(['selectTable', 'navigate', 'close'])
 </script>
 
 <style scoped>
+.table-a-layout {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 917px;
+  width: 70%;
+}
+@media (max-width: 768px) {
   .table-a-layout {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    height: 917px;
-    width: 70%;
+    width: 100%;
   }
+}
 
 .table-a-layout .table-e-instance {
   left: unset;
