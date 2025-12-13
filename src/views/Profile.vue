@@ -113,7 +113,7 @@ async function saveImg() {
         @blur="saveImg" 
         @keyup.enter="saveImg"
         v-focus
-        placeholder="Paste image URL here..."
+        :placeholder="activeUser.imgurl ? activeUser.imgurl : 'Paste url of image here.'"
         class="edit-input-inline"
       />
     </div>

@@ -23,7 +23,7 @@
       </slot>
       <slot name="right">
         <button @click="openProfile" class="avatar-button" v-if="avatar">
-          <img :src="avatar" class="avatar" />
+          <img :src="activeUser?.imgurl || avatar" class="avatar" />
         </button>
         <button
           class="back-btn"
@@ -152,7 +152,8 @@ export default {
       ArrowLeftSvg, 
       selectedTable, 
       formattedTime,
-      timeRemainingMs
+      timeRemainingMs,
+      activeUser
     }
   },
   methods: {

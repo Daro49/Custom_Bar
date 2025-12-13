@@ -38,7 +38,8 @@ async function fetchAndInitializeUser() {
                 userData.points || 0, 
                 userData.email || null, 
                 userData.table || null,
-                userData.tableExpiration 
+                userData.tableExpiration, 
+                userData.imgurl
             );
 
             const plainUserObject = userInstance.toJSON();
