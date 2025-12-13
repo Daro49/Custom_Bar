@@ -27,8 +27,9 @@ const order = async () => {
   isError.value = false;
 
   if (activeUser.value.points < props.pkg.price) {
-    errorMessage.value = "Not enough points!";
-    isError.value = true;
+    addToast("Failed to add to cart. Not enough points.");
+    // errorMessage.value = "Not enough points!";
+    // isError.value = true;
     return;
   }
   if (!activeUser.value.table)
@@ -40,12 +41,14 @@ const order = async () => {
 
   if (!result.success) {
     if (result.status === 440) {
-      errorMessage.value = "Package already in order!";
-      isError.value = true;
+      // errorMessage.value = "Package already in order!";
+      // isError.value = true;
+      addToast("Package already in order.");
       return;
     } else {
-      isError.value = true;
-      errorMessage.value = "Cannot order package!";
+      // isError.value = true;
+      // errorMessage.value = "Cannot order package!";
+      addToast("Error occured while ordering package.");
     }
   }
 
@@ -53,8 +56,9 @@ const order = async () => {
   if (!result2) {
     alert("Error occured while ordering package");
   }
-  errorMessage.value = "Package sucessfully added to order!";
-  isError.value = false;
+  addToast("Package successfully added to order!");
+  // errorMessage.value = "Package sucessfully added to order!";
+  // isError.value = false;
 };
 </script>
 
