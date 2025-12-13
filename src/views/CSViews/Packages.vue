@@ -15,7 +15,7 @@ onMounted(async () => {
 
 <template>
   <div class="packages">
-      <Header :avatar="Profile" />
+      <Header :avatar="Profile" :previous="true" />
 
     <PointsPresenter/>
     <div class="package-list" v-if="loaded">

@@ -2,10 +2,8 @@
 import SectionDivider from '@/components/SectionDivider.vue'
 import { useRouter } from 'vue-router'
 import { defineProps, ref } from 'vue'
-import { orderPackage } from '@/stores/CSModels/Packages'
+import { processPackageOrder } from '@/stores/CSModels/Packages'
 import { activeUser } from '@/stores/Login'
-import { addPoints } from '@/stores/AddPoints'
-import { addToast } from '@/stores/ToastStore'
 
 const router = useRouter()
 let errorMessage = ref('');
@@ -23,38 +21,10 @@ function goToDetails() {
 }
 
 const order = async () => {
-  errorMessage.value = '';
-  isError.value = false;
-
-  if (activeUser.value.points < props.pkg.price) {
-    errorMessage.value = "Not enough points!";
-    isError.value = true;
-    return;
-  }
-  if (!activeUser.value.table)
-  {
-    addToast("Failed to add to cart. Please select table first.");
-    return;
-  }
-  const result = await orderPackage(activeUser.value.username, props.pkg);
-
-  if (!result.success) {
-    if (result.status === 440) {
-      errorMessage.value = "Package already in order!";
-      isError.value = true;
-      return;
-    } else {
-      isError.value = true;
-      errorMessage.value = "Cannot order package!";
-    }
-  }
-
-  const result2 = await addPoints(-props.pkg.price);
-  if (!result2) {
-    alert("Error occured while ordering package");
-  }
-  errorMessage.value = "Package sucessfully added to order!";
-  isError.value = false;
+  await processPackageOrder(
+    props.pkg, 
+    { errorMsg: errorMessage, isErr: isError }
+  );
 };
 </script>
 
