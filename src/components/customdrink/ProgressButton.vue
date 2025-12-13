@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+    import router from '@/router';
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
     import { computed } from 'vue';
 
@@ -25,7 +26,11 @@
                 const success = await store.postDrinkRecipe();
 
                 if (success) {
+                    store.informUser();
                     store.resetRecipe();
+                    router.push({
+                        name: "custommenu"
+                    })
                 }
             }
             else {
@@ -50,6 +55,8 @@
 
         border-radius: 20px;
         background: #D9D9D9;
+
+        cursor: pointer;
     }
 
     .button:hover {

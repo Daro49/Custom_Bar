@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useNotificationStore } from "./notificationStore";
 import { activeUser } from "./Login";
+import { addToast } from "./ToastStore";
 
 const ML_AMOUNT = 20;
 const API_URL = "https://itu-wb12.onrender.com";
@@ -157,8 +158,6 @@ export const useDrinkRecipe = defineStore("recipe", {
 
                 const data = await response.json();
 
-                notification.showNotification(`Drink '${data.name}' was successfully saved!`, 'success');
-
                 return true;
             }
             catch (error) {
@@ -240,6 +239,10 @@ export const useDrinkRecipe = defineStore("recipe", {
 
         setDescription(desc) {
             this.drinkDescription = desc;
+        },
+
+        informUser() {
+            addToast(`Drink '${this.drinkName}' was created!`);
         },
 
         resetRecipe() {

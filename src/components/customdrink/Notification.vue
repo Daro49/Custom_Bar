@@ -30,9 +30,10 @@
         z-index: 1000;
         top: 20px;
         
-        padding: 12px 20px;
-        border-radius: 8px;
-        color: white;
+        padding: 12px 40px;
+        border-radius: 50px;
+        background-color: #D4AF37;
+        border: 2px solid #552808;
         cursor: pointer;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         min-width: 250px;
@@ -40,24 +41,29 @@
     }
 
     .container-warning {
-        background-color: #ff9800;
+        color: #7b2424;
     }
 
     .container-success {
-        background-color: #4CAF50;
+        color: #0d564b;
     }
 
-    .container-fade-enter-from, .container-fade-leave-to {
+    .fade-enter-from, .fade-leave-to {
         opacity: 0;
         transform: translateX(-50%) translateY(20px); 
     }
 
-    .container-fade-enter-active, .container-fade-leave-active {
-        transition: all 0.5s ease;
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
-    .container-fade-enter-to {
+    .fade-enter-to {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
+    }
+
+    p {
+        font-size: 1.5rem;
+		font-family: "Josefin Slab", sans-serif;
     }
 </style>

@@ -139,6 +139,8 @@
 
         border-radius: 20px;
         background: #D9D9D9;
+
+        cursor: pointer;
     }
 
     .ingredient_item_box:hover {
