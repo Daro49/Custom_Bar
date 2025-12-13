@@ -2,22 +2,21 @@
   <div class="table-b-layout">
     <div class="out-tables-1">
       <br><br>
-      <TableD class="table-d-instance" label="E1" :selected="selectedTable === 'E1'" @select="$emit('selectTable', $event)" />
+      <TableD class="table-d-instance" label="E1" :textRotation="90" :selected="selectedTable === 'E1'" @select="$emit('selectTable', $event)" />
       <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" />
-      <TableD class="table-d-instance" label="E2" :selected="selectedTable === 'E2'" @select="$emit('selectTable', $event)" />
+      <TableD class="table-d-instance" label="E2" :textRotation="90" :selected="selectedTable === 'E2'" @select="$emit('selectTable', $event)" />
       <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" />
-      <TableD class="table-d-instance" label="E3" :selected="selectedTable === 'E3'" @select="$emit('selectTable', $event)" />
-      <br> <br> <br>
-      <TableA class="table-a-instance" label="E4" :selected="selectedTable === 'E4'" @select="$emit('selectTable', $event)" />
+      <TableD class="table-d-instance" label="E3" :textRotation="90" :selected="selectedTable === 'E3'" @select="$emit('selectTable', $event)" /> <br> <br> <br>
+      <TableA class="table-a-instance" label="E4" :textRotation="45" :selected="selectedTable === 'E4'" @select="$emit('selectTable', $event)" />
     </div>
 
     <div class="out-tables-2">
       <div class="bar-instance" v-html="Bar"></div> <br> <br>
-      <TableD class="table-d-instance" label="E8" :selected="selectedTable === 'E8'" @select="$emit('selectTable', $event)" />
+      <TableD class="table-d-instance" label="E8" :textRotation="90" :selected="selectedTable === 'E8'" @select="$emit('selectTable', $event)" />
       <br>
-      <TableD class="table-d-instance" label="E7" :selected="selectedTable === 'E7'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="E6" :selected="selectedTable === 'E6'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="E5" :selected="selectedTable === 'E5'" @select="$emit('selectTable', $event)" />
+      <TableD class="table-d-instance" label="E7" :textRotation="90" :selected="selectedTable === 'E7'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="E6" :textRotation="45" :selected="selectedTable === 'E6'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="E5" :textRotation="45" :selected="selectedTable === 'E5'" @select="$emit('selectTable', $event)" />
     </div>
 
     <div class="group" @click="$emit('navigate', 'terrace'); $emit('close')" style="cursor: pointer;">

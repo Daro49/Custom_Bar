@@ -1,14 +1,14 @@
 <template>
   <div class="table-a-component" :class="{ active: selected }">
     <div class="seat top" @click.stop="$emit('select', label)"></div>
-
     <div class="main-table" @click.stop="$emit('select', label)">
-      <span class="table-label">{{ label }}</span>
+      <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
+        <span class="table-label">{{ label }}</span>
+        <span class="table-label-capacity">{{ capacityLabel }}</span>
+      </div>
     </div>
-
     <div class="seat left" @click.stop="$emit('select', label)"></div>
     <div class="seat right" @click.stop="$emit('select', label)"></div>
-
     <div class="seat bottom" @click.stop="$emit('select', label)"></div>
   </div>
 </template>
@@ -23,46 +23,54 @@ const props = defineProps({
     type: String,
     default: 'T2'
   },
+  capacityLabel: {
+    type: String,
+    default: '0/4'
+  },
   tableColor: {
     type: String,
-   default: '#552808'
+    default: '#552808'
   },
   seatColor: {
     type: String,
-   default: '#552808'
-  }
-  ,
+    default: '#552808'
+  },
   selected: {
     type: Boolean,
     default: false
+  },
+  textRotation: {
+    type: Number,
+    default: 0
   }
 })
-
 </script>
 
 <style scoped>
 .table-a-component {
   display: grid;
-  grid-template-columns: auto 1fr auto; 
-  grid-template-rows: auto 1fr auto; 
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
   gap: 5px;
-  align-items: center; 
+  align-items: center;
   justify-items: center;
 
-  width: 110px; 
-  height: 110px; 
+  width: 110px;
+  height: 110px;
   padding: 10px;
   box-sizing: border-box;
   overflow: visible;
   cursor: default;
   transition: filter 0.2s ease, background-color 0.2s ease;
 }
+
 .seat.top {
   grid-column: 2;
   grid-row: 1;
   width: 43px;
   height: 10px;
 }
+
 .main-table {
   grid-column: 2;
   grid-row: 2;
@@ -76,18 +84,21 @@ const props = defineProps({
   align-items: center;
   transition: background-color 0.2s ease;
 }
+
 .seat.left {
   grid-column: 1;
   grid-row: 2;
   width: 10px;
   height: 43px;
 }
+
 .seat.right {
   grid-column: 3;
   grid-row: 2;
   width: 10px;
   height: 43px;
 }
+
 .seat.bottom {
   grid-column: 2;
   grid-row: 3;
@@ -111,15 +122,29 @@ const props = defineProps({
 .table-a-component.active .seat {
   background-color: #513C2C;
 }
+
 .table-a-component:hover {
   filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 1.5rem;
 }
 
 .table-label {
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: 2rem;
   font-weight: bold;
-  color: black;
   text-transform: uppercase;
+}
+
+.table-label-capacity {
+  font-weight: normal;
+  margin-top: 3px;
 }
 </style>

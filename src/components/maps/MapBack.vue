@@ -1,16 +1,19 @@
 <template>
   <div class="table-c-layout">
     <div class="out-tables-1">
-      <TableD class="table-d-instance" label="B5" :selected="selectedTable === 'B5'" @select="$emit('selectTable', $event)" /><br><br><br><br><br><br>
-      <TableD class="table-d-instance" label="B4" :selected="selectedTable === 'B4'" @select="$emit('selectTable', $event)" /><br><br><br><br><br><br>
-      <TableD class="table-d-instance" label="B3" :selected="selectedTable === 'B3'" @select="$emit('selectTable', $event)" /><br><br>
+      <TableD class="table-d-instance" label="B5" :textRotation="90" :selected="selectedTable === 'B5'" @select="$emit('selectTable', $event)" /><br><br><br><br><br>
+      <TableD class="table-d-instance" label="B4" :textRotation="90" :selected="selectedTable === 'B4'" @select="$emit('selectTable', $event)" /><br><br><br><br><br>
+      <TableD class="table-d-instance" label="B3" :textRotation="90" :selected="selectedTable === 'B3'" @select="$emit('selectTable', $event)" /><br>><br><br>
 
       <div class="bottom-cluster">
         <div class="b2-wrap">
           <TableC class="table-c-instance" label="B2" :selected="selectedTable === 'B2'" @select="$emit('selectTable', $event)" />
         </div>
         <div class="b1-wrap">
-          <TableC class="table-c-instance rotated" label="B1" :selected="selectedTable === 'B1'" @select="$emit('selectTable', $event)" />
+          <TableC class="table-c-instance" label="B1" :textRotation="90" layoutDirection="row" :selected="selectedTable === 'B1'" @select="$emit('selectTable', $event)" />
+        </div>
+        <div class="plant">
+          <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" />
         </div>
       </div>
     </div>
@@ -48,6 +51,7 @@
 import TableD from '../tables/TableD.vue'
 import TableB from '../tables/TableB.vue'
 import TableC from '../tables/TableC.vue'
+import Plant from '../Plant.vue'
 
 defineProps({
   selectedTable: String
@@ -146,15 +150,25 @@ defineEmits(['selectTable', 'navigate', 'close'])
   transform: translateX(-38px);
 }
 .table-c-layout .b2-wrap{
-  transform: translateY(40px);
+  transform: translateY(10px);
 }
 .table-c-layout .b1-wrap{
-  transform: rotate(-90deg) translateY(110px);
+  transform: rotate(-90deg) translateY(140px);
 }
 .table-c-layout .group-map1 .text-wrapper {
   margin-top: 7px;
 }
 .table-c-layout .group-map2 .text-wrapper {
   margin-top: 7px;
+}
+
+.table-c-instance {
+  transform: scale(1.3);
+}
+
+.plant {
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-30%);
 }
 </style>

@@ -4,11 +4,14 @@
       <div class="couch-wrapper left">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
-      
+
       <div class="main-table">
-        <span class="table-label">{{ label }}</span>
+        <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
+          <span class="table-label">{{ label }}</span>
+          <span class="table-label-capacity">{{ capacityLabel }}</span>
+        </div>
       </div>
-      
+
       <div class="couch-wrapper right">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
@@ -25,9 +28,14 @@ const emit = defineEmits(['select'])
 
 const props = defineProps({
   label: { type: String, default: 'T1' },
+  capacityLabel: {
+    type: String,
+    default: '0/4'
+  },
   tableColor: { type: String, default: '#552808' },
   seatColor: { type: String, default: '#552808' },
-  selected: { type: Boolean, default: false }
+  selected: { type: Boolean, default: false },
+  textRotation: { type: Number, default: 0 }
 })
 </script>
 
@@ -44,7 +52,7 @@ const props = defineProps({
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 2px;
+  gap: 0px;
 }
 
 .couch-wrapper {
@@ -82,11 +90,28 @@ const props = defineProps({
   justify-content: center;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
 .table-label {
-  font-family: "Georgia","Times New Roman", serif;
-  font-size: 0.95rem;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.85rem;
   font-weight: 700;
   color: black;
+  text-transform: uppercase;
+}
+
+.table-label-capacity {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.65rem;
+  font-weight: normal;
+  color: black;
+  margin-top: 1px;
 }
 
 .table-d-component.active .main-table {

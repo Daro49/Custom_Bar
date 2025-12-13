@@ -7,7 +7,10 @@
     </div>
 
     <div class="main-table" @click.stop="$emit('select', label)">
-      <span class="table-label">{{ label }}</span>
+      <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
+        <span class="table-label">{{ label }}</span>
+        <span class="table-label-capacity">{{ capacityLabel }}</span>
+      </div>
     </div>
 
     <div class="seat horizontal bottom" @click.stop="$emit('select', label)"></div>
@@ -24,18 +27,26 @@ const props = defineProps({
     type: String,
     default: 'T1'
   },
+  capacityLabel: {
+    type: String,
+    default: '0/7'
+  },
   tableColor: {
     type: String,
-   default: '#552808'
+    default: '#552808'
   },
   seatColor: {
     type: String,
-   default: '#552808'
+    default: '#552808'
   }
   ,
   selected: {
     type: Boolean,
     default: false
+  },
+  textRotation: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -62,10 +73,12 @@ const props = defineProps({
   grid-column: 2;
   grid-row: 1;
 }
+
 .seat.horizontal.bottom {
   grid-column: 2;
   grid-row: 3;
 }
+
 .main-table {
   grid-column: 2;
   grid-row: 2;
@@ -89,12 +102,28 @@ const props = defineProps({
   height: 100%;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
 .table-label {
   font-family: "Georgia", "Times New Roman", serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: black;
   text-transform: uppercase;
+}
+
+.table-label-capacity {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: black;
+  margin-top: 2px;
 }
 
 .seat {
@@ -104,10 +133,12 @@ const props = defineProps({
   flex-shrink: 0;
   transition: background-color 0.2s ease;
 }
+
 .seat.horizontal {
   width: 30px;
   height: 10.5px;
 }
+
 .seat.vertical {
   width: 10.5px;
   height: 30px;
@@ -117,6 +148,7 @@ const props = defineProps({
 .table-e.active .seat {
   background-color: #513C2C;
 }
+
 .main-table:hover,
 .seat:hover {
   filter: brightness(1.1);

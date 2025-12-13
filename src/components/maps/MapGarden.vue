@@ -3,12 +3,12 @@
     <div class="garden" v-html="Garden"></div>
 
     <div class="out-tables-2">
-      <TableB class="table-b-instance" label="G1" :selected="selectedTable === 'G1'" @select="$emit('selectTable', $event)"/>
-      <TableB class="table-b-instance" label="G2" :selected="selectedTable === 'G2'" @select="$emit('selectTable', $event)"/>
-      <TableB class="table-b-instance" label="G3" :selected="selectedTable === 'G3'" @select="$emit('selectTable', $event)"/>
-      <TableB class="table-b-instance" label="G4" :selected="selectedTable === 'G4'" @select="$emit('selectTable', $event)"/>
-      <TableB class="table-b-instance" label="G5" :selected="selectedTable === 'G5'" @select="$emit('selectTable', $event)"/>
-      <TableB class="table-b-instance" label="G6" :selected="selectedTable === 'G6'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G1" :textRotation="90" :selected="selectedTable === 'G1'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G2" :textRotation="90" :selected="selectedTable === 'G2'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G3" :textRotation="90" :selected="selectedTable === 'G3'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G4" :textRotation="90" :selected="selectedTable === 'G4'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G5" :textRotation="90" :selected="selectedTable === 'G5'" @select="$emit('selectTable', $event)"/>
+      <TableB class="table-b-instance" label="G6" :textRotation="90":selected="selectedTable === 'G6'" @select="$emit('selectTable', $event)"/>
     </div>
 
     <div class="group" @click="$emit('navigate', 'back'); $emit('close')" style="cursor: pointer;">
