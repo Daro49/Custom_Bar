@@ -36,7 +36,6 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
 
 <style scoped>
 .slide-panel-wrapper {
-  /* positioning handled by parent (.slide-up-table-layout) */
   display: flex;
   flex-direction: column;
   align-items: center;

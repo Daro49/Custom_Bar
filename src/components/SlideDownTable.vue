@@ -85,7 +85,6 @@ defineProps({
   background-color: #c49f32;
 }
 
-/* active state: vertical gradient lighter on top */
 .nav-button.active {
   background: linear-gradient(to bottom, #017579 0%, #013C3E 100%);
   color: black;
