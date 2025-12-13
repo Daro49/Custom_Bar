@@ -3,7 +3,6 @@ import SectionDivider from '@/components/SectionDivider.vue'
 import { useRouter } from 'vue-router'
 import { defineProps, ref } from 'vue'
 import { processPackageOrder } from '@/stores/CSModels/Packages'
-import { activeUser } from '@/stores/Login'
 
 const router = useRouter()
 let errorMessage = ref('');

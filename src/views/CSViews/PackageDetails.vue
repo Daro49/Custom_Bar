@@ -2,15 +2,21 @@
 import Header from '@/components/Header.vue';
 import { useRoute } from 'vue-router';
 import Profile from '@/assets/user.png';
-import { getPackageById } from '@/stores/CSModels/Packages'
+import { getPackageById, processPackageOrder } from '@/stores/CSModels/Packages'
 import { ref, onMounted } from 'vue';
 import { pkg } from '@/stores/CSModels/Packages'
-import { order } from '@/components/PackageCard.vue'
 import PointsPresenter from '@/components/PointsPresenter.vue';
 
 const route = useRoute();
 const packageId = route.params.pkgId;
 let loaded = ref(false);
+
+const order = async () => {
+  console.log(pkg);
+  await processPackageOrder(
+    pkg.value
+  );
+};
 
 onMounted(async () => {
     const success = await getPackageById(packageId);
@@ -29,17 +35,12 @@ onMounted(async () => {
               <div class="package-image">
                   <img :src="pkg.imgurl" alt="Package Image" />
               </div>
-                  <span class="price-label">Price:</span>
+                  <span class="price-label">Price: </span>
                   <span class="price-value">{{ pkg.price }}</span>
               <div class="package-description" >{{ pkg.description }}</div>  
               <button class="order-package" @click.stop = "order">
                   Click here to order
                 </button>
-                <Transition name="fade">
-                  <p v-if="errorMessage" :class="{'error-message': isError, 'success-message': !isError}">
-                    {{ errorMessage }}
-                  </p>
-                </Transition>
               </div>
             </div>
           <div v-else class = "package-loading">

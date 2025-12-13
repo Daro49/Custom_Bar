@@ -158,7 +158,7 @@ export default {
          */
         function calculateOrderTotals(items) {
             if (!items || items.length === 0) {
-                return { euroTotal: 0, pointsTotal: 0 };
+                return { euroTotal: 0 };
             }
 
             return items.reduce((acc, item) => {
@@ -166,12 +166,8 @@ export default {
                 if (item.quantity !== undefined && item.quantity !== null) {
                     acc.euroTotal += item.quantity * item.price;
                 } 
-                // If not, count package value
-                else {
-                    acc.pointsTotal += item.price;
-                }
-                return acc;
-            }, { euroTotal: 0, pointsTotal: 0 });
+                return acc ? acc : 0;
+            }, { euroTotal: 0 });
         }
 
         // reactive var for order button
@@ -180,13 +176,9 @@ export default {
                 return 'ORDER SOMETHING';
             }
 
-            const { euroTotal, pointsTotal } = calculateOrderTotals(orderItems.value);
+            const { euroTotal, } = calculateOrderTotals(orderItems.value);
 
-            let parts = [];
-            if (euroTotal > 0) parts.push(`${euroTotal.toFixed(2)}€`);
-            if (pointsTotal > 0) parts.push(`${pointsTotal} pts`);
-
-            return 'PAY ' + parts.join(' & ');
+            return 'PAY ' + `${euroTotal.toFixed(2)}€`;
         });
 
         const exposed = {
