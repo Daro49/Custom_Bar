@@ -65,6 +65,11 @@ defineEmits(['selectTable', 'navigate', 'close'])
   height: 917px;
   width: 70%;
 }
+@media (max-width: 768px) {
+  .table-c-layout {
+    width: 100%;
+  }
+}
 
 .table-c-layout .table-b-instance {
   transform : scale(120%);

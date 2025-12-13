@@ -54,6 +54,11 @@ defineEmits(['selectTable', 'navigate', 'close'])
   height: 917px;
   width: 70%;
 }
+@media (max-width: 768px) {
+  .table-b-layout {
+    width: 100%;
+  }
+}
 
 .table-b-layout .table-a-instance {
   transform : rotate(-45deg) translateX(-30px);
