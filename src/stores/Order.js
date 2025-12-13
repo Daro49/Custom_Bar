@@ -109,7 +109,7 @@ export default {
         }
 
         async function addToOrder(drink) {
-            if (!activeUser.value?.username || !activeUser.value?.table) {
+            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
                 throw new Error("User not logged in or table not set");
             }
             const username = activeUser.value.username;
