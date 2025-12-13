@@ -5,6 +5,7 @@ export default options;
 
 <template>
   <Header :avatar="Profile" :back-button="false"/>
+<div> <img :src="photo" class="photo" /> </div>
   <div class = "button-group">
     <MenuButton txt="Menu" :to="{ name: 'menu' }" />
     <MenuButton txt="Leaderboard" :to="{ name: 'leaderboard' }" />
@@ -136,4 +137,12 @@ export default options;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
+.photo {
+  display: block;
+  margin: 20px auto;
+  width: 49%;
+  height: 300px;
+  object-fit: cover;
+  border: var(--gold) 5px solid;
+}
 </style>

@@ -10,10 +10,10 @@
 
     <div class="right-content">
       <slot name="table">
-        <span class="default-table-text">
+        <span class="default-table-text" @click="goToMap">
           <span class="table-id">
             <span v-if="selectedTable !== 'N/A'">{{ selectedTable }}</span>
-            <span v-else>Table N/A</span>
+            <span v-else>Table<br></br>N/A</span>
           </span>
 
           <span v-if="timeRemainingMs > 0" class="timer">
@@ -100,6 +100,7 @@ export default options
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 }
 
 .table-id {

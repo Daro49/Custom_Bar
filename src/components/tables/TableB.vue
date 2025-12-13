@@ -39,14 +39,14 @@ const props = defineProps({
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  width: 80px; /* overall group width per design */
+  width: 80px; 
   padding: 6px;
   box-sizing: border-box;
 }
 .middle { display:flex; gap: 6px; align-items:center }
 .main-table {
-  width: 47px; /* approx 47.06 */
-  height: 117px; /* approx 117.32 */
+  width: 47px;
+  height: 117px;
   background-color: v-bind(tableColor);
   border: 1px solid black;
   border-radius: 14px;
@@ -59,7 +59,7 @@ const props = defineProps({
 .bottom-seat { transform: translateY(-3px) }
 .table-label { font-family: "Georgia","Times New Roman", serif; font-size: 1.2rem; font-weight:700; color: black }
 .table-b-component.active .main-table, .table-b-component.active .seat, .table-b-component.active .top-seat, .table-b-component.active .bottom-seat { 
-  background-color: #513C2C !important;
+  background-color: #513C2C;
   transform: scale(1.02);
 }
 .main-table:hover, .seat:hover, .top-seat:hover, .bottom-seat:hover { 

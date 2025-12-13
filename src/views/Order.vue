@@ -17,8 +17,8 @@
           </div>
           <div class="item-right">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
-            <button class="removeButton" @click="removeFromOrder(item)">-</button>
-            <button class="addButton" @click="addToOrder(item)">+</button>
+            <button class="remove-button" @click="removeFromOrder(item)">-</button>
+            <button class="add-button" @click="addToOrder(item)">+</button>
           </div>
         </div>
       </div>
@@ -92,7 +92,6 @@ export default options
   display: flex;
   flex-direction: column;
   gap: 16px;
-  /* flex: 1; */
   overflow-y: auto;
   padding-bottom: 130px;
 }
@@ -151,7 +150,6 @@ export default options
   cursor: pointer;
 }
 
-/* Apply Coupons */
 .apply-coupons {
   text-align: center;
   margin: 16px 0;
@@ -165,7 +163,6 @@ export default options
   cursor: pointer;
 }
 
-/* Pay Button */
 .pay-button {
   width: 90%;
   height: 122px;
@@ -190,4 +187,21 @@ export default options
 .pay-button:active {
   transform: translateY(-1px);
 }
+
+.remove-button,
+.add-button {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  background-color: #d39e30;
+  border: 1px solid black;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 </style>

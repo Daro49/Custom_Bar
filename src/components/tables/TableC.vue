@@ -29,15 +29,15 @@ const props = defineProps({
   display: flex;
   gap: 8px;
   align-items: center;
-  width: 50px; /* container roughly 50px wide per design */
+  width: 50px;
   padding: 6px;
   box-sizing: border-box;
   cursor: default;
 }
 
 .main-table {
-  width: 27px; /* approx 27px */
-  height: 135px; /* approx 135px */
+  width: 27px;
+  height: 135px;
   background-color: v-bind(tableColor);
   border: 1px solid black;
   border-radius: 12px;
@@ -69,7 +69,7 @@ const props = defineProps({
 
 .table-c-component.active .main-table,
 .table-c-component.active .seat {
-  background-color: #513C2C !important;
+  background-color: #513C2C;
 }
 
 .main-table:hover, .seat:hover { filter: brightness(1.05); cursor: pointer }

@@ -5,6 +5,7 @@ import MenuButton from '@/components/MenuButton.vue'
 import orderIcon from '@/assets/order.svg?raw'; 
 import shakerIcon from '@/assets/shaker.svg?raw'; 
 import mapIcon from '@/assets/map.svg?raw';
+import photo from '@/assets/bottles.jpg';
 
 export default {
   name: 'MainMenuView',
@@ -18,7 +19,8 @@ export default {
       Profile,
       orderIcon,
       shakerIcon,
-      mapIcon
+      mapIcon,
+      photo,
     }
   }
 }
