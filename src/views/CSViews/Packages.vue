@@ -34,7 +34,6 @@ onMounted(async () => {
 import Header from '@/components/Header.vue'
 import PointsPresenter from '@/components/PointsPresenter.vue'
 import PackageCard from '@/components/PackageCard.vue'
-import { activeUser } from '@/stores/Login'
 
 export default {
   name: 'Packages',

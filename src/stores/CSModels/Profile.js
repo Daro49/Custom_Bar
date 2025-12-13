@@ -1,4 +1,24 @@
-import { activeUser } from "./Login.js";
+import { ref } from "vue";
+import { activeUser } from "../Login";
+export const fetchedUser = ref(null)
+
+export async function getUser(username) {
+  fetchedUser.value = null;
+  try {
+    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}`);
+
+    if (!response.ok) {
+      throw new Error(`Fetching user failed.`);
+    }
+
+    const data = await response.json();
+    fetchedUser.value = data;
+    return true;
+  } catch (error) {
+    console.log(`User ${username} does not exist.`);
+    return false;
+  }
+}
 
 export async function saveProfileChanges(loggedIn) {
   try {
@@ -10,6 +30,7 @@ export async function saveProfileChanges(loggedIn) {
         body: JSON.stringify({
           'newUsername': activeUser.value.username,
           'email': activeUser.value.email,
+          'imgurl': activeUser.value.imgurl,
         }),
       }
     );
