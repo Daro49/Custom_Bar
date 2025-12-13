@@ -1,47 +1,89 @@
 <script setup>
 import SectionDivider from '@/components/SectionDivider.vue'
 import { useRouter } from 'vue-router'
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
+import { orderPackage } from '@/stores/CSModels/Packages'
+import { activeUser } from '@/stores/Login'
+import { addPoints } from '@/stores/AddPoints'
+import { addToast } from '@/stores/ToastStore'
 
 const router = useRouter()
+let errorMessage = ref('');
+let isError = ref(false);
 
 const props = defineProps({
-  pkgId: { type: Number, required: true },
-  name: { type: String, required: true },
-  img: { type: String, required: true },
-  price: { type: Number, required: true },
-  description: { type: String, required: true },
+  pkg : {type: Object, required: true},
 })
 
 function goToDetails() {
   router.push({
     name: 'package_details',
-    params: { pkgId: props.pkgId }
+    params: { pkgId: props.pkg.id }
   })
 }
+
+const order = async () => {
+  errorMessage.value = '';
+  isError.value = false;
+
+  if (activeUser.value.points < props.pkg.price) {
+    errorMessage.value = "Not enough points!";
+    isError.value = true;
+    return;
+  }
+  if (!activeUser.value.table)
+  {
+    addToast("Failed to add to cart. Please select table first.");
+    return;
+  }
+  const result = await orderPackage(activeUser.value.username, props.pkg);
+
+  if (!result.success) {
+    if (result.status === 440) {
+      errorMessage.value = "Package already in order!";
+      isError.value = true;
+      return;
+    } else {
+      isError.value = true;
+      errorMessage.value = "Cannot order package!";
+    }
+  }
+
+  const result2 = await addPoints(-props.pkg.price);
+  if (!result2) {
+    alert("Error occured while ordering package");
+  }
+  errorMessage.value = "Package sucessfully added to order!";
+  isError.value = false;
+};
 </script>
 
 <template>
   <div class="package-card" @click="goToDetails">
     <div class="package-text-frame">
-      <p class="package-text">{{ name }}</p>
+      <p class="package-text">{{ pkg.name }}</p>
     </div>
     <SectionDivider/>
     <div class="package-img">
-      <img :src="img"/>
+      <img :src="pkg.imgurl"/>
     </div>
 
     <div class="package-price">
       <span class="price-label">Price:</span>
-      <span class="price-value">{{ price }}</span>
+      <span class="price-value">{{ pkg.price }}</span>
     </div>
-    <button class="order-package">
-      Click to order
+    <button class="order-package" @click.stop = "order">
+      Click here to order
     </button>
+    <Transition name="fade">
+      <p v-if="errorMessage" :class="{'error-message': isError, 'success-message': !isError}">
+        {{ errorMessage }}
+      </p>
+    </Transition>
   </div>
 </template>
 
-<style>
+<style scoped>
 .package-card {
   background: var(--wood);
   border-radius: 10px;
@@ -50,8 +92,8 @@ function goToDetails() {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  width: 80%;
-  height: 750px;
+  width: 60%;
+  height: 600px;
   max-height: 30%;
   border: 3px solid;
   border-color: black;
@@ -71,15 +113,14 @@ function goToDetails() {
 .package-img {
   width: 95%;
   border-radius: 12px;
-  height: 100%;
   padding: 3px;
   background: conic-gradient(from 0deg, #ff7ab6, #7c5cff, #2dd4bf, #ff7ab6);
   background-size: 800% 800%;
   overflow: hidden;
   box-sizing: border-box;
   flex-grow: 0;       
-  flex-shrink: 0;     
-  flex-basis: 60%;
+  flex-shrink: 0;   
+  height: 50%;  
 }
 
 .package-card .order-package {
@@ -151,4 +192,28 @@ function goToDetails() {
   color: var(--gold);
 }
 
+.error-message {
+  color: var(--error-red, #df5252); 
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.success-message {
+  color: var(--success-green, #4CAF50); 
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

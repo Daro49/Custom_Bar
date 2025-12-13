@@ -9,7 +9,10 @@
       
     </div>
     <div class="drink-info-sub" v-if="drink.rating != null">
-        <span>#{{ drink.position }}</span>
+        <span>#{{ drink.position }}
+          <span v-if="drink.trend === 1">⭡</span>
+         <span v-else-if="drink.trend === 2">⭣</span>
+        </span>
         <span>rating: {{ drink.rating }}</span>
       </div>
 
@@ -22,9 +25,14 @@
     </div>
 
     <div class="drink-actions" v-if="drink.rating != null">
-      <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">❤ </button>
-      <button class="action-button" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">💔</button>
-    </div>
+  <button class="action-button" :class="{ activeLike: liked }" @click="$emit('rate', 'like')">
+    ❤️
+  </button>
+  
+  <button class="action-button-dislike" :class="{ activeDislike: disliked }" @click="$emit('rate', 'dislike')">
+    <span class="emoji">💔</span>
+  </button>
+</div>
 
     <button class="order-section" @click="$emit('order')">
       <span>ORDER:</span>
@@ -156,6 +164,28 @@ const ingredientsLine = computed(() => {
   transform: scale(1.05);
 }
 
+.action-button-dislike {
+  background-color: #1e463b;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  width: 50px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.action-button-dislike .emoji {
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+.activeDislike {
+  border: 2px solid #ff4d4d !important; 
+  transform: scale(1.1);
+}
+
 .order-section {
   background-color: #2e4c43;
   border-radius: 10px;
@@ -175,12 +205,10 @@ const ingredientsLine = computed(() => {
 }
 
 .activeLike {
-  background-color: #c43d3d !important; /* červené srdce */
   transform: scale(1.1);
+   border: 2px solid #ff4d4d;
 }
 
-.activeDislike {
-  background-color: #4b1b1b !important; /* tmavé "zlomené" srdce */
-  transform: scale(1.1);
-}
+
+
 </style>

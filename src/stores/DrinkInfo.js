@@ -1,4 +1,4 @@
-// /stores/DrinkInfo.js
+
 import { ref } from "vue";
 export const drinkData = ref(null);
 export const drinkError = ref(null);
@@ -59,7 +59,7 @@ export function startDrinkAutoRefresh(route) {
 
 export async function rateDrink(action, name, type = "regular", username) {
   try {
-    // action = "like" alebo "dislike"
+
     const endpointBase =
       type === "custom"
         ? `https://itu-wb12.onrender.com/customDrinks/${encodeURIComponent(name)}`
@@ -81,7 +81,7 @@ export async function rateDrink(action, name, type = "regular", username) {
       disliked.value = result.disliked;
     }
 
-    return result; // ak chceš vedieť či je liked/disliked
+    return result; 
   } catch (err) {
     console.error(err);
   }
@@ -92,12 +92,12 @@ import { activeUser } from './Login.js';
 export const orderItems = ref([]);
 
 export async function addToOrder(drink) {
-  if (!activeUser.value?.username || !activeUser.value?.table) {
+  if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
     
     throw new Error("User not logged in or table not set");
   }
 
-  // Hľadáme existujúci drink podľa ID v lokálnom stave
+
   const existing = orderItems.value.find(i => i.id === drink.id);
 
   if (existing) {
@@ -106,7 +106,7 @@ export async function addToOrder(drink) {
     orderItems.value.push({ ...drink, quantity: 1 });
   }
 
-  // POST na server, ale NEPREPISUJ orderItems z fetchOrder
+
   try {
     await fetch(
       `https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`,

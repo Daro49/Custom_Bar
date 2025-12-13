@@ -1,28 +1,31 @@
 <script setup>
 import Profile from '@/assets/user.png'
 import { packages } from '@/stores/CSModels/Packages'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getPackages } from '@/stores/CSModels/Packages'
 
-onMounted(() => {
-  getPackages()
+let loaded = ref(false);
+
+onMounted(async () => {
+  const success = await getPackages();
+  loaded.value = success;
 })
 
 </script>
 
 <template>
   <div class="packages">
-    <Header :avatar="Profile" :previous="true"/>
+      <Header :avatar="Profile" />
+
     <PointsPresenter/>
-    <div class="package-list">
+    <div class="package-list" v-if="loaded">
       <PackageCard
         v-for="packageItem in packages"
-        :pkgId="packageItem.id"
-        :name="packageItem.name"
-        :img="packageItem.imgurl"
-        :price="packageItem.price"
-        :description="packageItem.description"
+        :pkg = "packageItem"
       />
+    </div>
+    <div class = "loading" v-else>
+      Loading packages...
     </div>
 </div>
 </template>
@@ -52,7 +55,12 @@ export default {
   width: 100%;
 }
 
-
+.loading {
+  font-family: var(--button-font-family);
+  font-size: 50px;
+  color: white;
+  text-align: center;
+}
 .packages .package-list {
   display: flex;
   flex-direction: column;

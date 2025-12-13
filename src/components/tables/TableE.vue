@@ -115,7 +115,7 @@ const props = defineProps({
 
 .table-e.active .main-table,
 .table-e.active .seat {
-  background-color: #513C2C !important;
+  background-color: #513C2C;
 }
 .main-table:hover,
 .seat:hover {

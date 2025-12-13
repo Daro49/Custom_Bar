@@ -6,8 +6,6 @@
       <p v-if="initialLoading">
   Loading...
 </p>
- <!-- TODO ADD TOAST TO MENUS AND CHECK ADDING TO SERVER + FIX PSOITION IN DETAIL-->
-
       <DrinkInfoCard
         v-else-if="drinkData"
         :drink="drinkData"
@@ -66,18 +64,19 @@ import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
   try {
     const result = await addToOrder(drinkData.value);
-        addToast(`${drinkData.value.name} added to cart!`);
+    addToast(`${drinkData.value.name} added to cart!`);
     console.log("Order added:", result);
   } catch (err) {
+    addToast(`Failed to add to cart. Please select table first.`);
     console.error("Failed to add order:", err);
   }
 }
 
 onMounted(async () => {
   initialLoading.value = true;
-  await loadDrink(route, activeUser.value.username );       // initial fetch
-  initialLoading.value = false; // stop showing loading
-  startDrinkAutoRefresh(route); // start background refresh
+  await loadDrink(route, activeUser.value.username );       
+  initialLoading.value = false; 
+  startDrinkAutoRefresh(route); 
 });
 
 

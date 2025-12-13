@@ -10,10 +10,10 @@
 
     <div class="right-content">
       <slot name="table">
-        <span class="default-table-text">
+        <span class="default-table-text" @click="goToMap">
           <span class="table-id">
             <span v-if="selectedTable !== 'N/A'">{{ selectedTable }}</span>
-            <span v-else>Table N/A</span>
+            <span v-else>Table<br></br>N/A</span>
           </span>
 
           <span v-if="timeRemainingMs > 0" class="timer">
@@ -27,181 +27,19 @@
           class="PointPresenterHeader"
         />
         <button @click="openProfile" class="avatar-button" v-if="avatar">
-          <img :src="avatar" class="avatar" />
+          <img :src="activeUser?.imgurl || avatar" class="avatar" />
         </button>
-        <button
-          class="back-btn"
-          @click="rightFunction"
-          v-if="rightIcon"
-          v-html="rightIcon"
-        ></button>
+        <button class="back-btn" @click="rightFunction" v-if="rightIcon" v-html="rightIcon"></button>
       </slot>
     </div>
   </header>
 </template>
 
 <script>
-import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
-import PointsPresenterJukebox from '@/components/PointsPresenterJukebox.vue'
-import router from '@/router'
-import { activeUser } from '@/stores/Login.js';
-import { computed, ref, onBeforeUnmount, watch } from 'vue'; 
-
-function formatTime(ms) {
-    if (ms <= 0) return '0 s'; 
-    
-    const totalSeconds = Math.floor(ms / 1000); 
-
-    if (totalSeconds < 60) {
-        const seconds = totalSeconds % 60;
-        return `${seconds} s`;
-    }
-
-    let totalMinutes = Math.floor(totalSeconds / 60); 
-    
-    if (totalMinutes === 60) {
-        return '59 min';
-    }
-
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-
-    const pad = (num) => String(num); 
-    
-    if (hours > 0) {
-        return `${pad(hours)}:${String(minutes).padStart(2, '0')}`;
-    } else {
-        return `${minutes} min`; 
-    }
-}
-
-export default {
-  name: 'Header',
-  components: {
-    PointsPresenterJukebox,
-  },
-  props: {
-    showPoints: {type: Boolean, default: false}, 
-    previous: { type: Boolean, default: false },
-    backButton: { type: Boolean, default: true },
-    title: { type: String, default: '' },
-    avatar: { type: String, default: null },
-    rightIcon: { type: String, default: null },
-    rightFunction: { type: Function, default: null },
-  },
-  setup() {
-    const selectedTable = computed(() => activeUser.value?.table || 'N/A');
-    const timeRemainingMs = ref(0);
-    let intervalId = null; 
-
-    const updateTimer = () => {
-      const expiration = activeUser.value.tableExpiration;
-      
-      // 🛑 LOG: Aká hodnota expiration príde pri inicializácii (F5)?
-      console.log("HEADER DEBUG: 1. activeUser.tableExpiration po F5/zmene:", expiration);
-
-      if (expiration) {
-        const expiryTime = new Date(expiration).getTime();
-        const now = Date.now();
-        const remaining = expiryTime - now;
-        
-        // 🛑 LOG: Ako je vypočítaný zostávajúci čas?
-        console.log(`HEADER DEBUG: 2. expiryTime: ${expiryTime}, now: ${now}, remaining: ${remaining} ms`);
-
-        timeRemainingMs.value = remaining > 0 ? remaining : 0;
-      } else {
-        timeRemainingMs.value = 0;
-        // 🛑 LOG: Ak je expiration null/undefined/''
-        console.log("HEADER DEBUG: 3. Expiration is falsey, timer set to 0.");
-      }
-    };
-    
-    const startInterval = (duration) => {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = setInterval(updateTimer, duration);
-        console.log(`HEADER DEBUG: Interval nastavený na: ${duration / 1000} sekúnd.`);
-    };
-
-    // 🔑 watch: Vytvára prvotnú inicializáciu (F5) a reaguje na všetky zmeny exspirácie (Objednávka)
-    watch(() => activeUser.value.tableExpiration, (newExpiration) => {
-        
-        // 🛑 LOG: Watch sa spustil!
-        console.log("HEADER DEBUG: 4. WATCH TRIGGERED. New expiration value:", newExpiration);
-
-        // Okamžite prepočítaj čas (rieši problém s Objednávkou a F5)
-        updateTimer(); 
-        
-        if (newExpiration) {
-            const expiryTime = new Date(newExpiration).getTime();
-            const remainingMs = expiryTime - Date.now();
-            
-            if (remainingMs > 0 && remainingMs < 60000) {
-                // Menej ako minúta: Sekundový interval
-                startInterval(1000);
-            } else if (remainingMs >= 60000) {
-                // Viac ako minúta: Minútový interval
-                startInterval(60000); 
-            }
-        } else {
-            // Žiadna rezervácia, zastavíme interval
-            if (intervalId) clearInterval(intervalId);
-            intervalId = null;
-        }
-    }, { immediate: true }); // 🚀 KĽÚČOVÉ: Spustí sa hneď po načítaní!
-    
-    // watch: Dynamická zmena intervalu (z minútového na sekundový)
-    watch(timeRemainingMs, (newVal) => {
-        if (newVal > 0 && newVal < 60000) {
-            // Prechod na sekundový interval
-            if (intervalId && intervalId._idleTimeout !== 1000) { 
-                 console.log("HEADER DEBUG: 5. Prepínam interval na 1 sekundu.");
-                 startInterval(1000);
-            }
-        } else if (newVal >= 60000) {
-             // Návrat na minútový interval (ak došlo k predĺženiu, ktoré bežalo na sekundách)
-             if (intervalId && intervalId._idleTimeout === 1000) {
-                 console.log("HEADER DEBUG: 6. Prepínam interval na 60 sekúnd.");
-                 startInterval(60000);
-             }
-        }
-    });
-
-    onBeforeUnmount(() => {
-      if (intervalId) clearInterval(intervalId);
-    });
-    
-    const formattedTime = computed(() => formatTime(timeRemainingMs.value));
-    
-    return { 
-      ArrowLeftSvg, 
-      selectedTable, 
-      formattedTime,
-      timeRemainingMs
-    }
-  },
-  methods: {
-    back() {
-      if (this.previous) {
-        router.back();
-        return
-      }
-      const current = this.$route.path.split('/')
-      current.pop()
-
-      const parent = current.join('/') || '/'
-
-      this.$router.push(parent)
-    },
-    openProfile() {
-      router.push({ name: 'profile' })
-    },
-    menu()  {
-      router.push({ name: 'main' })
-    },
-    
-  },
-}
+import options from '@/stores/Header.js'
+export default options
 </script>
+
 <style scoped>
 .header {
   display: flex;
@@ -209,7 +47,7 @@ export default {
   justify-content: space-between;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);
   padding: 10px 14px;
-
+  height: 60px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -231,12 +69,18 @@ export default {
   color: black;
 }
 
+.back-btn :deep(svg) {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
 .center-content {
   flex: 1;
-  text-align: center; 
+  text-align: center;
   font-weight: 600;
   font-size: 18px;
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -257,9 +101,10 @@ export default {
 }
 
 .default-table-text {
-  display: flex; 
+  display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
+  cursor: pointer;
 }
 
 .table-id {
@@ -271,12 +116,12 @@ export default {
 .timer {
   font-weight: 400;
   font-size: 10px;
-  color: black; 
+  color: black;
   margin-top: -2px;
 }
 
 .expired-timer {
-  display: none; 
+  display: none;
 }
 
 .avatar-button {

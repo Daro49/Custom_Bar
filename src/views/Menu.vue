@@ -8,47 +8,86 @@
   @prev="goToSoftDrinks"
   @next="goToCustomMenu"
 />
-
+<div class="filter-section">
+  <div class="toggle-wrapper">
+    <span class="toggle-label">All drinks</span>
+    
+    <label class="switch">
+      <input type="checkbox" v-model="showOnlyLiked">
+      <span class="slider round"></span>
+    </label>
+    
+    <span class="toggle-label">Favourite drinks ❤️</span>
+  </div>
+</div>
 
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
 
-    <!-- Featured drink -->
-    <FeaturedDrink 
-  v-if="drinks?.length"
-  :drink="drinks[0]"
+<FeaturedDrink 
+  v-if="featuredDrink && (!showOnlyLiked || featuredDrink.liked)"
+  :drink="featuredDrink"
   @select="goToDrink"
   @order="handleOrder"
 />
 
-    <!-- Other drinks -->
-    <DrinkCard
-      v-for="drink in (drinks || []).slice(1)"  
-      :key="drink.id"
-      :drink="drink"
-      @info="goToDrink"
-      @addToOrder="handleOrder"
-    />
+<DrinkCard
+  v-for="drink in secondaryDrinks"  
+  :key="drink.id"
+  :drink="drink"
+  @info="goToDrink"
+  @addToOrder="handleOrder"
+/>
+
+<p v-if="!drinksLoading && secondaryDrinks.length === 0 && (!featuredDrink || !featuredDrink.liked && showOnlyLiked)" class="empty-msg">
+  No liked drinks yet ❤️
+</p>
   </div>
 </template>
 
 <script setup>
 import FeaturedDrink from "@/components/FeaturedDrink.vue";
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import cart from "@/assets/OrderHistory.svg?raw";
 import { addToOrder } from '@/stores/DrinkInfo';
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-
+import { activeUser } from "@/stores/Login";
 import { drinks, drinksLoading, loadDrinks } from "@/stores/Menu.js";
+
+const showOnlyLiked = ref(false); 
+
+const filteredDrinks = computed(() => {
+  const allDrinks = drinks.value || [];
+  
+  if (!showOnlyLiked.value) {
+    return allDrinks;
+  }
+  
+  return allDrinks.filter(drink => drink.liked === true);
+});
+
+const featuredDrink = computed(() => {
+  return (drinks.value || []).find(d => d.position === 1);
+});
+
+const secondaryDrinks = computed(() => {
+  let list = (drinks.value || []).filter(d => d.position !== 1);
+  
+  if (showOnlyLiked.value) {
+    list = list.filter(d => d.liked === true);
+  }
+  
+  return list;
+});
 
 const router = useRouter();
 
 onMounted(() => {
-  loadDrinks();
+  loadDrinks(activeUser.value.username);
 });
 
 function order(){
@@ -70,12 +109,13 @@ async function handleOrder(drink) {
     addToast(`${drink.name} added to cart!`);
     console.log("Added to order:", drink.name);
   } catch (err) {
-    addToast(`Failed to add to cart. Please select table first.`);
+    addToast(`Failed to add to cart. Please select table first.`, 5000);
     console.error("Order failed:", err);
   }
 }
 
 import MenuNavigation from "@/components/MenuNavigation.vue";
+
 function goToSoftDrinks() {
   router.push("/softdrinksmenu");
 }
@@ -91,16 +131,20 @@ function goToCustomMenu() {
     margin-top: 8px;
     padding: 8px;
     border-radius: 8px;
-    display:flex;
+    display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: center;
-    height: 917px;
+    height: 100vh; 
     overflow-y: auto;
-        box-sizing: border-box;
-    height: 100%;
-    padding-bottom: 71px;
-  }
+    box-sizing: border-box;
+    padding-bottom: 100px;
+}
+
+.app > * {
+    flex-shrink: 0;
+    transition: all 0.3s ease-in-out;
+}
 .drink-card {
   display: flex;
   align-items: center;
@@ -224,24 +268,118 @@ function goToCustomMenu() {
 }
 
 
-/* TODO -> still temporary*/
-.nav-btn { 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background: #d8a543;
-  border-radius: 8px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
-
 .featured-container {
   display: flex;
   justify-content: center; 
   width: 100%;              
   margin-bottom: 16px;
 }
+.filter-container {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  justify-content: flex-start;
+  padding: 8px 16px;
+}
 
+.checkbox-label {
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: #d8a543;
+}
+
+.empty-msg {
+  color: #f7d77c;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+.filter-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  margin-bottom: 10px;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(46, 76, 67, 0.5); 
+  padding: 8px 20px;
+  border-radius: 25px;
+  border: 1px solid #d4af37; 
+}
+
+.toggle-label {
+  color: #f7d77c;
+  font-family: 'Josefin Slab', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1a2e28;
+  transition: .4s;
+  border: 1px solid #d4af37;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: linear-gradient(135deg, #f7c244, #c98f00); 
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2e4c43;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
