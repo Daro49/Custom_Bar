@@ -1,3 +1,11 @@
+/**
+ * @file CustomLeaderboard.js
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia dotazu na ziskanie leaderboardu Custom drinkov
+ * @date 2023-10-27
+ */
+
+
 import { ref } from "vue";
 
 export const leaderboard = ref(null);

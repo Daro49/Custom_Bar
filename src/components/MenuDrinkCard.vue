@@ -1,5 +1,15 @@
+<!--
+/**
+ * @file MenuDrinkCard.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre zobrazenie drinku v Menu
+ * @date 2023-10-27
+ */
+-->
+
 <template>
   <div class="drink-card" @click="$emit('info', drink.name)">
+    <!--znacka ci je liked/disliked-->
     <div 
   v-if="drink.liked || drink.disliked" 
   class="status-badge" 
@@ -9,12 +19,12 @@
 </div>
 
     <img class="drink-image" :src="drink.image" :alt="drink.name" />
-
+    <!--menu a cena-->
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
       <div class="drink-price">{{ drink.price }}€</div>
     </div>
-
+    <!--pridanie do objednavky-->
     <button class="info-button" @click.stop="$emit('addToOrder', drink)">+</button>
   </div>
 </template>

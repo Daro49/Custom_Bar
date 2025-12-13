@@ -1,3 +1,12 @@
+<!--
+/**
+ * @file ToastContainer.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre zobrazenie spravy o pridani drinku do objednavky
+ * @date 2023-10-27
+ */
+-->
+
 <template>
   <div class="toast-container">
     <div v-for="toast in toasts" :key="toast.id" class="toast">

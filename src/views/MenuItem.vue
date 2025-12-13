@@ -1,11 +1,21 @@
+<!--
+/**
+ * @file MenuItem.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacie viewu pre detail napoja
+ * @date 2023-10-27
+ */
+-->
 
 <template>
   <div v-bind="$attrs">
+    <!--hlavicka-->
     <Header :previous="true" :rightIcon="cart" :rightFunction="order" />
     <div class="app">
       <p v-if="initialLoading">
   Loading...
 </p>
+      <!--component detail s predanymi parametrami-->
       <DrinkInfoCard
         v-else-if="drinkData"
         :drink="drinkData"
@@ -60,6 +70,8 @@ function goBackToList() {
 function rate(value) {
   rateDrink(value, route.params.name, route.path.includes("custommenu") ? "custom" : "regular", activeUser.value.username);
 }
+
+
 import { addToast } from '@/stores/ToastStore.js';
 async function addDrinkToOrder() {
   try {
@@ -86,12 +98,7 @@ onBeforeUnmount(() => {
 function order(){
       router.push({ name: 'order' })
     };
-const props = defineProps({
-  drink: Object,
-  name: String,
-  liked: Boolean,
-  disliked: Boolean
-});
+
 </script>
 
 <style scoped>

@@ -1,6 +1,15 @@
+<!--
+/**
+ * @file LeaderboardDrinkCard.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre zobrazenie drinku v leaderboarde 
+ * @date 2023-10-27
+ */
+-->
 <template>
   <div  class="drink-card" @click="$emit('info',drink.name)">
     <img :src="drink.image" class="drink-image" :alt="drink.name" />
+    <!--oznacenie liknute/disliknute-->
   <div 
   v-if="drink.liked || drink.disliked" 
   class="status-badge" 
@@ -10,6 +19,7 @@
 </div>
     <div class="drink-info">
       <div class="drink-name">{{ drink.name }}</div>
+      <!--pozicia, trend a rating-->
       <div class="drink-meta">
         <span>#{{ drink.position }}
         <span v-if="drink.trend === 1">⭡</span>

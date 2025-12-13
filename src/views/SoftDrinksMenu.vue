@@ -1,18 +1,29 @@
+<!--
+/**
+ * @file AlcoholMenu.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre menu nealka
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
+  <!--hlavicka-->
     <Header :rightIcon = "cart" :rightFunction = "order" />
   <div class="app">
-
+  <!--sipky-->
       <MenuNavigation
   label="Soft drinks"
   @prev="goToAlcoholMenu"
   @next="goToMenu"
 />
 
-
+<!--nacitanie-->
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
+  <!--napoje-->
     <DrinkCard
   v-for="drink in (drinks || []).slice(1)"  
   :key="drink.id"

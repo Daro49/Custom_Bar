@@ -1,5 +1,17 @@
+<!--
+/**
+ * @file AlcoholMenu.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre menu alkoholov
+ * @date 2023-10-27
+ */
+-->
+
+
 <template>
+  <!--hlavicka-->
   <Header :rightIcon = "cart" :rightFunction = "order" />
+  <!--sipky na zmenu pohladu-->
   <div class="app">
       <MenuNavigation
   label="Alcohol Menu"
@@ -11,7 +23,7 @@
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
+  <!-- jednotlive alkoholy-->
     <DrinkCard
   v-for="drink in drinks "  
   :key="drink.id"

@@ -1,17 +1,22 @@
+/**
+ * @file ToastStore.js
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia upozornenia na pridanie napoja
+ * @date 2023-10-27
+ */
+
 import { ref } from 'vue';
 
 export const toasts = ref([]);
 
 /**
- * Add a new toast
- * @param {string} message
- * @param {number} duration - in ms
+ * @brief pridanie noveho upozornenia, na 2s
  */
 export function addToast(message, duration = 2000) {
   const id = Date.now();
   toasts.value.push({ id, message });
 
-  // Remove automatically after duration
+  // automaticky odstranene
   setTimeout(() => {
     const index = toasts.value.findIndex(t => t.id === id);
     if (index !== -1) toasts.value.splice(index, 1);

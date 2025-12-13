@@ -1,8 +1,18 @@
-<!-- src/views/DrinksView.vue -->
+<!--
+/**
+ * @file AlcoholMenu.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia viewu pre menu drinkov
+ * @date 2023-10-27
+ */
+-->
+
 <template>
+  <!--hlavicka-->
   <Header :rightIcon = "cart" :rightFunction = "order" />
 
   <div class="app">
+    <!--sipky-->
   <MenuNavigation
   label="Menu"
   @prev="goToSoftDrinks"
@@ -10,6 +20,7 @@
 />
 <div class="filter-section">
   <div class="toggle-wrapper">
+    <!--zobrazenie len oblubenych napojov-->
     <span class="toggle-label">All drinks</span>
     
     <label class="switch">
@@ -20,18 +31,18 @@
     <span class="toggle-label">Favourite drinks ❤️</span>
   </div>
 </div>
-
+<!--nacitanie-->
 <p v-if="drinksLoading && (!drinks || drinks.length === 0)">
   Loading...
 </p>
-
+<!--napoj tyzdna-->
 <FeaturedDrink 
   v-if="featuredDrink && (!showOnlyLiked || featuredDrink.liked)"
   :drink="featuredDrink"
   @select="goToDrink"
   @order="handleOrder"
 />
-
+<!--zvysne napoje-->
 <DrinkCard
   v-for="drink in secondaryDrinks"  
   :key="drink.id"
@@ -39,7 +50,7 @@
   @info="goToDrink"
   @addToOrder="handleOrder"
 />
-
+<!--sprava ak nie je ziaden drink oblubeny-->
 <p v-if="!drinksLoading && secondaryDrinks.length === 0 && (!featuredDrink || !featuredDrink.liked && showOnlyLiked)" class="empty-msg">
   No liked drinks yet ❤️
 </p>
@@ -60,15 +71,7 @@ import { drinks, drinksLoading, loadDrinks } from "@/stores/Menu.js";
 
 const showOnlyLiked = ref(false); 
 
-const filteredDrinks = computed(() => {
-  const allDrinks = drinks.value || [];
-  
-  if (!showOnlyLiked.value) {
-    return allDrinks;
-  }
-  
-  return allDrinks.filter(drink => drink.liked === true);
-});
+
 
 const featuredDrink = computed(() => {
   return (drinks.value || []).find(d => d.position === 1);
