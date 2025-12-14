@@ -14,7 +14,7 @@
     <div class="content">
       <!-- Title with divider -->
       <div class="order-title">
-        <h2>ORDER</h2> <br>
+        <h2>ORDER {{ orderCount > 0 ? `${orderIndex + 1}/${orderCount}` : '' }}</h2> <br>
         <div class="order-date">
           <svg class="chevron-icon1" viewBox="0 0 100 50" @click="prevOrder">
             <path 
@@ -50,7 +50,7 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right" v-if="item.class === 'drink' || item.class === 'custom'">
+          <div class="item-right" v-if="item.class === 'drink' || item.class === 'custom' || item.class === 'alcohol' || item.class === 'soft'">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="add-button" @click="handleOrder(item)">+</button>
           </div>

@@ -128,7 +128,9 @@ export default {
             prevOrder,
             handleOrder,
             Profile,
-            orderPrice
+            orderPrice,
+            orderIndex, 
+            orderCount
         }
     }
 }
