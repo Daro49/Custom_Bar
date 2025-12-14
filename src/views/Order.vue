@@ -64,18 +64,17 @@ export default options
   bottom: 0;
 }
 .apply-coupons {
-  align-items: center;
-  justify-content: space-between;
-  
+  position: fixed;
+  bottom: 150px;
+  left: 0;
+  right: 0;
+  z-index: 100;
   background-color: rgba(255, 255, 255, 0.25);
   border: 1.5px solid rgba(0, 0, 0, 0.15);
   border-radius: 12px;
-  
   padding: 12px 18px;
-  margin: 15px 0;
   cursor: pointer;
   transition: all 0.2s ease;
-
 }
 
 .apply-coupons:hover {

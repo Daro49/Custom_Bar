@@ -91,6 +91,10 @@ export default {
         },
 
         async releaseTable(tableLabel) {
+            if(activeUser.value.orderLength > 0) {
+                addToast('You have items in your order. Please clear your order before releasing the table.');
+                return;
+            }
             if (this.expirationChecker) {
                 clearInterval(this.expirationChecker);
                 this.expirationChecker = null;
