@@ -59,6 +59,9 @@ export default {
   },
 
   methods: {
+    showDetails() {
+      this.detailsEnabled = !this.detailsEnabled;
+    },
     async handleToggle(requestedStatus) {
       const user = activeUser.value.username;
       const couponObject = this.couponData;
@@ -198,5 +201,7 @@ export default {
     color: var(--background-green);
     word-break: break-word; 
     padding-right: 15px; 
+    overflow-y: auto; 
+    max-height: 100%;
 }
 </style>
