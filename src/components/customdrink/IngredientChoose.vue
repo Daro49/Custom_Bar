@@ -8,6 +8,7 @@
             :ingredient="ingredient.name"
             :current-category="recipe.currentCategory"
             :amount="ingredient.amount"
+            :color="ingredient.color"
         />
     </div>
 </template>

@@ -85,6 +85,39 @@ export const useDrinkRecipe = defineStore("recipe", {
             return Math.floor(this.remainingVolume / ML_AMOUNT);
         },
 
+        liquidLayers() {
+            const maxCapacity = this.maxCapacity;
+
+            if (maxCapacity === 0) return [];
+            
+            let layers = [];
+            const include = ['alcohols', 'softDrinks'];
+
+            let cumulativePercentage = 0;
+
+            for (const category in this.selectedIngredients) {
+                if (include.includes(category)) {
+                    const ingredients = this.selectedIngredients[category];
+
+                    for (const ingredient in ingredients) {
+                        const item = ingredients[ingredient];
+
+                        const percentage = (item.amount / maxCapacity) * 100;
+
+                        layers.push({
+                            color: item.color,
+                            start: cumulativePercentage,
+                            end: cumulativePercentage + percentage
+                        })
+
+                        cumulativePercentage += percentage;
+                    }
+                }
+            }
+
+            return layers;
+        },
+
         customDrinkRecipePayload: (state) => {
             let ingredients = [];
 
@@ -166,7 +199,7 @@ export const useDrinkRecipe = defineStore("recipe", {
             }
         },
 
-        updateIngredient({ category, ingredient, amount, isSelected }) {
+        updateIngredient({ category, ingredient, amount, color, isSelected }) {
             if (!this.selectedIngredients[category]) {
                 this.selectedIngredients[category] = {};
             }
@@ -174,7 +207,12 @@ export const useDrinkRecipe = defineStore("recipe", {
             const selectedCategory = this.selectedIngredients[category];
 
             if (isSelected) {
-                selectedCategory[ingredient] = { name: ingredient, amount: amount };
+                if (category === 'alcohols' || category === 'softDrinks') {
+                    selectedCategory[ingredient] = { name: ingredient, amount: amount, color: color };
+                }
+                else {
+                    selectedCategory[ingredient] = { name: ingredient, amount: amount };
+                }
             }
             else {
                 delete selectedCategory[ingredient];
@@ -186,7 +224,12 @@ export const useDrinkRecipe = defineStore("recipe", {
         },
 
         selectSingleSize({ category, ingredient, amount }) {
-            if (this.sizeSelected) {
+
+            const currentVolume = this.currentVolume;
+
+            const existingSize = Object.keys(this.selectedIngredients['sizes'] || {})[0];
+
+            if (amount < currentVolume ) {
                 this.resetWithSize();
             }
 

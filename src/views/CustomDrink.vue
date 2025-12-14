@@ -50,6 +50,7 @@
 		height: 100%;
 		box-sizing: border-box;
 		overflow: auto;
+		padding-bottom: 75px;
 	}
 
 	.ingredient_progress {

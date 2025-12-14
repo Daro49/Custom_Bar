@@ -28,6 +28,10 @@
         amount: {
             type: Number,
             default: 0
+        },
+        color: {
+            type: String,
+            default: 'fuchsia'
         }
     })
 
@@ -99,6 +103,7 @@
             category: props.currentCategory,
             ingredient: props.ingredient,
             amount: amountML,
+            color: props.color,
             isSelected: selected
         })
     }
