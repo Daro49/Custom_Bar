@@ -124,7 +124,7 @@ export default {
             }
 
             const newOccupiedCount = table.occupied + 1;
-            const expirationTime = new Date(Date.now() + 1 * 10 * 1000).toISOString();
+            const expirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
             this.tableStore.setSelectedTable({
                 table: label,
