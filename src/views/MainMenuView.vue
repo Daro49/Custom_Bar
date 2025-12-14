@@ -10,7 +10,7 @@ export default options;
     <MenuButton txt="Menu" :to="{ name: 'menu' }" />
     <MenuButton txt="Leaderboard" :to="{ name: 'leaderboard' }" />
     <MenuButton txt="Jukebox" :to="{ name: 'jukebox' }" />
-    <MenuButton txt="Customer Service" :to="{ name: 'customer_service' }" />
+    <MenuButton txt="Loyalty Hub" :to="{ name: 'customer_service' }" />
   </div>
 
 <div class="bottom-nav-container">

@@ -3,7 +3,6 @@
     <div v-if="!detailsEnabled" class="coupon-header">
       <img :src="couponData.imgurl" alt="Coupon image" class="coupon-image" />
       <div class="coupon-info">
-        <div class="valid-date">Valid until {{ validUntil }}</div>
         <ActivateButton 
           :activation_points="couponData.price" 
           :is-active-prop="isActive"  @toggle="handleToggle"/>
@@ -33,7 +32,6 @@ export default {
     ActivateButton,
   },
   props: {
-    validUntil: String,
     couponData: { type: Object, required: true },
     activated: { type: Boolean, default: false, required: true },
   },
@@ -139,7 +137,7 @@ export default {
   margin-top: 0;
   width: 25%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 6px 0 0 6px;
   object-fit: cover;
   
 }
