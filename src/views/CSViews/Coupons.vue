@@ -35,7 +35,6 @@ const isActivated = (couponId) => {
       <CouponCard
         v-for="coupon in coupons"
         :couponData ="coupon"
-        :validUntil="date"
         :activated="isActivated(coupon.id)"
       />
     </div>
@@ -55,12 +54,7 @@ export default {
     SectionDivider,
     CouponCard,
     PointsPresenter,
-  },
-  data() {
-    return {
-      date: '22.11.2025',
-    }
-  },
+  }
 }
 </script>
 
@@ -84,9 +78,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  height: 980px;
+  height: 80%;
   margin-top: 21px;
   position: relative;
   width: 100%;
+  margin-bottom: 20px;
 }
 </style>

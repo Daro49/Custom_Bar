@@ -6,6 +6,8 @@ import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
 import { addPoints } from './AddPoints'
 import { removePackageFromOrder } from './CSModels/Packages'
+import { getMilestonesOfUser, milestones, setMilestonesOfUser } from './CSModels/Milestones'
+import { addToast } from './ToastStore'
 
 export default {
     name: 'OrderView',
@@ -40,6 +42,16 @@ export default {
         const confirmOrder = async () => {
             try {
                 const username = activeUser.value.username
+
+                await getMilestonesOfUser();
+                
+                const { euroTotal } = calculateOrderTotals(orderItems.value);
+                const { updates, milestoneReached } = await getMilestoneUpdates(euroTotal);
+
+                if (updates.length > 0) {
+                    await setMilestonesOfUser(updates);
+                }
+
                 const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
@@ -64,6 +76,7 @@ export default {
                 localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
                 orderItems.value = []
                 alert('Order confirmed! Thank you for your purchase.')
+                if (milestoneReached) addToast("Milestone reached, check it in milestones!");
                 router.push('/')
             } catch (err) {
                 console.error('Error confirming order:', err)
@@ -166,8 +179,41 @@ export default {
                 if (item.quantity !== undefined && item.quantity !== null) {
                     acc.euroTotal += item.quantity * item.price;
                 } 
-                return acc ? acc : 0;
+                return acc;
             }, { euroTotal: 0 });
+        }
+
+        async function getMilestoneUpdates(currentEuroTotal) {
+            const updates = [];
+            let milestoneReached = false;
+            for (const m of milestones.value) {
+                if (m.progress < m.goal) {
+                    let newProgress = m.progress;
+                    // check for type of milestone                    
+                    if (m.class === "orderCount") {
+                        const countInOrder = orderItems.value
+                            .filter(item => item.name.toLowerCase().includes(m.drink.toLowerCase()))
+                            .reduce((sum, item) => sum + (item.quantity || 1), 0);
+                        // nothing to check
+                        if (countInOrder <= 0) continue;
+
+                        newProgress = m.type === "total" ? m.progress + countInOrder : Math.max(m.progress, countInOrder);
+                    } else {
+                        newProgress = m.type === "total" ? m.progress + currentEuroTotal : Math.max(m.progress, currentEuroTotal);
+                    }
+
+                    const cappedProgress = Math.min(newProgress, m.goal);
+
+                    if (cappedProgress > m.progress) {
+                        updates.push({ id: m.id, progress: cappedProgress });
+
+                        if (cappedProgress === m.goal) {
+                            milestoneReached = true;
+                        }
+                    }
+                }
+            }
+            return { updates, milestoneReached };
         }
 
         // reactive var for order button

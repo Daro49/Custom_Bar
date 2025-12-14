@@ -107,7 +107,7 @@ const startEditing = () => {
 </script>
 
 <template>
-  <Header />
+  <Header :previous="true" />
   <div class="profile" v-if="activeUser">
     <div class="picture-wrapper">
       <img 
