@@ -21,12 +21,20 @@
 <script setup>
 import TableB from '../tables/TableB.vue';
 import Garden from '../../assets/garden.svg?raw';
+import { onMounted } from 'vue';
+import { useTableStore } from '@/stores/tableStore';
+
+const tableStore = useTableStore();
 
 defineProps({
   selectedTable: String
 })
 
 defineEmits(['selectTable', 'navigate', 'close'])
+
+onMounted(() => {
+  tableStore.fetchInitialTables();
+});
 </script>
 
 <style scoped>

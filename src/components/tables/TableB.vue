@@ -1,31 +1,35 @@
 <template>
   <div class="table-b-component" :class="{ active: selected }">
-    <div class="top-seat" @click.stop="$emit('select', label)"></div>
+    <div class="top-seat" @click.stop="handleTableClick"></div>
 
     <div class="middle">
       <div class="side-seats left">
-        <div v-for="i in 3" :key="`l-${i}`" class="seat" @click.stop="$emit('select', label)"></div>
+        <div v-for="i in 3" :key="`l-${i}`" class="seat" @click.stop="handleTableClick"></div>
+        <div class="seat" @click.stop="handleTableClick"></div>
       </div>
 
-      <div class="main-table" @click.stop="$emit('select', label)">
+      <div class="main-table" @click.stop="handleTableClick">
         <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
           <span class="table-label">{{ label }}</span>
-          <span class="table-label-capacity">{{ capacityLabel }}</span>
+          <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
         </div>
       </div>
 
       <div class="side-seats right">
-        <div v-for="i in 3" :key="`r-${i}`" class="seat" @click.stop="$emit('select', label)"></div>
+        <div v-for="i in 3" :key="`r-${i}`" class="seat" @click.stop="handleTableClick"></div>
+        <div class="seat" @click.stop="handleTableClick"></div>
       </div>
     </div>
 
-    <div class="bottom-seat" @click.stop="$emit('select', label)"></div>
+    <div class="bottom-seat" @click.stop="handleTableClick"></div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
@@ -39,6 +43,20 @@ const props = defineProps({
   selected: { type: Boolean, default: false },
   textRotation: { type: Number, default: 0 }
 })
+
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>
@@ -132,7 +150,7 @@ const props = defineProps({
   transform: scale(1.02);
 }
 
-.table-b-component:hover{
+.table-b-component:hover {
   filter: brightness(1.1);
   cursor: pointer
 }

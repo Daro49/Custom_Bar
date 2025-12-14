@@ -1,16 +1,21 @@
 <template>
   <div class="table-c-layout">
     <div class="out-tables-1">
-      <TableD class="table-d-instance" label="B5" :textRotation="90" :selected="selectedTable === 'B5'" @select="$emit('selectTable', $event)" /><br><br><br><br><br>
-      <TableD class="table-d-instance" label="B4" :textRotation="90" :selected="selectedTable === 'B4'" @select="$emit('selectTable', $event)" /><br><br><br><br><br>
-      <TableD class="table-d-instance" label="B3" :textRotation="90" :selected="selectedTable === 'B3'" @select="$emit('selectTable', $event)" /><br>><br><br>
+      <TableD class="table-d-instance" label="B5" :textRotation="90" :selected="selectedTable === 'B5'"
+        @select="$emit('selectTable', $event)" /><br><br><br><br><br>
+      <TableD class="table-d-instance" label="B4" :textRotation="90" :selected="selectedTable === 'B4'"
+        @select="$emit('selectTable', $event)" /><br><br><br><br><br>
+      <TableD class="table-d-instance" label="B3" :textRotation="90" :selected="selectedTable === 'B3'"
+        @select="$emit('selectTable', $event)" /><br>><br><br>
 
       <div class="bottom-cluster">
         <div class="b2-wrap">
-          <TableC class="table-c-instance" label="B2" :selected="selectedTable === 'B2'" @select="$emit('selectTable', $event)" />
+          <TableC class="table-c-instance" label="B2" :selected="selectedTable === 'B2'"
+            @select="$emit('selectTable', $event)" />
         </div>
         <div class="b1-wrap">
-          <TableC class="table-c-instance" label="B1" :textRotation="90" layoutDirection="row" :selected="selectedTable === 'B1'" @select="$emit('selectTable', $event)" />
+          <TableC class="table-c-instance" label="B1" :textRotation="90" layoutDirection="row"
+            :selected="selectedTable === 'B1'" @select="$emit('selectTable', $event)" />
         </div>
         <div class="plant">
           <Plant class="plant-instance" overlapGroupClassName="plant-2" prop="normal" />
@@ -20,29 +25,32 @@
 
     <div class="out-tables-2">
       <div class="b7-wrap">
-        <TableB class="table-b-instance" label="B6" :selected="selectedTable === 'B6'" @select="$emit('selectTable', $event)" />
+        <TableB class="table-b-instance" label="B6" :selected="selectedTable === 'B6'"
+          @select="$emit('selectTable', $event)" />
       </div>
       <div class="b8-wrap">
-        <TableB class="table-b-instance" label="B7" :selected="selectedTable === 'B7'" @select="$emit('selectTable', $event)" />
+        <TableB class="table-b-instance" label="B7" :selected="selectedTable === 'B7'"
+          @select="$emit('selectTable', $event)" />
       </div>
       <div class="b9-wrap">
-        <TableB class="table-b-instance" label="B8" :selected="selectedTable === 'B8'" @select="$emit('selectTable', $event)" />
+        <TableB class="table-b-instance" label="B8" :selected="selectedTable === 'B8'"
+          @select="$emit('selectTable', $event)" />
       </div>
     </div>
 
     <div class="group-rest">
-      <img class="entry" alt="Entry" src="../../assets/Entry.png" style="transform: rotate(-90deg);"/>
+      <img class="entry" alt="Entry" src="../../assets/Entry.png" style="transform: rotate(-90deg);" />
       <div class="text-wrapper">RESTROOMS</div>
     </div>
 
     <div class="group-map1" @click="$emit('navigate', 'garden'); $emit('close')" style="cursor: pointer;">
       <div class="text-wrapper">GARDEN</div>
-      <img class="entry" alt="Entry" src="../../assets/Entry.png"/>
+      <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div>
 
     <div class="group-map2" @click="$emit('navigate', 'entry'); $emit('close')" style="cursor: pointer;">
       <div class="text-wrapper">ENTRY</div>
-      <img class="entry" alt="Entry" src="../../assets/Entry.png"/>
+      <img class="entry" alt="Entry" src="../../assets/Entry.png" />
     </div>
   </div>
 </template>
@@ -52,12 +60,19 @@ import TableD from '../tables/TableD.vue'
 import TableB from '../tables/TableB.vue'
 import TableC from '../tables/TableC.vue'
 import Plant from '../Plant.vue'
+import { onMounted } from 'vue';
+import { useTableStore } from '@/stores/tableStore';
 
+const tableStore = useTableStore();
 defineProps({
   selectedTable: String
 })
 
 defineEmits(['selectTable', 'navigate', 'close'])
+
+onMounted(() => {
+  tableStore.fetchInitialTables();
+});
 </script>
 
 <style scoped>
@@ -69,6 +84,7 @@ defineEmits(['selectTable', 'navigate', 'close'])
   height: 917px;
   width: 70%;
 }
+
 @media (max-width: 768px) {
   .table-c-layout {
     width: 100%;
@@ -76,7 +92,7 @@ defineEmits(['selectTable', 'navigate', 'close'])
 }
 
 .table-c-layout .table-b-instance {
-  transform : scale(120%);
+  transform: scale(120%);
 }
 
 .table-c-layout .table-d-instance {
@@ -149,15 +165,19 @@ defineEmits(['selectTable', 'navigate', 'close'])
 .table-c-layout .bottom-cluster {
   transform: translateX(-38px);
 }
-.table-c-layout .b2-wrap{
+
+.table-c-layout .b2-wrap {
   transform: translateY(10px);
 }
-.table-c-layout .b1-wrap{
+
+.table-c-layout .b1-wrap {
   transform: rotate(-90deg) translateY(140px);
 }
+
 .table-c-layout .group-map1 .text-wrapper {
   margin-top: 7px;
 }
+
 .table-c-layout .group-map2 .text-wrapper {
   margin-top: 7px;
 }

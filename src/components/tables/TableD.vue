@@ -1,5 +1,5 @@
 <template>
-  <div class="table-d-component" :class="{ active: selected }" @click.stop="$emit('select', label)">
+  <div class="table-d-component" :class="{ active: selected }" @click.stop="handleTableClick">
     <div class="layout">
       <div class="couch-wrapper left">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
@@ -8,7 +8,7 @@
       <div class="main-table">
         <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
           <span class="table-label">{{ label }}</span>
-          <span class="table-label-capacity">{{ capacityLabel }}</span>
+          <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
         </div>
       </div>
 
@@ -20,10 +20,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 import couchSvg from '../../assets/couch.svg'
 import couchActiveSvg from '../../assets/couchActive.svg'
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
@@ -37,6 +39,20 @@ const props = defineProps({
   selected: { type: Boolean, default: false },
   textRotation: { type: Number, default: 0 }
 })
+
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>

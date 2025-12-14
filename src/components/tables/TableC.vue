@@ -1,40 +1,59 @@
 <template>
   <div class="table-c-component" :class="{ active: selected }">
-    <div class="main-table" @click.stop="$emit('select', label)">
+    <div class="main-table" @click.stop="handleTableClick">
       <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
         <span class="table-label">{{ label }}</span>
-        <span class="table-label-capacity">{{ capacityLabel }}</span>
+        <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
+      </div>
+      <div class="seats-mobile">
+        <div v-for="n in 5" :key="`seat-mobile-${n}`" class="seat" @click.stop="handleTableClick"></div>
       </div>
     </div>
 
     <div class="seats">
-      <div v-for="n in 5" :key="`seat-${n}`" class="seat" @click.stop="$emit('select', label)"></div>
+      <div v-for="n in 5" :key="`seat-${n}`" class="seat" @click.stop="handleTableClick"></div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
-  label: { type: String, default: 'T1'},
-  capacityLabel: { type: String, default: '0/5'},
-  tableColor: { type: String, default: '#552808'},
-  seatColor: { type: String, default: '#552808'},
-  selected: { type: Boolean, default: false},
-  textRotation: { type: Number, default: 0},
-  layoutDirection: { type: String, default: 'column'}
+  label: { type: String, default: 'T1' },
+  capacityLabel: { type: String, default: '0/5' },
+  tableColor: { type: String, default: '#552808' },
+  seatColor: { type: String, default: '#552808' },
+  selected: { type: Boolean, default: false },
+  textRotation: { type: Number, default: 0 },
+  layoutDirection: { type: String, default: 'column' }
 })
 
 const capacityMarginTop = computed(() => {
-    return props.layoutDirection === 'column' ? '1px' : '0';
+  return props.layoutDirection === 'column' ? '1px' : '0';
 });
 
 const capacityMarginLeft = computed(() => {
-    return props.layoutDirection === 'row' ? '10px' : '0';
+  return props.layoutDirection === 'row' ? '10px' : '0';
 });
+
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>

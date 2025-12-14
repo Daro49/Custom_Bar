@@ -1,25 +1,27 @@
 <template>
   <div class="table-e" :class="{ active: selected }">
-    <div class="seat horizontal top" @click.stop="$emit('select', label)"></div>
+    <div class="seat horizontal top" @click.stop="handleTableClick"></div>
 
     <div class="side-seats left">
-      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`" @click.stop="$emit('select', label)"></div>
+      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`" @click.stop="handleTableClick"></div>
     </div>
 
-    <div class="main-table" @click.stop="$emit('select', label)">
+    <div class="main-table" @click.stop="handleTableClick">
       <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
         <span class="table-label">{{ label }}</span>
-        <span class="table-label-capacity">{{ capacityLabel }}</span>
+        <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
       </div>
     </div>
 
-    <div class="seat horizontal bottom" @click.stop="$emit('select', label)"></div>
+    <div class="seat horizontal bottom" @click.stop="handleTableClick"></div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
@@ -50,6 +52,19 @@ const props = defineProps({
   }
 })
 
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>

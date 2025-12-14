@@ -36,12 +36,20 @@ import TableA from '../tables/TableA.vue'
 import TableD from '../tables/TableD.vue'
 import Plant from '../Plant.vue'
 import Bar from '@/assets/bar.svg?raw';
+import { onMounted } from 'vue';
+import { useTableStore } from '@/stores/tableStore';
+
+const tableStore = useTableStore();
 
 defineProps({
   selectedTable: String
 })
 
 defineEmits(['selectTable', 'navigate', 'close'])
+
+onMounted(() => {
+  tableStore.fetchInitialTables();
+});
 </script>
 
 <style scoped>
