@@ -1,3 +1,15 @@
+<!--
+*
+* File:     SlideDownTable.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* SlideDownTable component displays navigation buttons for switching between maps.
+* Emits navigation and close events when a button is clicked.
+*
+* @prop {String} currentMap - The currently active map.
+* @event navigate - Emitted with the target map name.
+* @event close - Emitted to close the panel.
+*
+-->
 <template>
   <div class="slide-up-content">
     <div class="button-container">

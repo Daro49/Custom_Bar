@@ -1,3 +1,12 @@
+<!--
+*
+* File:     TableC.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* TableC component represents a table with a main table and five seats.
+* Displays the table label and current occupancy/capacity.
+* Emits a select event when the table or seat is clicked.
+*
+-->
 <template>
   <div class="table-c-component" :class="{ active: selected }">
     <div class="main-table" @click.stop="handleTableClick">
@@ -14,6 +23,11 @@
 </template>
 
 <script setup>
+/**
+ * Emits when the table is selected.
+ * @event select
+ * @param {string} label - The label of the selected table.
+ */
 import { defineProps, defineEmits, computed } from 'vue'
 import { useTableStore } from '@/stores/tableStore';
 

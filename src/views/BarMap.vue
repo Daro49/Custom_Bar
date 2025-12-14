@@ -1,3 +1,11 @@
+<!--
+*
+* File:     BarMap.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* This component renders the interactive bar map view, including map navigation, table selection, and the slide panel for table details.
+* It integrates with the BarMap store logic and emits events for table selection and map navigation.
+*
+-->
 <template>
   <Header :rightIcon="cart" :rightFunction="order" :previous="true" :isCart="true">
       <template #title>

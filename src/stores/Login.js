@@ -1,8 +1,24 @@
+/**
+ * @file Login.js
+ * @brief User authentication and state management.
+ * @authors ..., Matej Marušinec (xmarusm00@stud.fit.vut.cz) (clearTable function)
+ *
+ * Handles user authentication, user state, and local storage for the active user.
+ * Provides functions to fetch and initialize user data from the backend API.
+ */
 import { ref } from 'vue';
 import User from '@/stores/User.js';
 
+
+/**
+ * Base URL for backend API.
+ */
 const API_BASE_URL = 'https://itu-wb12.onrender.com';
 
+/**
+ * Retrieves the username of the active user from localStorage, if available.
+ * @returns {string|null} Username or null if not found/invalid
+ */
 function getLocalUsername() {
     const storedUserString = localStorage.getItem('activeUser');
     if (storedUserString) {
@@ -17,6 +33,10 @@ function getLocalUsername() {
     return null;
 }
 
+/**
+ * Fetches user data from the backend and initializes the user in localStorage.
+ * @returns {Object} User object
+ */
 async function fetchAndInitializeUser() {
     const username = getLocalUsername();
 
@@ -59,6 +79,9 @@ async function fetchAndInitializeUser() {
 
 export var activeUser = ref(new User('').toJSON());
 
+/**
+ * Initializes the Pinia store with the user from backend/localStorage.
+ */
 async function initializeStore() {
     const initialUserObject = await fetchAndInitializeUser();
     activeUser.value = initialUserObject;
@@ -66,6 +89,11 @@ async function initializeStore() {
 
 initializeStore();
 
+/**
+ * Logs in a user by username, updates local state and localStorage.
+ * @param {string} username - Username to log in
+ * @returns {boolean} True if login successful, false otherwise
+ */
 export async function login(username) {
     try {
         const response = await fetch(`${API_BASE_URL}/login`, {
@@ -100,6 +128,10 @@ export async function login(username) {
     }
 }
 
+/**
+ * Clears the user's table reservation both locally and on the server.
+ * @param {string|null} tableCodeToRelease - Table code to release (optional)
+ */
 export async function clearTable(tableCodeToRelease = null) {
     activeUser.value.table = 'N/A';
     activeUser.value.tableExpiration = null;

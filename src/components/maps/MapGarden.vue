@@ -1,3 +1,11 @@
+<!--
+*
+* File:     MapGarden.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* This component renders the Garden map layout with tables and navigation buttons.
+* It emits events for table selection and map navigation.
+*
+-->
 <template>
   <div class="table-d-layout">
     <div class="garden" v-html="Garden"></div>
@@ -19,9 +27,20 @@
 </template>
 
 <script setup>
+/**
+ * Emits when a table is selected.
+ * @event selectTable
+ * @param {string} label - The label of the selected table.
+ *
+ * Emits when navigation to another map is requested.
+ * @event navigate
+ * @param {string} map - The target map name.
+ *
+ * Emits when the map panel should be closed.
+ * @event close
+ */
 import TableB from '../tables/TableB.vue';
 import Garden from '../../assets/garden.svg?raw';
-import { onMounted } from 'vue';
 import { useTableStore } from '@/stores/tableStore';
 
 const tableStore = useTableStore();
@@ -32,9 +51,6 @@ defineProps({
 
 defineEmits(['selectTable', 'navigate', 'close'])
 
-// onMounted(() => {
-//   tableStore.fetchInitialTables();
-// });
 </script>
 
 <style scoped>

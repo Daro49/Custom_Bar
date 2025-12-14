@@ -1,3 +1,12 @@
+/**
+ * @file Order.js
+ * @brief 
+ * @author Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+ *
+ * Logic for the Order view and order management.
+ * Handles fetching, confirming, and modifying user orders, as well as milestone and coupon logic.
+ * Integrates with user state and backend API.
+ */
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { activeUser } from '@/stores/Login.js'
@@ -66,6 +75,10 @@ export default {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tableCode: activeUser.value.table, expirationTime: newExpirationTime })
+                /**
+                 * Fetches the current order for the active user from the server.
+                 * Updates the orderItems ref with the result.
+                 */
                 });
                 const newUser = new User(
                     activeUser.value.username,
@@ -82,6 +95,11 @@ export default {
                 userCoupons.value = userCoupons.value.filter(c => !usedCouponIds.includes(c.id));
                 if (usedCouponIds.length > 0) {
                     for (const id of usedCouponIds) {
+
+                /**
+                 * Confirms the current order, updates milestones, coupons, and user state.
+                 * Handles all server communication for order confirmation and milestone logic.
+                 */
                         await fetch(`https://itu-wb12.onrender.com/coupons/${username}/remove/${id}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' }
@@ -142,6 +160,12 @@ export default {
                     }
                 );
 
+                /**
+                 * Removes a drink from the current order on the server and updates local state.
+                 * Throws if user or drink info is missing.
+                 * @param {Object} drink - Drink object to remove
+                 */
+
                 const result = await response.json();
 
                 if (response.ok) {
@@ -189,6 +213,11 @@ async function addToOrder(drink) {
     };
     try {
         const response = await fetch(
+
+                /**
+                 * Removes a package from the order and adds points back to the user.
+                 * @param {Object} pkg - Package object to remove
+                 */
             `https://itu-wb12.onrender.com/users/${username}/order/add`,
             {
                 method: "POST",
@@ -201,6 +230,12 @@ async function addToOrder(drink) {
         
         if (response.ok) {
             console.log("Added to server order:", result);
+
+                /**
+                 * Adds a drink to the current order on the server and updates local state.
+                 * Throws if user or table is not set.
+                 * @param {Object} drink - Drink object to add
+                 */
             if (result.order) {
                 orderItems.value = result.order;
             } else if (result.items) {
@@ -247,6 +282,12 @@ async function addToOrder(drink) {
                     const percentage = parseInt(coupon.discount) / 100;
                     discountAmount += subtotal * percentage;
                     applied = true;
+
+                /**
+                 * Calculates totals for drinks and packages, including coupon discounts.
+                 * @param {Array} items - The array of items in the order
+                 * @returns {Object} - Object containing euroTotal and usedCouponIds
+                 */
                 }
                 // Eur discount 
                 else if (coupon.discount.includes('€')) {
@@ -315,6 +356,12 @@ async function addToOrder(drink) {
 
                         newProgress = m.type === "total" ? m.progress + countInOrder : Math.max(m.progress, countInOrder);
                     } else {
+
+                /**
+                 * Determines which milestones should be updated based on the current order total.
+                 * @param {number} currentEuroTotal - The current order total in euros
+                 * @returns {Object} - Object with updates array and milestoneReached boolean
+                 */
                         newProgress = m.type === "total" ? m.progress + currentEuroTotal : Math.max(m.progress, currentEuroTotal);
                     }
 

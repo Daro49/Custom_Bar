@@ -1,3 +1,12 @@
+<!--
+*
+* File:     TableA.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* TableA component represents a rectangular table with four seats.
+* Displays the table label and current occupancy/capacity.
+* Emits a select event when the table or seat is clicked.
+*
+-->
 <template>
   <div class="table-a-component" :class="{ active: selected }">
     <div class="seat top" @click.stop="handleTableClick"></div>
@@ -14,6 +23,11 @@
 </template>
 
 <script setup>
+/**
+ * Emits when the table is selected.
+ * @event select
+ * @param {string} label - The label of the selected table.
+ */
 import { defineProps, defineEmits, computed } from 'vue'
 import { useTableStore } from '@/stores/tableStore';
 

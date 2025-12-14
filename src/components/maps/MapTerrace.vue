@@ -1,3 +1,11 @@
+<!--
+*
+* File:     MapTerrace.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* This component renders the Terrace map layout with tables, plants, and navigation buttons.
+* It emits events for table selection and map navigation.
+*
+-->
 <template>
   <div class="table-a-layout">
     <div class="out-tables-1">
@@ -23,10 +31,21 @@
 </template>
 
 <script setup>
+/**
+ * Emits when a table is selected.
+ * @event selectTable
+ * @param {string} label - The label of the selected table.
+ *
+ * Emits when navigation to another map is requested.
+ * @event navigate
+ * @param {string} map - The target map name.
+ *
+ * Emits when the map panel should be closed.
+ * @event close
+ */
 import TableA from '../tables/TableA.vue'
 import TableE from '../tables/TableE.vue'
 import Plant from '../Plant.vue'
-import { onMounted } from 'vue';
 import { useTableStore } from '@/stores/tableStore';
 
 const tableStore = useTableStore();
@@ -37,9 +56,6 @@ defineProps({
 
 defineEmits(['selectTable', 'navigate', 'close'])
 
-// onMounted(() => {
-//   tableStore.fetchInitialTables();
-// });
 </script>
 
 <style scoped>
