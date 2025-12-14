@@ -1,3 +1,12 @@
+<!--
+*
+* File:     RecipeIngredientListItem.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    List of ingredients in selected category for RecipeIngredientList.vue
+*
+-->
+
 <template>
     <div class="ingredient_list">
         <h3>{{ props.category_name }}</h3>

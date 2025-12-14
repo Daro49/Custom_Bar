@@ -1,3 +1,12 @@
+<!--
+*
+* File:     GlassLiquid.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Computes color layers of glass (Glass.vue) by colors of the selected liquids
+*
+-->
+
 <template>
     <div class="liquid" :style="liquidStyle"></div>
 </template>
@@ -8,6 +17,10 @@
 
     const store = useDrinkRecipe();
 
+
+    /**
+     * Compute the linear gradient of colors of the drink
+     */
     const liquidStyle = computed (() => {
         const layers = store.liquidLayers;
 
@@ -31,7 +44,7 @@
         }
 
         return {
-            height: `100%`,
+            height: `95%`,
             backgroundImage: `linear-gradient(to top, ${gradient})`
         }
     })
@@ -45,7 +58,5 @@
         left: 0;
 
         border-radius: 0 0 100px 100px;
-
-        transition: ___ 0.8s ease-out;
     }
 </style>

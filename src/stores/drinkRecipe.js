@@ -1,3 +1,10 @@
+/**
+* File:     drinkRecipe.js
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Model for Custom Drink Recipe maker
+*/
+
 import { defineStore } from "pinia";
 import { useNotificationStore } from "./notificationStore";
 import { activeUser } from "./Login";

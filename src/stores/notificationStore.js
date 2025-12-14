@@ -1,3 +1,10 @@
+/**
+* File:     notificationStore.js
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Pop-up for informing user store
+*/
+
 import { defineStore } from "pinia";
 
 export const useNotificationStore = defineStore('notification' , {

@@ -1,3 +1,12 @@
+<!--
+*
+* File:     ProgressCircle.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    UI elements for showing step categories
+*
+-->
+
 <template>
     <div class="progress_in_recipe">
         <div :class="['circle', circleClass]"></div>

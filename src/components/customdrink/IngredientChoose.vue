@@ -1,3 +1,12 @@
+<!--
+*
+* File:     IngredientChoose.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    UI showing all available ingredients from selected category from server API
+*
+-->
+
 <template>
     <div class="ingredient_box">
         <h2>{{ headerText }}</h2>

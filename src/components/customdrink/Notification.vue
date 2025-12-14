@@ -1,10 +1,19 @@
+<!--
+*
+* File:     Notification.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Popup notification to inform user
+*
+-->
+
 <template>
     <Transition name="fade">
         <div v-if="notification.isVisible"
             :class="['container', `container-${notification.type}`]"
             @click="notification.hideNotification"
         >
-            <p>{{ notification.message }}</p>
+            <p><b>{{ notification.message }}</b></p>
         </div>
     </Transition>
 </template>

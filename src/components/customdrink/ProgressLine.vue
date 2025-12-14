@@ -1,3 +1,12 @@
+<!--
+*
+* File:     ProgressLine.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    UI element merging ProgressCircle.vue
+*
+-->
+
 <template>
     <div class="linebox">
         <div :class="['line', lineClass]"></div>

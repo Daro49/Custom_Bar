@@ -1,3 +1,12 @@
+<!--
+*
+* File:     IngredientListItem.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Clickable ingredient element, that saves selected ingredients and amount to store
+*
+-->
+
 <template>
     <div class="ingredient_item_box" @click="toggleIngredient">
         <div class="info">
@@ -20,6 +29,7 @@
 
 <script setup>
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
+    import { useNotificationStore } from '@/stores/notificationStore';
     import { computed, ref, watch } from 'vue';
 
     const props = defineProps({
@@ -36,6 +46,7 @@
     })
 
     const store = useDrinkRecipe();
+    const notification = useNotificationStore();
 
     const ML_AMOUNT = 20;
     const sliderValue = ref(1);
@@ -63,6 +74,9 @@
         return currentValue + maxSliderValue.value;
     })
 
+    /**
+     * Check if there is any available amount in selected glass size
+     */
     const canToggle = computed(() => {
         if (isSelected.value) {
             return true;
@@ -75,6 +89,9 @@
         return true;
     })
 
+    /**
+     * When category changes, set values from store (selection, selected amount)
+     */
     watch(() => props.ingredient,() => {
         if (props.currentCategory === 'sizes') {
             return;
@@ -112,7 +129,7 @@
         const newState = !isSelected.value;
 
         if (!isSelected.value && !canToggle.value) {
-            console.warn("Glass capacity full!");
+            notification.showNotification("Glass is full!", 'warning');
             return;
         }
 

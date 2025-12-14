@@ -1,3 +1,12 @@
+<!--
+*
+* File:     DrinkDetail.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    UI element for showing the current selected ingredients in a recipe and input for drink name and description
+*
+-->
+
 <template>
     <div class="detail_input">
         <div class="column">
@@ -10,11 +19,12 @@
         </div>
 
         <div class="column_desc">
-            <input class="input_desc"
-            type="text" 
-            v-model="localDesc"
-            placeholder="(Optional)"
-            >
+            <textarea class="input_desc"
+                type="text" 
+                v-model="localDesc"
+                placeholder="(Optional)"
+                ref="descRef"
+            ></textarea>
             <label class="label_desc"><b>Description</b></label>
         </div>
     </div>
@@ -22,14 +32,16 @@
 
 <script setup>
     import { useDrinkRecipe } from '@/stores/drinkRecipe';
-    import { ref, watch } from 'vue';
+    import { nextTick, ref, watch } from 'vue';
 
     const DEBOUNCE_DELAY = 500;
+    const MIN_HEIGHT = 44;
 
     const store = useDrinkRecipe();
 
     const localName = ref(store.drinkName);
     const localDesc = ref(store.drinkDescription);
+    const descRef = ref(null);
 
     const debounce = (fn, delay) => {
         let timeout;
@@ -41,6 +53,17 @@
         }
     }
 
+    const adjustTextarea = () => {
+        if (descRef.value) {
+            descRef.value.style.height = MIN_HEIGHT + 'px';
+            const height = descRef.value.scrollHeight;
+            descRef.value.style.height = Math.max(height, MIN_HEIGHT) + 'px';
+        }
+    }
+
+    /**
+     * Debounce timers so input gets saved to store only after inactivity delay
+     */
     const debounceName = debounce((value) => {
         store.setName(value);
         console.log('Name stored')
@@ -57,9 +80,12 @@
 
     watch(localDesc, (newVal) => {
         debounceDesc(newVal);
+        nextTick(adjustTextarea())
     })
 
-    // In case of reset
+    /**
+     * In case of reset
+     */
     watch(() => store.drinkName, (newStoreVal) => {
         if (newStoreVal !== localName.value) {
             localName.value = newStoreVal;
@@ -69,6 +95,7 @@
     watch(() => store.drinkDescription, (newStoreVal) => {
         if (newStoreVal !== localDesc.value) {
             localDesc.value = newStoreVal;
+            nextTick(adjustTextarea);
         }
     })
 </script>
@@ -96,7 +123,7 @@
     .column_desc {
         position: relative;
         width: 100%;
-        height: 2.75rem;
+        height: auto;
     }
 
     .label_name {
@@ -137,14 +164,15 @@
 
     .input_desc {
         width: 100%;
-        height: 100%;
+        height: 44px;
+        overflow: hidden;
+        resize: none;
         box-sizing: border-box;
 
         border: 2px solid #55280879;
         border-radius: 1rem;
         background: none;
-        padding-right: 0.5rem;
-        padding-left: 0.5rem;
+        padding: 0.5rem;
 
         font-size: 1rem;
         color: #552808;

@@ -1,3 +1,12 @@
+<!--
+*
+* File:     CustomDrink.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Main Custom Drink view
+*
+-->
+
 <template>
 	<Header :avatar="Profile" ></Header>
 

@@ -1,3 +1,12 @@
+<!--
+*
+* File:     RecipeIngredientList.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Recipe List showing user what ingredients were selected
+*
+-->
+
 <template>
     <RecipeIngredientListItem
         v-for="category in CATEGORIES"

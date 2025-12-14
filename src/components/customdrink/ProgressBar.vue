@@ -1,3 +1,12 @@
+<!--
+*
+* File:     ProgressBar.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    UI Element for showing step progress on recipe
+*
+-->
+
 <template>
     <div class="progress_bar">
         <ProgressCircle :category-name="'Size'" :is-active="isActive('sizes')" :is-done="isStepDone('sizes')" />

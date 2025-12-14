@@ -1,3 +1,12 @@
+<!--
+*
+* File:     ProgressButton.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Buttons for navigating through steps of making a recipe
+*
+-->
+
 <template>
     <div class="button" @click="buttonAction">
         <p>{{ buttonText }}</p>
