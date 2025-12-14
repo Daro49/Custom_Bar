@@ -10,7 +10,7 @@
 
 <template>
   <!--hlavicka-->
-  <Header :rightIcon = "cart" :rightFunction = "order" />
+  <Header :rightIcon = "cart" :rightFunction = "order" :isCart="true"/>
   <div class="app">
   <!--sipky-->
     <MenuNavigation
@@ -61,7 +61,7 @@
 import { onMounted, ref, computed} from "vue";
 import { useRouter } from "vue-router";
 import DrinkCard from "@/components/MenuDrinkCard.vue";
-import cart from "@/assets/OrderHistory.svg?raw";
+import cart from "@/assets/orderIcon.svg?raw";
 import FeaturedDrink from "@/components/FeaturedDrink.vue";
 import { addToOrder } from '@/stores/DrinkInfo';
 

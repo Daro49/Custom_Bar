@@ -65,7 +65,7 @@ async function addToOrder(drink) {
     tableCode: activeUser.value.table
   };
   try {
-    const res = await fetch(
+    const response = await fetch(
       `https://itu-wb12.onrender.com/users/${username}/order/add`,
       {
         method: "POST",
@@ -73,8 +73,20 @@ async function addToOrder(drink) {
         body: JSON.stringify(payload)
       }
     );
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const result = await res.json();
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Added to server order:", result);
+      if (typeof result.orderLength === 'number') {
+        activeUser.value.orderLength = result.orderLength;
+        console.log(`Order length updated from server: ${result.orderLength}`);
+      } else {
+        console.warn("Server response did not contain newOrderLength.");
+      }
+    } else {
+      console.error("Server responded with error:", response.statusText);
+    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await response.json();
     return result;
   } catch (err) {
     console.error(err);

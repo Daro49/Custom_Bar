@@ -44,7 +44,7 @@ export default {
                 const username = activeUser.value.username
 
                 await getMilestonesOfUser();
-                
+
                 const { euroTotal } = calculateOrderTotals(orderItems.value);
                 const { updates, milestoneReached } = await getMilestoneUpdates(euroTotal);
 
@@ -97,26 +97,48 @@ export default {
         })
 
         async function removeFromOrder(drink) {
-            const username = activeUser.value.username;
-
-            if (!drink.id || !drink.class) {
-                console.error("Chyba: Objekty drinku chýba ID alebo CLASS. Server nemôže položku jednoznačne odstrániť.");
-                return;
+            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+                throw new Error("User not logged in or table not set");
             }
 
+            if (!drink.id || !drink.class) {
+                throw new Error("Error: Drink object is missing ID or CLASS. Server cannot uniquely remove the item.");
+            }
+
+            const username = activeUser.value.username;
+            const payload = {
+                drinkId: drink.id,
+                drinkClass: drink.class,
+                tableCode: activeUser.value.table
+            };
+
             try {
-                console.log("Removing from order:", drink.name, "with ID:", drink.id, "and Class:", drink.class);
-                const res = await fetch(
+                const response = await fetch(
                     `https://itu-wb12.onrender.com/users/${username}/order/remove`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ drinkId: drink.id, drinkClass: drink.class }),
+                        body: JSON.stringify(payload),
                     }
                 );
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const result = await res.json();
-                orderItems.value = result.order;
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (result.order) {
+                        orderItems.value = result.order;
+                    } else if (result.items) {
+                        orderItems.value = result.items;
+                    }
+                    if (typeof result.orderLength === 'number') {
+                        activeUser.value.orderLength = result.orderLength;
+                    }
+
+                    return result;
+                } else {
+                    const errorMessage = result.message || response.statusText;
+                    throw new Error(`HTTP ${response.status}: ${errorMessage}`);
+                }
             } catch (err) {
                 console.error(err);
                 throw err;
@@ -136,33 +158,52 @@ export default {
             fetchOrder();
         }
 
-        async function addToOrder(drink) {
-            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
-                throw new Error("User not logged in or table not set");
+async function addToOrder(drink) {
+    if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+        throw new Error("User not logged in or table not set");
+    }
+    const username = activeUser.value.username;
+    const payload = {
+        drink,
+        tableCode: activeUser.value.table
+    };
+    try {
+        const response = await fetch(
+            `https://itu-wb12.onrender.com/users/${username}/order/add`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             }
-            const username = activeUser.value.username;
-            const payload = {
-                drink,
-                tableCode: activeUser.value.table
-            };
-            try {
-                const res = await fetch(
-                    `https://itu-wb12.onrender.com/users/${username}/order/add`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    }
-                );
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const result = await res.json();
+        );
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            console.log("Added to server order:", result);
+            if (result.order) {
                 orderItems.value = result.order;
-                return result;
-            } catch (err) {
-                console.error(err);
-                throw err;
+            } else if (result.items) {
+                orderItems.value = result.items;
             }
+            if (typeof result.orderLength === 'number') {
+                activeUser.value.orderLength = result.orderLength;
+                console.log(`Order length updated from server: ${result.orderLength}`);
+            } else {
+                console.warn("Server response did not contain orderLength.");
+            }
+            
+            return result;
+        } else {
+            console.error("Server responded with error:", response.statusText);
+            const errorMessage = result.message || response.statusText;
+            throw new Error(`HTTP ${response.status}: ${errorMessage}`);
         }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
 
         /**
          * Calculates totals for drinks and packages
@@ -178,7 +219,7 @@ export default {
                 // If item has quantity, count drink value
                 if (item.quantity !== undefined && item.quantity !== null) {
                     acc.euroTotal += item.quantity * item.price;
-                } 
+                }
                 return acc;
             }, { euroTotal: 0 });
         }
