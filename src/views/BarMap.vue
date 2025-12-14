@@ -1,5 +1,5 @@
 <template>
-  <Header :rightIcon="cart" :rightFunction="order" :previous="true">
+  <Header :rightIcon="cart" :rightFunction="order" :previous="true" :isCart="true">
       <template #title>
       <span class="custom-title">{{ currentMap }}</span>
     </template>

@@ -38,7 +38,8 @@ async function fetchAndInitializeUser() {
                 userData.email || null,
                 userData.table || null,
                 userData.tableExpiration, 
-                userData.imgurl
+                userData.imgurl,
+                userData.orderLength || 0
             );
 
             const plainUserObject = userInstance.toJSON();
@@ -83,7 +84,8 @@ export async function login(username) {
             data.user.email,
             data.user.table,
             data.user.tableExpiration,
-            data.user.imgurl
+            data.user.imgurl,
+            data.user.orderLength || 0
         );
 
         activeUser.value = newUser.toJSON();

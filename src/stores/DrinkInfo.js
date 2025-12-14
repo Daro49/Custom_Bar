@@ -6,6 +6,7 @@
  */
 
 import { ref } from "vue";
+import cartItemCount from "@/stores/Header.js";
 export const drinkData = ref(null);
 export const drinkError = ref(null);
 export const drinkLoading = ref(false);
@@ -42,7 +43,7 @@ export async function loadDrink(route, username) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: username  
+        username: username
       })
     });
 
@@ -65,7 +66,7 @@ export async function loadDrink(route, username) {
  */
 export function startDrinkAutoRefresh(route) {
   stopDrinkAutoRefresh();
-  intervalId = setInterval(() => loadDrink(route, activeUser.value.username ), 5000);
+  intervalId = setInterval(() => loadDrink(route, activeUser.value.username), 5000);
 }
 /**
  * 
@@ -77,7 +78,7 @@ export function startDrinkAutoRefresh(route) {
  */
 export async function rateDrink(action, name, type = "regular", username) {
   try {
-    
+
     const endpointBase =
       type === "custom"
         ? `https://itu-wb12.onrender.com/customDrinks/${encodeURIComponent(name)}`
@@ -100,7 +101,7 @@ export async function rateDrink(action, name, type = "regular", username) {
       disliked.value = result.disliked;
     }
 
-    return result; 
+    return result;
   } catch (err) {
     console.error(err);
   }
@@ -116,10 +117,8 @@ export const orderItems = ref([]);
  */
 export async function addToOrder(drink) {
   if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
-    
     throw new Error("User not logged in or table not set");
   }
-
 
   const existing = orderItems.value.find(i => i.id === drink.id);
 
@@ -129,9 +128,8 @@ export async function addToOrder(drink) {
     orderItems.value.push({ ...drink, quantity: 1 });
   }
 
-
   try {
-    await fetch(
+    const response = await fetch(
       `https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`,
       {
         method: "POST",
@@ -139,6 +137,18 @@ export async function addToOrder(drink) {
         body: JSON.stringify({ drink, tableCode: activeUser.value.table })
       }
     );
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Added to server order:", result);
+      if (typeof result.orderLength === 'number') {
+        activeUser.value.orderLength = result.orderLength;
+        console.log(`Order length updated from server: ${result.orderLength}`);
+      } else {
+        console.warn("Server response did not contain newOrderLength.");
+      }
+    } else {
+      console.error("Server responded with error:", response.statusText);
+    }
   } catch (err) {
     console.error("Failed to add to server order:", err);
   }

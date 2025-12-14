@@ -10,7 +10,7 @@
 
 <template>
   <!--hlavicka-->
-  <Header :rightIcon = "cart" :rightFunction = "order" />
+  <Header :rightIcon = "cart" :rightFunction = "order" :isCart="true"/>
   <div class="app">
   <!--sipky-->
     <MenuNavigation
@@ -38,7 +38,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-import cart from "@/assets/OrderHistory.svg?raw";
+import cart from "@/assets/orderIcon.svg?raw";
 import Header from "@/components/Header.vue";
 import {
   leaderboard,
