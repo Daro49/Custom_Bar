@@ -35,7 +35,7 @@ async function syncChangesWithServer(oldUsername) {
   if (success) {
     console.log("Server updated successfully");
   }
-  else{
+  else {
     isError.value = true;
     errorMessage.value = "Cannot save profile changes";
   }
@@ -58,7 +58,7 @@ async function saveUsername() {
     return;
   }
 
-    // synchronisation here, wait to check if user exists!
+  // synchronisation here, wait to check if user exists!
   const userExists = await getUser(cleanedName);
 
   if (userExists) {
@@ -72,12 +72,12 @@ async function saveUsername() {
     activeUser.value.username = cleanedName;
     await syncChangesWithServer(oldUsername);
   }
-  
+
   isEditingUsername.value = false;
 }
 
 async function saveEmail() {
-  const oldUsername = activeUser.value.username; 
+  const oldUsername = activeUser.value.username;
   const cleanedEmail = newEmail.value.trim();
 
   if (cleanedEmail !== '' && cleanedEmail.includes('@')) {
@@ -90,7 +90,7 @@ async function saveEmail() {
 }
 
 async function saveImg() {
-  const oldUsername = activeUser.value.username; 
+  const oldUsername = activeUser.value.username;
 
   if (newImage.value !== activeUser.value.imgurl) {
     activeUser.value.imgurl = newImage.value;
@@ -110,24 +110,14 @@ const startEditing = () => {
   <Header :previous="true" />
   <div class="profile" v-if="activeUser">
     <div class="picture-wrapper">
-      <img 
-        :src="activeUser.imgurl || ProfileImg" 
-        alt="Profile Picture" 
-        class="picture" 
-        @error="handleImageError"
-      />
+      <img :src="activeUser.imgurl || ProfileImg" alt="Profile Picture" class="picture" @error="handleImageError" />
       <div class="edit-icon" @click="startEditing" v-html="edit"></div>
     </div>
 
     <div v-if="isEditingImage" class="image-edit-container-static">
-      <input 
-        v-model="newImage" 
-        @blur="saveImg" 
-        @keyup.enter="saveImg"
-        v-focus
+      <input v-model="newImage" @blur="saveImg" @keyup.enter="saveImg" v-focus
         :placeholder="!newImage && activeUser.imgurl ? 'Paste url of image here.' : 'Paste url of image here.'"
-        class="edit-input-inline"
-      />
+        class="edit-input-inline" />
     </div>
 
     <div class="message-container">
@@ -138,14 +128,8 @@ const startEditing = () => {
       </Transition>
     </div>
     <div class="username">
-      <input 
-        v-if="isEditingUsername" 
-        v-model="newUsername" 
-        @blur="saveUsername" 
-        @keyup.enter="saveUsername"
-        v-focus
-        class="edit-input"
-      />
+      <input v-if="isEditingUsername" v-model="newUsername" @blur="saveUsername" @keyup.enter="saveUsername" v-focus
+        class="edit-input" />
       <h2 v-else @click="isEditingUsername = true">
         {{ activeUser.username }}
       </h2>
@@ -156,14 +140,8 @@ const startEditing = () => {
     <div class="details">
       <div class="row">
         <span class="label">Email</span>
-        <input 
-          v-if="isEditingEmail" 
-          v-model="newEmail" 
-          @blur="saveEmail" 
-          @keyup.enter="saveEmail"
-          v-focus
-          class="edit-input-inline"
-        />
+        <input v-if="isEditingEmail" v-model="newEmail" @blur="saveEmail" @keyup.enter="saveEmail" v-focus
+          class="edit-input-inline" />
         <span v-else class="value clickable-text" @click="isEditingEmail = true">
           {{ activeUser.email }}
         </span>
@@ -175,9 +153,10 @@ const startEditing = () => {
     </div>
 
     <div class="actions">
-       <button class="profile-button" @click="drinks">My Drinks</button>
-       <button class="profile-button" @click="orders">Order History</button>
-       <button class="profile-button logout" @click="logout">Logout</button>
+      <button class="profile-button" @click="drinks">My Drinks</button>
+      <button class="profile-button" @click="orders">Order History</button>
+      <button class="profile-button" @click="myorder">Current Order</button>
+      <button class="profile-button logout" @click="logout">Logout</button>
     </div>
   </div>
 </template>
@@ -191,7 +170,7 @@ export default {
   },
   data() {
     return {
-      activeUserRef: activeUser, 
+      activeUserRef: activeUser,
     }
   },
   methods: {
@@ -206,6 +185,9 @@ export default {
     orders() {
       router.push({ name: 'orders' })
     },
+    myorder() {
+      router.push({ name: "order" })
+    }
   }
 }
 </script>
@@ -215,11 +197,11 @@ export default {
   background: var(--background-green);
   display: flex;
   flex-direction: column;
-  
+
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  
+
   width: 100%;
   box-sizing: border-box;
   padding: 10px 10px 40px 10px;
@@ -231,11 +213,12 @@ export default {
   border-bottom: 2px solid var(--gold);
   color: white;
   font-family: var(--profile-font-family);
-  font-size: clamp(24px, 4vw, 48px); 
+  font-size: clamp(24px, 4vw, 48px);
   text-align: center;
   outline: none;
   width: 100%;
 }
+
 .picture {
   align-self: center;
   margin: 20px 0;
@@ -261,7 +244,7 @@ export default {
   font-size: 32px;
   color: black;
   border-radius: 10px;
-  width:80%;
+  width: 80%;
   align-self: center;
 }
 
@@ -295,36 +278,40 @@ export default {
 
 .row {
   display: flex;
-  flex-direction: row; 
-  justify-content: space-between; 
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-bottom: 1px solid rgba(0,0,0,0.1); 
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-bottom: 10px;
 }
-.row:last-child { border-bottom: none; }
+
+.row:last-child {
+  border-bottom: none;
+}
 
 .details {
   background: linear-gradient(135deg, #e9c15b, #d39e30);
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.3), 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3), 0 4px 15px rgba(0, 0, 0, 0.2);
   padding: 25px;
-  font-size: 20px; 
-  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .actions {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  gap: 10px;             
+  gap: 10px;
   margin-top: 20px;
-  flex-shrink: 0;  
+  flex-shrink: 0;
   margin-bottom: 30px;
 }
+
 .profile-button {
   background: var(--gold);
-  border-bottom: 3px solid #b8860b; 
+  border-bottom: 3px solid #b8860b;
   transition: all 0.2s ease;
   font-weight: 600;
 }
@@ -335,29 +322,30 @@ export default {
 }
 
 .picture {
-  width: 180px; 
+  width: 180px;
   height: 180px;
   border: 4px solid var(--gold);
-  padding: 5px; 
+  padding: 5px;
   align-self: center;
   background: white;
 }
 
 .error-message {
-color: var(--error-red, #df5252); 
-font-size: 24px;
-font-weight: bold;
-text-align: center;
-margin-top: 5px;
-}
-
-.success-message {
-  color: var(--success-green, #4CAF50); 
+  color: var(--error-red, #df5252);
   font-size: 24px;
   font-weight: bold;
   text-align: center;
   margin-top: 5px;
 }
+
+.success-message {
+  color: var(--success-green, #4CAF50);
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
@@ -393,7 +381,7 @@ margin-top: 5px;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .image-edit-container label {
@@ -411,15 +399,15 @@ margin-top: 5px;
   padding: 12px;
   border-radius: 10px;
   border: 2px solid var(--gold);
-  margin-bottom: 10px; 
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  margin-bottom: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .picture-wrapper {
   position: relative;
   align-self: center;
-  margin: 20px 0 10px 0; 
-  width: 180px; 
+  margin: 20px 0 10px 0;
+  width: 180px;
   height: 180px;
   margin-bottom: 80px;
 }
@@ -447,7 +435,7 @@ margin-top: 5px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 2px solid var(--background-green); 
+  border: 2px solid var(--background-green);
   transition: transform 0.2s ease;
   padding: 6px;
   box-sizing: border-box;

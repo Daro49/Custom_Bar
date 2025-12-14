@@ -48,7 +48,7 @@
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
-          <span class="item-name">Order price: {{ orderPrice }} €</span>
+          <span class="item-name">Order price: {{ (orderPrice).toFixed(2)}} €</span>
         </div>
       </div>
     </div>

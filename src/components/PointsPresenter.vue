@@ -79,8 +79,7 @@ export default defineComponent({
 }
 
 .points .text-wrapper-2 {
-  background: var(--headerv2);
-  -webkit-text-fill-color: transparent;
+  color: var(--gold);
   font-family: 'Century Schoolbook', Helvetica;
   font-size: 38px;
   text-align: center;
