@@ -150,7 +150,7 @@ export default {
             this.selectedTable = label;
             activeUser.value.table = this.selectedTable;
             
-            const expirationTime = new Date(Date.now() + 1 * 10 * 1000).toISOString(); 
+            const expirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString(); 
             activeUser.value.tableExpiration = expirationTime;
             
             localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
