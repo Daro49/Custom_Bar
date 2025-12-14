@@ -1,3 +1,12 @@
+<!--
+*
+* File:     TableB.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+* TableB component represents a table with multiple seats on each side.
+* Displays the table label and current occupancy/capacity.
+* Emits a select event when the table or seat is clicked.
+*
+-->
 <template>
   <div class="table-b-component" :class="{ active: selected }">
     <div class="top-seat" @click.stop="handleTableClick"></div>
@@ -26,6 +35,11 @@
 </template>
 
 <script setup>
+/**
+ * Emits when the table is selected.
+ * @event select
+ * @param {string} label - The label of the selected table.
+ */
 import { defineProps, defineEmits, computed } from 'vue'
 import { useTableStore } from '@/stores/tableStore';
 

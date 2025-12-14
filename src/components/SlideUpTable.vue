@@ -1,3 +1,14 @@
+<!--
+*
+* File:     SlideUpTable.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+ * SlideUpTable component displays a handle for expanding or collapsing a panel.
+ * Emits a toggle event when the handle is clicked.
+ *
+ * @prop {Boolean} expanded - Whether the panel is expanded.
+ * @event toggle - Emitted when the handle is clicked.
+*
+-->
 <template>
   <div class="slide-up-handle" @click="$emit('toggle')">
     <svg 

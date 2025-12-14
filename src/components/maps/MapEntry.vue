@@ -1,3 +1,11 @@
+<!--
+*
+* File:     MapEntry.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+* This component renders the Entry map layout with tables and navigation buttons.
+* It emits events for table selection and map navigation.
+*
+-->
 <template>
   <div class="table-b-layout">
     <div class="out-tables-1">
@@ -32,11 +40,22 @@
 </template>
 
 <script setup>
+/**
+ * Emits when a table is selected.
+ * @event selectTable
+ * @param {string} label - The label of the selected table.
+ *
+ * Emits when navigation to another map is requested.
+ * @event navigate
+ * @param {string} map - The target map name.
+ *
+ * Emits when the map panel should be closed.
+ * @event close
+ */
 import TableA from '../tables/TableA.vue'
 import TableD from '../tables/TableD.vue'
 import Plant from '../Plant.vue'
 import Bar from '@/assets/bar.svg?raw';
-import { onMounted } from 'vue';
 import { useTableStore } from '@/stores/tableStore';
 
 const tableStore = useTableStore();
@@ -47,9 +66,6 @@ defineProps({
 
 defineEmits(['selectTable', 'navigate', 'close'])
 
-// onMounted(() => {
-//   tableStore.fetchInitialTables();
-// });
 </script>
 
 <style scoped>

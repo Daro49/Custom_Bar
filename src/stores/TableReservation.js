@@ -1,5 +1,17 @@
+/**
+ * @file TableReservation.js
+ * @brief Logic for extending a user's table reservation.
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+ *
+ * Provides logic for extending a user's table reservation.
+ * Integrates with user state and backend API.
+ */
 import { activeUser } from '@/stores/Login.js';
 
+/**
+ * Extends the current user's table reservation by 1 hour and updates server/local state.
+ * @returns {boolean} True if successful, false otherwise
+ */
 export async function extendTableReservation() {
     const tableLabel = activeUser.value.table;
     const username = activeUser.value.username;

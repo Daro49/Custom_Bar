@@ -1,12 +1,18 @@
 /**
- * File: Login.js
- * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
- * Brief: Function defined for login of an user action
+ * @file Login.js
+ * @brief User authentication and state management.
+ * @authors Samuel Kudla (xkudlas00@stud.fit.vutbr.cz), Matej Marušinec (xmarusm00@stud.fit.vutbr.cz) (clearTable function)
+ *
+ * Handles user authentication, user state, and local storage for the active user.
+ * Provides functions to fetch and initialize user data from the backend API.
  */
-
 import { ref } from 'vue';
 import User from '@/stores/User.js';
 
+
+/**
+ * Base URL for backend API.
+ */
 const API_BASE_URL = 'https://itu-wb12.onrender.com';
 
 /**
@@ -78,6 +84,9 @@ async function fetchAndInitializeUser() {
  */
 export var activeUser = ref(new User('').toJSON());
 
+/**
+ * Initializes the Pinia store with the user from backend/localStorage.
+ */
 async function initializeStore() {
     const initialUserObject = await fetchAndInitializeUser();
     activeUser.value = initialUserObject;

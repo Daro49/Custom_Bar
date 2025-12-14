@@ -1,3 +1,12 @@
+/**
+ * @file Order.js
+ * @brief 
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+ *
+ * Logic for the Order view and order management.
+ * Handles fetching, confirming, and modifying user orders, as well as milestone and coupon logic.
+ * Integrates with user state and backend API.
+ */
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { activeUser } from '@/stores/Login.js'
@@ -175,23 +184,52 @@ export default {
         }
 
         /**
-         * Adds a specific drink to the current order on the server.
-         * @param {Object} drink - The drink object to add.
+         * Adds a drink to the current order on the server and updates local state.
+         * Throws if user or table is not set.
+         * @param {Object} drink - Drink object to add
          */
         async function addToOrder(drink) {
-            if (!activeUser.value?.username || !activeUser.value?.table) throw new Error("Missing user/table");
+            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+                throw new Error("User not logged in or table not set");
+            }
+            const username = activeUser.value.username;
+            const payload = {
+                drink,
+                tableCode: activeUser.value.table
+            };
             try {
-                const response = await fetch(`https://itu-wb12.onrender.com/users/${activeUser.value.username}/order/add`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ drink, tableCode: activeUser.value.table })
-                });
+                const response = await fetch(
+                    `https://itu-wb12.onrender.com/users/${username}/order/add`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    }
+                );
                 const result = await response.json();
                 if (response.ok) {
-                    orderItems.value = result.order || result.items;
+                    console.log("Added to server order:", result);
+                    if (result.order) {
+                        orderItems.value = result.order;
+                    } else if (result.items) {
+                        orderItems.value = result.items;
+                    }
+                    if (typeof result.orderLength === 'number') {
+                        activeUser.value.orderLength = result.orderLength;
+                        console.log(`Order length updated from server: ${result.orderLength}`);
+                    } else {
+                        console.warn("Server response did not contain orderLength.");
+                    }
                     return result;
+                } else {
+                    console.error("Server responded with error:", response.statusText);
+                    const errorMessage = result.message || response.statusText;
+                    throw new Error(`HTTP ${response.status}: ${errorMessage}`);
                 }
-            } catch (err) { console.error(err); throw err; }
+            } catch (err) {
+                console.error(err);
+                throw err;
+            }
         }
 
         /**
@@ -202,19 +240,15 @@ export default {
          */
         function calculateOrderTotals(items) {
             if (!items || items.length === 0) return { euroTotal: 0, usedCouponIds: [] };
-
             let subtotal = items
                 .filter(item => item?.class !== "coupon" && item?.class !== "pkg")
                 .reduce((acc, item) => acc + ((item.quantity || 0) * (item.price || 0)), 0);
-
             let discountAmount = 0;
             let usedCouponIds = [];
-
             // Prepare pool of items for free-item allocation
             let availableForDiscount = items
                 .filter(item => item?.class !== "coupon" && item?.class !== "pkg")
                 .flatMap(item => Array(item.quantity || 1).fill({ ...item, quantity: 1 }));
-
             for (const coupon of userCoupons.value) {
                 let applied = false;
                 if (coupon.discount.includes('%')) {
@@ -233,7 +267,6 @@ export default {
                         }
                     } else if (coupon.code.includes("FOR")) {
                         const [required, free] = coupon.code.split("FOR").map(num => parseInt(num));
-
                         for (const item of items) {
                             // if count of items in order is equal or more than required, apply discount
                             if (item?.class !== "coupon" && item?.class !== "pkg" && (item.quantity || 0) >= required) {
@@ -247,7 +280,6 @@ export default {
                 }
                 if (applied) usedCouponIds.push(coupon.id);
             }
-
             return {
                 euroTotal: Math.max(0, subtotal - discountAmount),
                 usedCouponIds
@@ -290,12 +322,10 @@ export default {
         const buttonText = computed(() => {
             // only real items that can be ordered
             const realItems = orderItems.value.filter(item => item.class !== "coupon");
-
             // if no real order something
             if (!orderItems.value || realItems.length === 0) {
                 return 'ORDER SOMETHING';
             }
-
             const { euroTotal } = calculateOrderTotals(orderItems.value);
             return 'PAY ' + `${euroTotal.toFixed(2)}€`;
         });

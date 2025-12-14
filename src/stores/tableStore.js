@@ -1,3 +1,11 @@
+/**
+ * @file tableStore.js
+ * @brief Pinia store for managing tables, their occupancy, and selection state.
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+ *
+ * Pinia store for managing tables, their occupancy, and selection state.
+ * Handles fetching tables, updating occupancy, and synchronizing with server via WebSockets.
+ */
 import { defineStore } from 'pinia';
 import { io } from "socket.io-client";
 import { activeUser } from '@/stores/Login.js';
@@ -19,6 +27,10 @@ export const useTableStore = defineStore('tables', {
         }
     },
     actions: {
+        /**
+         * Fetches the initial list of tables from the server and populates the store.
+         * Skips fetch if tables are already loaded.
+         */
         async fetchInitialTables() {
             if (this.tables && this.tables.length > 0) {
                 console.log("Tables already fetched, skipping initial fetch.");
@@ -46,9 +58,19 @@ export const useTableStore = defineStore('tables', {
                 console.error("Chyba načítania stolov:", error);
             }
         },
+        /**
+         * Sets the currently selected table in the store.
+         * @param {Object|null} table - Table object or null to clear selection
+         */
         setSelectedTable(table) {
             this.selectedTable = table;
         },
+        /**
+         * Updates the occupancy count for a table on the server and locally.
+         * Handles server PATCH and updates local state if successful.
+         * @param {string} tableId - Table ID
+         * @param {number} newOccupiedCount - New occupancy count
+         */
         async updateTableOccupancy(tableId, newOccupiedCount) {
             try {
                 const table = this.getTableById(tableId);
@@ -75,6 +97,12 @@ export const useTableStore = defineStore('tables', {
             }
         },
         
+        /**
+         * Updates the local occupancy count for a table and resets selection if needed.
+         * Handles edge cases where table is released remotely.
+         * @param {string} id - Table ID
+         * @param {number} newOccupied - New occupancy count
+         */
         updateLocalOccupancy(id, newOccupied) {
             const table = this.getTableById(id);
             if (table) {
@@ -93,6 +121,11 @@ export const useTableStore = defineStore('tables', {
             }
         },
 
+        /**
+         * Connects to the server via Socket.IO and listens for table updates.
+         * Updates local occupancy in real time.
+         * Only connects once per store instance.
+         */
         connectToWebSockets() {
             if (socket) return; 
 

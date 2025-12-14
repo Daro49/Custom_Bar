@@ -1,3 +1,12 @@
+<!--
+*
+* File:     TableD.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+* TableD component represents a table with two couches and a main table.
+* Displays the table label and current occupancy/capacity.
+* Emits a select event when the table is clicked.
+*
+-->
 <template>
   <div class="table-d-component" :class="{ active: selected }" @click.stop="handleTableClick">
     <div class="layout">
@@ -20,6 +29,11 @@
 </template>
 
 <script setup>
+/**
+ * Emits when the table is selected.
+ * @event select
+ * @param {string} label - The label of the selected table.
+ */
 import { defineProps, defineEmits, computed } from 'vue'
 import { useTableStore } from '@/stores/tableStore';
 import couchSvg from '../../assets/couch.svg'

@@ -1,8 +1,10 @@
-<!-------------ITU-PROJECT------------->
-<!---author:-Jozef-Matus-(xmatusj00)--->
-<!---file-name:-MainMenuView.vue------->
-<!------------------------------------->
-
+<!--
+*
+* File:     MainMenuView.vue
+* Author:   Jozef Matus (xmatusj00@stud.fit.vut.cz), Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+* MainMenuView component represents the main menu view of the application.
+*
+-->
 <script>
 import options from '@/stores/MainMenuView.js';
 export default options;

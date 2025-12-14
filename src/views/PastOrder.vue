@@ -1,3 +1,11 @@
+<!--
+*
+* File:     PastOrder.vue
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
+* This component displays the user's past orders, including navigation between orders and order details.
+* It integrates with the PastOrder store logic and provides UI for reviewing previous purchases.
+*
+-->
 <template>
     <Header :avatar="Profile" :previous="true"/>
   <div class="order-container">
