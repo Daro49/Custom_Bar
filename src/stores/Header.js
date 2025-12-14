@@ -24,27 +24,37 @@ function formatTime(ms) {
         return `${minutes} min`;
     }
 }
+async function clearOrderOnServer(username) {
+    try {
+        const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/delete/`, {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (response.ok) {
+            activeUser.value.orderLength = 0;
+        } else {
+            console.error("Failed to delete order on server:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error deleting order on server:", error);
+    }
+}
 
-// Funkcia na počiatočné načítanie orderLength
 async function fetchOrderLength() {
     if (!activeUser.value?.username) {
         activeUser.value.orderLength = 0;
         return;
     }
-
     const username = activeUser.value.username;
-
     try {
         const response = await fetch(`https://itu-wb12.onrender.com/users/${username}`);
 
         if (response.ok) {
             const result = await response.json();
 
-            // Kontrola a aktualizácia orderLength z odpovede používateľa
             if (typeof result.orderLength === 'number') {
                 activeUser.value.orderLength = result.orderLength;
             } else {
-                // Ak orderLength chýba v odpovedi, inicializujeme na 0
                 activeUser.value.orderLength = 0;
             }
         } else {
@@ -77,7 +87,7 @@ export default {
         const timeRemainingMs = ref(0);
         let intervalId = null;
 
-        const updateTimer = () => {
+        const updateTimer = async () => {
             const user = activeUser.value;
 
             if (!user) {
@@ -100,7 +110,12 @@ export default {
                     timeRemainingMs.value = 0;
 
                     const tableCodeToClear = user.table;
+                    const username = user.username;
 
+                    if (username) {
+                        await clearOrderOnServer(username);
+                    }
+                    
                     clearTable(tableCodeToClear);
 
                     if (intervalId) {
