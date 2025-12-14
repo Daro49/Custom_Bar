@@ -20,6 +20,10 @@ export const useTableStore = defineStore('tables', {
     },
     actions: {
         async fetchInitialTables() {
+            if (this.tables && this.tables.length > 0) {
+                console.log("Tables already fetched, skipping initial fetch.");
+                return; 
+            }
             try {
                 const response = await fetch('https://itu-wb12.onrender.com/tables', {
                     headers: {

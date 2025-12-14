@@ -10,7 +10,6 @@ import { useTableStore } from '@/stores/tableStore';
 import { addToast } from '@/stores/ToastStore';
 
 export default {
-    name: "TableLayoutA",
     data() {
         return {
             currentMap: 'terrace',
@@ -21,6 +20,7 @@ export default {
     },
     created() {
         this.tableStore = useTableStore();
+        this.tableStore.fetchInitialTables();
         if (activeUser.value && activeUser.value.table && activeUser.value.table !== 'N/A') {
             if (!this.tableStore.selectedTable) {
                 this.tableStore.setSelectedTable({
@@ -35,7 +35,7 @@ export default {
     mounted() {
         const tableStore = useTableStore();
         tableStore.connectToWebSockets();
-        this.expirationChecker = setInterval(this.checkTableExpiration, 60000);
+        this.expirationChecker = setInterval(this.checkTableExpiration, 5000);
     },
     beforeDestroy() {
         clearInterval(this.expirationChecker);
@@ -48,10 +48,10 @@ export default {
                 const table = tableStore.getTableById(tableLabel);
                 if (table) {
                     const newCount = Math.max(0, table.occupied - 1);
-                    tableStore.updateLocalOccupancy(tableLabel, newCount); 
+                    tableStore.updateLocalOccupancy(tableLabel, newCount);
                     console.log(`Watch triggered: Table ${tableLabel} visually decremented to ${newCount}.`);
                 }
-                
+
                 if (tableStore.getSelectedTableId === tableLabel) {
                     tableStore.setSelectedTable(null);
                 }
@@ -82,7 +82,7 @@ export default {
 
                 if (now >= expiryTime) {
                     console.log(`Table ${table} reservation expired. Releasing.`);
-                    this.releaseTable(table); 
+                    this.releaseTable(table);
                 }
             } else if (this.expirationChecker) {
                 clearInterval(this.expirationChecker);
@@ -91,24 +91,12 @@ export default {
         },
 
         async releaseTable(tableLabel) {
-            const table = this.tableStore.getTableById(tableLabel);
-            
-            // 1. Znížime obsadenosť stola (odošle PATCH request na server)
-            if (table) {
-                const newCount = Math.max(0, table.occupied - 1);
-                await this.tableStore.updateTableOccupancy(tableLabel, newCount); 
-            }
-            
-            // 2. Zrušíme rezerváciu užívateľa na serveri (volá teraz vyčistený /release endpoint)
-            await clearTable(tableLabel);
-            
-            // 3. Zrušíme lokálnu selekciu v Pinia
-            this.tableStore.setSelectedTable(null);
-            
             if (this.expirationChecker) {
                 clearInterval(this.expirationChecker);
                 this.expirationChecker = null;
             }
+            await clearTable(tableLabel);
+            this.tableStore.setSelectedTable(null);
         },
 
         async selectTable(label) {
@@ -116,10 +104,9 @@ export default {
                 addToast('Please log in to select a table.');
                 return;
             }
-            const isDeselecting = this.selectedTable === label; 
-            
+            const isDeselecting = this.selectedTable === label;
+
             if (isDeselecting) {
-                // Volanie releaseTable spraví dekrementáciu a zrušenie rezervácie
                 await this.releaseTable(label);
                 return;
             }
@@ -131,28 +118,20 @@ export default {
                 return;
             }
             if (activeUser.value.table && activeUser.value.table !== 'N/A') {
-                // TOTO JE ČASŤ PRE PRESUN:
                 const oldTableId = activeUser.value.table;
                 const oldTable = tableStore.getTableById(oldTableId);
-                
-                // 1. Znížime obsadenosť starého stola (PATCH request)
-                if (oldTable) {
-                    const oldOccupiedCount = Math.max(0, oldTable.occupied - 1);
-                    await tableStore.updateTableOccupancy(oldTableId, oldOccupiedCount);
-                }
-                // 2. Uvoľníme starú rezerváciu užívateľa (volá /release)
                 await clearTable(oldTableId);
             }
-            
+
             const newOccupiedCount = table.occupied + 1;
-            const expirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString(); 
-            
-            this.tableStore.setSelectedTable({ 
-                table: label, 
-                tableExpiration: expirationTime 
+            const expirationTime = new Date(Date.now() + 1 * 10 * 1000).toISOString();
+
+            this.tableStore.setSelectedTable({
+                table: label,
+                tableExpiration: expirationTime
             });
 
-            activeUser.value.table = label; 
+            activeUser.value.table = label;
             activeUser.value.tableExpiration = expirationTime;
             localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
 
@@ -171,12 +150,12 @@ export default {
             } catch (error) {
                 console.error('Error selecting table:', error);
             }
-            
+
             // 3. Zvýšime obsadenosť nového stola (PATCH request)
             await tableStore.updateTableOccupancy(label, newOccupiedCount);
-            
+
             if (!this.expirationChecker) {
-                this.expirationChecker = setInterval(this.checkTableExpiration, 60000);
+                this.expirationChecker = setInterval(this.checkTableExpiration, 5000);
             }
         },
 

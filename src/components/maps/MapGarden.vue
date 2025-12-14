@@ -32,9 +32,9 @@ defineProps({
 
 defineEmits(['selectTable', 'navigate', 'close'])
 
-onMounted(() => {
-  tableStore.fetchInitialTables();
-});
+// onMounted(() => {
+//   tableStore.fetchInitialTables();
+// });
 </script>
 
 <style scoped>
