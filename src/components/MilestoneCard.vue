@@ -15,6 +15,7 @@
         <ProgressBar :progress="(progress / goal) * 100" />
         <div class="progress-labels">
           <span class="count">{{ (progress).toFixed(2) }} / {{ (goal).toFixed(2) }}</span>
+          <span class="count" v-if="claimed">Claimed</span>
           <span class="percent">{{ Math.round((progress / goal) * 100) }}%</span>
         </div>
       </div>

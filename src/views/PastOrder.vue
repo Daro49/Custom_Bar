@@ -42,13 +42,13 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right">
+          <div class="item-right" v-if="item.class === 'drink'">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
-          <span class="item-name">Order price: {{ orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) }}€</span>
+          <span class="item-name">Order price: {{ orderPrice }} €</span>
         </div>
       </div>
     </div>
@@ -64,6 +64,7 @@ import { addToast } from '@/stores/ToastStore.js';
 
 const orderItems = ref([])
 const orderDate = ref('')
+const orderPrice = ref(0);
 const isLoading = ref(true)
 const error = ref(null)
 const orderIndex = ref(0)
@@ -86,9 +87,11 @@ const fetchOrder = async () => {
       throw new Error('No past orders')
     }
     const data = await response.json()
+    orderPrice.value = data.price ?? 0;
     orderItems.value = data.items ?? data
     orderDate.value = data.date ? formatDate(data.date) : ''
     orderCount.value = data.totalOrders ?? orderCount.value
+    console.log(data);
   } catch (err) {
     console.error('Error fetching order:', err)
     error.value = err.message
@@ -272,7 +275,7 @@ async function handleOrder(drink) {
 }
 
 .item-name {
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: var(--button-family-font);
   font-size: 16px;
   color: black;
   line-height: 1.3;
