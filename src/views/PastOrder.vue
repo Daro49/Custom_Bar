@@ -14,7 +14,7 @@
     <div class="content">
       <!-- Title with divider -->
       <div class="order-title">
-        <h2>ORDER</h2> <br>
+        <h2>ORDER {{ orderCount > 0 ? `${orderIndex + 1}/${orderCount}` : '' }}</h2> <br>
         <div class="order-date">
           <svg class="chevron-icon1" viewBox="0 0 100 50" @click="prevOrder">
             <path 
