@@ -1,11 +1,11 @@
 <template>
   <div class="table-a-layout">
     <div class="out-tables-1">
-      <TableA class="table-a-instance" label="T2" :selected="selectedTable === 'T2'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="T3" :selected="selectedTable === 'T3'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="T4" :selected="selectedTable === 'T4'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="T5" :selected="selectedTable === 'T5'" @select="$emit('selectTable', $event)" />
-      <TableA class="table-a-instance" label="T6" :selected="selectedTable === 'T6'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="T2" :textRotation="45" :selected="selectedTable === 'T2'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="T3" :textRotation="45" :selected="selectedTable === 'T3'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="T4" :textRotation="45" :selected="selectedTable === 'T4'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="T5" :textRotation="45" :selected="selectedTable === 'T5'" @select="$emit('selectTable', $event)" />
+      <TableA class="table-a-instance" label="T6" :textRotation="45" :selected="selectedTable === 'T6'" @select="$emit('selectTable', $event)" />
     </div>
 
     <div class="out-tables-2">
@@ -26,12 +26,20 @@
 import TableA from '../tables/TableA.vue'
 import TableE from '../tables/TableE.vue'
 import Plant from '../Plant.vue'
+import { onMounted } from 'vue';
+import { useTableStore } from '@/stores/tableStore';
+
+const tableStore = useTableStore();
 
 defineProps({
   selectedTable: String
 })
 
 defineEmits(['selectTable', 'navigate', 'close'])
+
+// onMounted(() => {
+//   tableStore.fetchInitialTables();
+// });
 </script>
 
 <style scoped>
