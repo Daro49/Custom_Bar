@@ -4,13 +4,11 @@ import Profile from '@/assets/user.png'
 
 <template>
   <div class="customer-service">
-      <Header :avatar="Profile" />
-
+    <Header :avatar="Profile" />
+    <PointsPresenter/>
     <div class="frame">
-      <ShiningHeader />
-
       <div class="frame-2">
-        <div class="text-wrapper-2">Koniferium Borovička</div>
+        <Minigame/>
         <SectionDivider />
         <div class="frame-3">
           <MenuButton txt="Coupons" :to="{ name: 'coupons' }" />
@@ -24,16 +22,16 @@ import Profile from '@/assets/user.png'
 
 <script>
 import Header from '@/components/Header.vue'
-import ShiningHeader from '@/components/ShiningHeader.vue'
 import SectionDivider from '@/components/SectionDivider.vue'
 import MenuButton from '@/components/MenuButton.vue'
+import Minigame from '@/components/Minigame.vue';
+import PointsPresenter from '@/components/PointsPresenter.vue';
 
 export default {
   name: 'CustomerService',
   components: {
     Header,
     SectionDivider,
-    ShiningHeader,
     MenuButton,
   },
 }

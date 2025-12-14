@@ -1,5 +1,5 @@
 <template>
-  <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true"/>
+  <Header :rightIcon="pastOrders" :rightFunction="goOrderHistory" :previous="true" />
   <div class="order-container">
     <div class="content">
       <div class="order-title">
@@ -16,12 +16,13 @@
             <span class="item-name">{{ item.name }}</span>
           </div>
           <div class="item-right" v-if="item.quantity">
-            <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
+            <span class="price">{{ item.quantity }} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2)
+              }}€</span>
             <button class="remove-button" @click="removeFromOrder(item)">-</button>
             <button class="add-button" @click="addToOrder(item)">+</button>
           </div>
-          <div v-else class = "item-right">
-            <span class = "price">{{ item.price }} pts</span>
+          <div v-else class="item-right">
+            <span class="price">{{ item.price }} pts</span>
             <button class="remove-button" @click="removePackage(item)">-</button>
           </div>
         </div>
@@ -200,5 +201,4 @@ export default options
   font-weight: bold;
   cursor: pointer;
 }
-
 </style>
