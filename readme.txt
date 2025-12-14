@@ -82,5 +82,6 @@ src
 
 How to run:
 To console write
+    - npm install
     - npm run build
     - npm run preview
