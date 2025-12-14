@@ -1,3 +1,8 @@
+<!-------------ITU-PROJECT------------->
+<!---author:-Jozef-Matus-(xmatusj00)--->
+<!---file-name:-MainMenuView.vue------->
+<!------------------------------------->
+
 <script>
 import options from '@/stores/MainMenuView.js';
 export default options;

@@ -1,3 +1,9 @@
+////////////////////////////////////////
+//             ITU-PROJECT            //
+//   author: Jozef Matus (xmatusj00)  //
+//   file-name: ProgresionJukebox.js  //
+////////////////////////////////////////
+
 import { reactive, computed } from "vue"
 import { usePlaylist } from "./Playlist"
 
