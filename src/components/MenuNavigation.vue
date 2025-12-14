@@ -1,3 +1,12 @@
+<!--
+/**
+ * @file MenuNavigation.vue
+ * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
+ * @brief implementacia modulu pre zobrazenie drinku v Menu
+ * @date 2025-12-13
+ */
+-->
+
 <template>
   <div class="menu-navigator">
     <button class="nav-arrow" @click="$emit('prev')">◀</button>

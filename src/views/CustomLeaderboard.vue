@@ -3,7 +3,7 @@
  * @file CustomLeaderboard.vue
  * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
  * @brief implementacia viewu pre rebricek vlastnych napojov
- * @date 2023-10-27
+ * @date 2025-12-13
  */
 -->
 

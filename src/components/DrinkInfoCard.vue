@@ -3,7 +3,7 @@
  * @file DrinkInfoCArd.vue
  * @author Adam Babaca - xbabaca00@stud.fit.vutbr.cz
  * @brief implementacia modulu pre detail drinku
- * @date 2023-10-27
+ * @date 2025-12-13
  */
 -->
 
