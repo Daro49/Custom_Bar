@@ -30,7 +30,7 @@
         </div>
         <div v-else>
           <div class="placeholder">
-            Aktualne sa nic neprehrava
+            <h1>There is nothing to play</h1>
           </div>
           <div class="progress_wrapper">
             <div class="progress_timer">
@@ -52,9 +52,11 @@
             :title="song.title"
             :artist="song.artist"
             :song="song"
+            :rating="song.rating"
              @promote="promoteSongHandler(song)"
              @like="songLikeHandle(song)"
             :showAdd="false"
+            :showRC="true"
             />
             <h1 v-if="playlist.length===0" class="placeholder-playlist-msg"> Wow! Such empty! </h1>
           </div>
@@ -133,7 +135,7 @@ const {
 } = useProgresionJukebox()
 
 /**
- * 
+ * @brief watches if new song was added to playlist and starts playing first song contained in playlist
  */
 watch(
   () => playlist.value.length,
@@ -147,7 +149,7 @@ watch(
 )
 
 /**
- * 
+ * @brief Handles interaction with like button. It operates as toggle between liked and normal song for each different user. After pressing it, it updates the liked state in the playlist, and if that same song is currently playing, it updates the current song too.
  * @param song 
  */
 async function songLikeHandle(song) {
@@ -156,7 +158,6 @@ async function songLikeHandle(song) {
 
   await fetchPlaylist()
 
-  // kľúč: ak currentSong existuje, prepni ho na nový objekt z playlistu
   if (progressState.currentSong) {
     const updated = playlist.value.find(s => s.id === progressState.currentSong.id)
     if (updated) progressState.currentSong = updated
@@ -164,7 +165,7 @@ async function songLikeHandle(song) {
 }
 
 /**
- * 
+ * @brief Handles fetching songs from the playlist and makes sure playback starts if nothing is currently playing and the playlist is not empty after the fetch.
  */
 async function fetchSongHandler() {
   await fetchPlaylist()
@@ -186,7 +187,7 @@ async function fetchSongHandler() {
 }
 
 /**
- * 
+ * @brief If a song is playing, it returns the rest of the playlist without the current song.
  */
 const nextSongs = computed(() => {
   if (!currentSong.value) return playlist.value
@@ -194,7 +195,7 @@ const nextSongs = computed(() => {
 })
 
 /**
- * 
+ * @brief Handles first load of the page. Fetches songs and playlist.
  */
 onMounted(()=> {
   fetchSongHandler();
@@ -204,7 +205,7 @@ onMounted(()=> {
 }) 
 
 /**
- * 
+ * @brief Handles return to playlist from song search
  */
 const ReturnBackQueue = () => {
   showDetailSearch.value = false;
@@ -213,7 +214,7 @@ const ReturnBackQueue = () => {
 }
 
 /**
- * 
+ * @brief Handles switch from playlist to song search
  */
 const switchAddToQueue = () => {
   fetchSongs();
@@ -221,7 +222,7 @@ const switchAddToQueue = () => {
 }
 
 /**
- * 
+ * @brief Handles adding song to playlist and returns user to playlist view. addToast was created by Adam Babaca
  * @param song 
  */
 async function addToQueueHandler(song) {
@@ -229,25 +230,25 @@ async function addToQueueHandler(song) {
   fetchPlaylist();
   showDetailSearch.value = false;
   showSearchPanel.value = false;
+  // Created by Adam Babaca
   addToast("Song added to a playlist")
 }
 
 /**
- * 
+ * @brief Handles promotion of song and updates playlist, function addPoints was created by Samo Kudla and addToast by Adam Babaca
  * @param song 
  */
 async function promoteSongHandler(song) {
   promoteSong(song)
   fetchPlaylist();
-  showDetailSearch.value = false;
-  showSearchPanel.value = false;
-  showDetailQueue.value = false;
+  // Created by Samo Kudla
   addPoints(-10)
-  addToast("Song promoted")
+  // Created by Adam Babaca
+  addToast("Song promoted -10 points")
 }
 
 /**
- * 
+ * @brief Handles sorting (first song shown are favorite) and searching for songs or interpret
  */
 const filteredSongs = computed(() => {
   const q = search.value.toLowerCase().trim()
@@ -274,7 +275,7 @@ const filteredSongs = computed(() => {
 })
 
 /**
- * 
+ * @Brief Handles leaving of page
  */
 onUnmounted(() => {
   console.log('Unmounting')

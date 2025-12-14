@@ -3,6 +3,12 @@
 <!---file-name:-SongButton.vue--------->
 <!------------------------------------->
 
+<!--
+/**
+*   Template for song details and buttons for promoting, adding and liking songs. 
+*   Display name of song and author as well as rating of each song and cost to promoted it
+*/
+-->
 <template>
     <div class="song">
         <button 
@@ -16,6 +22,16 @@
         </div>
         </button>
 
+
+        <div class="things_for_pl" v-if="showRC">
+            <div class="label_rating">
+                <h2 class="rating">rating: {{ rating }}</h2>
+            </div>
+            <div class="label_cost">
+                <h2 class="cost">cost: 10 pts</h2>
+            </div>
+        </div>
+       
         <!--action-buttons-->
         <div class="actionButtons">
             <button 
@@ -49,7 +65,7 @@
 </template>
 
 <script setup>
-import iconPromote from "@/assets/Crown.svg"
+import iconPromote from "@/assets/CrownGreen.svg"
 import iconFavourite from "@/assets/Heart.svg"
 import iconAdd from "@/assets/Plus.svg"
 import iconFavouriteFill from "@/assets/Favorite.svg"
@@ -61,13 +77,15 @@ const props = defineProps({
     title: String,
     artist: String,
     song: Object, 
-
+    rating: Number,
     showPromote: { type: Boolean, default: true },
     showAdd:     { type: Boolean, default: true },
     showLike:     { type: Boolean, default: true },
+    showRC:     {type: Boolean, default: false}
 })
 defineEmits(['click', 'promote', 'add', 'like'])
 
+// if song is liked return filled heart
 const heartIcon = computed(() =>
   props.song?.liked ? iconFavourite : iconFavouriteFill
 )
@@ -160,5 +178,19 @@ const heartIcon = computed(() =>
 .likeButton:hover .like,
 .addButton:hover .add{
     transform: scale(1.1);
+}
+.things_for_pl{
+    display: flex;
+    flex-direction: row;        
+    gap: 32px;
+    margin-left: auto;   
+}
+.label_rating,
+.label_cost{
+    color: #0D564B;
+    font-family: var(--button-font-family);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

@@ -20,12 +20,21 @@ const state = reactive ({
 
 let progressTimer = null
 
+/**
+ * @brief Handles formatting of duration to mins and sec
+ * @param duration 
+ * @returns duration in format 00:00
+ */
 function formatTime (duration) {
   const mins = Math.floor(duration/60)
   const sec = Math.floor(duration%60)
   return `${String(mins).padStart(2, '0')}:${String(sec).padStart(2,'0')}`
 }
 
+/**
+ * @brief Handles recalculation of progress and time to end song. Makes sure to change song if current song is finished
+ * @param song 
+ */
 function startProgress(song) {
   if (!song) return
   state.currentSong = song
@@ -63,6 +72,9 @@ function startProgress(song) {
   }, tick)
 }
 
+/**
+ * @brief Handles ending of current song (clears interval and variable startedAt)
+ */
 function stopProgress() {
   state.isPlaying = false
   if(progressTimer) {

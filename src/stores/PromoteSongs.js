@@ -4,6 +4,10 @@
 //   file-name: PromoteSongs.js       //
 ////////////////////////////////////////
 
+/**
+ * @brief POST function to send server information that song was promoted
+ * @param  song 
+ */
 export async function promoteSong(song) {
     try {
       const url = `https://itu-wb12.onrender.com/playlist/${encodeURIComponent(song.title)}/rate`
