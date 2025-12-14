@@ -244,7 +244,7 @@ async function promoteSongHandler(song) {
   // Created by Samo Kudla
   addPoints(-10)
   // Created by Adam Babaca
-  addToast("Song promoted")
+  addToast("Song promoted -10 points")
 }
 
 /**
