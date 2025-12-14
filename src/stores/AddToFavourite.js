@@ -6,6 +6,11 @@
 
 import { activeUser } from "./Login";
 
+/**
+ * @brief POST function sends server info that song was liked
+ * @param song 
+ * @returns data from server
+ */
 export async function addToFavouritesToggle(song) {
     const username = activeUser.value.username
     if (!username) throw new Error("No active user");

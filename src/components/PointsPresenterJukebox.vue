@@ -1,3 +1,13 @@
+<!-------------ITU-PROJECT------------------->
+<!---author:-Jozef-Matus-(xmatusj00)--------->
+<!---file-name:-PointsPresenterJukebox.vue--->
+<!------------------------------------------->
+
+<!--
+/**
+* Took inspiration from Samo Kudla and his pointPresenter
+*/
+-->
 <script setup>
   import { activeUser } from "@/stores/Login"
   const activeUserRef = activeUser

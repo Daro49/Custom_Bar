@@ -1,3 +1,9 @@
+////////////////////////////////////////
+//             ITU-PROJECT            //
+//   author: Jozef Matus (xmatusj00)  //
+//   file-name: MainMenuView.js       //
+////////////////////////////////////////
+
 import { RouterLink } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Profile from '@/assets/user.png'

@@ -9,6 +9,9 @@ import { activeUser } from "./Login";
 
 const playlist = ref([]) 
 
+/**
+ * @brief function fetches playlist from server and saves data to playlist
+ */
 async function fetchPlaylist() {
   const username = activeUser.value.username
     try {
@@ -25,7 +28,10 @@ async function fetchPlaylist() {
     }
 }
   
-
+/**
+ * @brief Removes a song from the playlist. Used to remove the current song after it ends.
+ * @param song 
+ */
 async function current_song_update(song) {
     console.log('Piesen skoncila')
     try {

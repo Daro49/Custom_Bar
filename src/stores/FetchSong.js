@@ -9,7 +9,9 @@ import { activeUser } from "./Login";
 
 const songs = ref([]) 
 
-
+/**
+ * @brief fetches all songs from server
+ */
 async function fetchSongs() {
     const username = activeUser.value.username 
     try {

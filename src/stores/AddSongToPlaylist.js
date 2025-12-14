@@ -4,6 +4,10 @@
 //   file-name: AddSongToPlaylist.js  //
 ////////////////////////////////////////
 
+/**
+ * @brief POST function that sends server info about song to be added to playlist
+ * @param song 
+ */
 export async function addToQueue(song) {
     try {
       const request = await fetch('https://itu-wb12.onrender.com/playlist/add', {
