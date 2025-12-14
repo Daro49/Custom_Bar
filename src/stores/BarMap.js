@@ -1,6 +1,6 @@
 import SlidePanel from '../components/SlidePanel.vue';
 import Header from '@/components/Header.vue';
-import cart from "@/assets/OrderHistory.svg?raw";
+import cart from "@/assets/orderIcon.svg?raw";
 import MapTerrace from '../components/maps/MapTerrace.vue';
 import MapEntry from '../components/maps/MapEntry.vue';
 import MapBack from '../components/maps/MapBack.vue';

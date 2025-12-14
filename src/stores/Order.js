@@ -128,31 +128,53 @@ export default {
                 await getUserCoupons(activeUser.value.username);
             }
         })
-
         /**
          * Removes a specific item from the order based on its ID and class.
          * @param {Object} item - The item object to remove.
          */
-        async function removeFromOrder(item) {
-            const username = activeUser.value.username;
-
-            if (!item.id || !item.class) {
-                console.error("Error: invalid order object.");
-                return;
+        async function removeFromOrder(drink) {
+            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+                throw new Error("User not logged in or table not set");
             }
 
+            if (!drink.id || !drink.class) {
+                throw new Error("Error: Drink object is missing ID or CLASS. Server cannot uniquely remove the item.");
+            }
+
+            const username = activeUser.value.username;
+            const payload = {
+                drinkId: drink.id,
+                drinkClass: drink.class,
+                tableCode: activeUser.value.table
+            };
+
             try {
-                const res = await fetch(
+                const response = await fetch(
                     `https://itu-wb12.onrender.com/users/${username}/order/remove`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ itemId: item.id, itemClass: item.class }),
+                        body: JSON.stringify(payload),
                     }
                 );
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const result = await res.json();
-                orderItems.value = result.order;
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (result.order) {
+                        orderItems.value = result.order;
+                    } else if (result.items) {
+                        orderItems.value = result.items;
+                    }
+                    if (typeof result.orderLength === 'number') {
+                        activeUser.value.orderLength = result.orderLength;
+                    }
+
+                    return result;
+                } else {
+                    const errorMessage = result.message || response.statusText;
+                    throw new Error(`HTTP ${response.status}: ${errorMessage}`);
+                }
             } catch (err) {
                 console.error(err);
                 throw err;
@@ -172,33 +194,52 @@ export default {
             fetchOrder();
         }
 
-        async function addToOrder(item) {
-            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
-                throw new Error("User not logged in or table not set");
+async function addToOrder(drink) {
+    if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+        throw new Error("User not logged in or table not set");
+    }
+    const username = activeUser.value.username;
+    const payload = {
+        drink,
+        tableCode: activeUser.value.table
+    };
+    try {
+        const response = await fetch(
+            `https://itu-wb12.onrender.com/users/${username}/order/add`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
             }
-            const username = activeUser.value.username;
-            const payload = {
-                item,
-                tableCode: activeUser.value.table
-            };
-            try {
-                const res = await fetch(
-                    `https://itu-wb12.onrender.com/users/${username}/order/add`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload)
-                    }
-                );
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const result = await res.json();
+        );
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            console.log("Added to server order:", result);
+            if (result.order) {
                 orderItems.value = result.order;
-                return result;
-            } catch (err) {
-                console.error(err);
-                throw err;
+            } else if (result.items) {
+                orderItems.value = result.items;
             }
+            if (typeof result.orderLength === 'number') {
+                activeUser.value.orderLength = result.orderLength;
+                console.log(`Order length updated from server: ${result.orderLength}`);
+            } else {
+                console.warn("Server response did not contain orderLength.");
+            }
+            
+            return result;
+        } else {
+            console.error("Server responded with error:", response.statusText);
+            const errorMessage = result.message || response.statusText;
+            throw new Error(`HTTP ${response.status}: ${errorMessage}`);
         }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
 
         /** * Calculates totals for drinks and packages. 
          * Functions calculates price with activated coupons included. 

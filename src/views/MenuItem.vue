@@ -10,7 +10,7 @@
 <template>
   <div v-bind="$attrs">
     <!--hlavicka-->
-    <Header :previous="true" :rightIcon="cart" :rightFunction="order" />
+    <Header :previous="true" :rightIcon="cart" :rightFunction="order" :isCart="true" />
     <div class="app">
       <p v-if="initialLoading">
   Loading...
@@ -40,7 +40,7 @@ const initialLoading = ref(true);
 
 import { onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import cart from "@/assets/OrderHistory.svg?raw";
+import cart from "@/assets/orderIcon.svg?raw";
 import DrinkInfoCard from "@/components/DrinkInfoCard.vue";
 import { activeUser } from "@/stores/Login";
 import {

@@ -30,14 +30,18 @@
         </span>
       </slot>
       <slot name="right">
-        <PointsPresenterJukebox 
-          v-if="showPoints"
-          class="PointPresenterHeader"
-        />
+        <PointsPresenterJukebox v-if="showPoints" class="PointPresenterHeader" />
         <button @click="openProfile" class="avatar-button" v-if="avatar">
           <img :src="activeUser?.imgurl || avatar" class="avatar" />
         </button>
-        <button class="back-btn" @click="rightFunction" v-if="rightIcon" v-html="rightIcon"></button>
+
+        <div v-if="rightIcon" class="icon-with-badge" @click="rightFunction">
+          <button class="back-btn" v-html="rightIcon"></button>
+          <span v-if="isCart" class="cart-badge">
+            {{ orderLength}}
+          </span>
+        </div>
+
       </slot>
     </div>
   </header>
@@ -65,10 +69,17 @@ export default options
   min-width: 100px;
 }
 
+.icon-with-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .back-btn {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   width: 40px;
   height: 40px;
   background: none;
@@ -81,6 +92,25 @@ export default options
   width: 32px;
   height: 32px;
   display: block;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  background-color: #FF0000;
+  color: black;
+  border-radius: 50%;
+  padding: 3px 0px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 18px;
+  text-align: center;
+  transform: translate(50%, -50%);
+  box-shadow: 0 0 0 1px black;
+  z-index: 10;
+  cursor: pointer;
 }
 
 .center-content {

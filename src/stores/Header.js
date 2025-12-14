@@ -2,7 +2,7 @@ import ArrowLeftSvg from '@/assets/arrow-left-circle.svg?raw'
 import PointsPresenterJukebox from '@/components/PointsPresenterJukebox.vue';
 import router from '@/router'
 import { activeUser, clearTable } from '@/stores/Login.js';
-import { computed, ref, onBeforeUnmount, watch } from 'vue';
+import { computed, ref, onBeforeUnmount, watch, onMounted } from 'vue';
 
 function formatTime(ms) {
     if (ms <= 0) return '0 s';
@@ -25,19 +25,52 @@ function formatTime(ms) {
     }
 }
 
+// Funkcia na počiatočné načítanie orderLength
+async function fetchOrderLength() {
+    if (!activeUser.value?.username) {
+        activeUser.value.orderLength = 0;
+        return;
+    }
+
+    const username = activeUser.value.username;
+
+    try {
+        const response = await fetch(`https://itu-wb12.onrender.com/users/${username}`);
+
+        if (response.ok) {
+            const result = await response.json();
+
+            // Kontrola a aktualizácia orderLength z odpovede používateľa
+            if (typeof result.orderLength === 'number') {
+                activeUser.value.orderLength = result.orderLength;
+            } else {
+                // Ak orderLength chýba v odpovedi, inicializujeme na 0
+                activeUser.value.orderLength = 0;
+            }
+        } else {
+            console.error("Failed to fetch user details for order length:", response.statusText);
+            activeUser.value.orderLength = 0;
+        }
+    } catch (err) {
+        console.error("Initial user fetch error:", err);
+        activeUser.value.orderLength = 0;
+    }
+}
+
 export default {
     name: 'Header',
     components: {
         PointsPresenterJukebox,
-      },
+    },
     props: {
-        showPoints: {type: Boolean, default: false},
+        showPoints: { type: Boolean, default: false },
         previous: { type: Boolean, default: false },
         backButton: { type: Boolean, default: true },
         title: { type: String, default: '' },
         avatar: { type: String, default: null },
         rightIcon: { type: String, default: null },
         rightFunction: { type: Function, default: null },
+        isCart: { type: Boolean, default: false },
     },
     setup() {
         const selectedTable = computed(() => activeUser.value?.table || 'N/A');
@@ -46,8 +79,8 @@ export default {
 
         const updateTimer = () => {
             const user = activeUser.value;
-            
-            if (!user) { 
+
+            if (!user) {
                 timeRemainingMs.value = 0;
                 if (intervalId) { clearInterval(intervalId); intervalId = null; }
                 return;
@@ -90,7 +123,7 @@ export default {
             if (intervalId) clearInterval(intervalId);
             intervalId = setInterval(updateTimer, duration);
         };
-        
+
         watch(() => activeUser.value?.tableExpiration, (newExpiration) => {
             updateTimer();
             if (newExpiration) {
@@ -123,14 +156,30 @@ export default {
             if (intervalId) clearInterval(intervalId);
         });
 
+        // NOVÁ IMPLEMENTÁCIA: Načítanie dĺžky objednávky pri načítaní komponentu
+        // a pri zmene prihláseného užívateľa
+        watch(() => activeUser.value?.username, (newUsername) => {
+            if (newUsername) {
+                fetchOrderLength();
+            } else {
+                activeUser.value.orderLength = 0;
+            }
+        }, { immediate: true });
+
         const formattedTime = computed(() => formatTime(timeRemainingMs.value));
+
+        const orderLength = computed(() => {
+            const length = activeUser.value?.orderLength;
+            return typeof length === 'number' && length > 0 ? length : 0;
+        });
 
         return {
             ArrowLeftSvg,
             selectedTable,
             formattedTime,
             timeRemainingMs,
-            activeUser
+            activeUser,
+            orderLength
         }
     },
     methods: {
