@@ -11,34 +11,34 @@ export async function getMilestonesOfUser() {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
         });
-    
+
         if (!response.ok) {
-          throw new Error('Error while fetching milestones.');
+            throw new Error('Error while fetching milestones.');
         }
-    
+
         const data = await response.json();
-    
+
         milestones.value = data;
         return true;
-      } catch (error) {
+    } catch (error) {
         console.error(error);
         addToast('Milestones couldn\'t be fetched.')
         return false;
     }
 }
 
-export async function setMilestonesOfUser(updates){
+export async function setMilestonesOfUser(updates) {
     try {
         const response = await fetch(`https://itu-wb12.onrender.com/milestones/${activeUser.value.username}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                updatedMilestones: updates 
+                updatedMilestones: updates
             })
         });
-    
+
         if (!response.ok) {
-        throw new Error('Error while updating milestones.');
+            throw new Error('Error while updating milestones.');
         }
         return true;
     } catch (error) {
@@ -56,7 +56,7 @@ export async function claimReward(milestone) {
 
     try {
         const username = activeUser.value.username;
-        
+
         const response = await fetch(`https://itu-wb12.onrender.com/milestones/${username}/claim`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,12 +69,12 @@ export async function claimReward(milestone) {
         }
 
         const pointsSuccess = await addPoints(milestone.reward);
-        
+
         if (!pointsSuccess) {
             throw new Error('Add points failed');
         }
 
-        await getMilestonesOfUser(); 
+        await getMilestonesOfUser();
 
         addToast(`Successfully claimed ${milestone.reward} points!`);
         return true;

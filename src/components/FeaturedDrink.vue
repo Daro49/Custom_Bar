@@ -74,6 +74,8 @@ defineEmits(["select", "order"]);
 
 .drinkImage {
   object-fit: contain;
+  width: 80%;
+  height: 80%;
 }
 
 .drinkFooter {

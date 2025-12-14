@@ -1,4 +1,7 @@
 import { ref } from 'vue';
+import { addToast } from '../ToastStore';
+import { activeUser } from '../Login';
+import { orderItems } from '../DrinkInfo';
 
 export const coupons = ref([]);
 export const userCoupons = ref([]);
@@ -21,7 +24,7 @@ export async function getCoupons() {
     return true;
   } catch (error) {
     console.error('Coupons error:', error);
-    alert('Error occured while fetching coupons: ' + error.message);
+    addToast('Error occured while fetching coupons: ' + error.message);
     return false;
   }
 }
@@ -44,12 +47,16 @@ export async function getUserCoupons(username) {
   }
   catch (error) {
     console.error('User Coupons error:', error);
-    alert('Error occured while fetching user coupons: ' + error.message);
+    addToast('Error occured while fetching user coupons: ' + error.message);
     return false;
   }
 }
 
 export async function activateCoupon(username, coupon) {
+  if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+    addToast("Failed to add to cart. Please select table.");
+    return false;
+  }
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/coupons`, {
       method: 'POST',
@@ -60,17 +67,41 @@ export async function activateCoupon(username, coupon) {
     if (!response.ok) {
       throw new Error('Activating coupon failed');
     }
-    return true;
+
+    const couponAsItem = {
+      ...coupon, //same as before, but add item data
+      name: `COUPON: ${coupon.code}`,
+      quantity: 1,
+      isCoupon: true
+    };
+    const payload = {
+      drink: couponAsItem,
+      tableCode: activeUser.value.table
+    };
+    
+    const res = await fetch(
+      `https://itu-wb12.onrender.com/users/${username}/order/add`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    orderItems.value = result.order;
+
+    return result;
   } catch (error) {
     console.error('Activate Coupon error:', error);
-    alert('Error occured while activating coupon: ' + error.message);
+    addToast('Error occured while activating coupon: ' + error.message);
     return false;
   }
 }
 
-export async function deactivateCoupon(username, couponId) { 
+export async function deactivateCoupon(username, couponId) {
   try {
-    const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/remove/${couponId}`, {
+    const response = await fetch(`https://itu-wb12.onrender.com/coupons/${username}/remove/${couponId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -78,11 +109,10 @@ export async function deactivateCoupon(username, couponId) {
     if (!response.ok) {
       throw new Error('Deactivating coupon failed');
     }
-
     return true;
   } catch (error) {
     console.error('Deactivate Coupon error:', error);
-    alert('Error occured while deactivating coupon: ' + error.message);
+    addToast('Error occured while deactivating coupon: ' + error.message);
     return false;
   }
 }

@@ -1,172 +1,133 @@
+<!--
+*
+* File:     CustomDrink.vue
+* Author:   Matej Daransky (xdaranm00@stud.fit.vut.cz)
+*
+* Brief:    Main Custom Drink view
+*
+-->
+
 <template>
-  <Header :avatar = "Profile"/>
-  <div id="tied" @click="toggleShow">
+	<Header :avatar="Profile" ></Header>
 
-    <div id="middlePanel">
-      <!-- Left-side buttons -->
-      <div class="ingredientButton">
-        <CustomDrink_Button class="leftButton" @click.stop="showLeftPopup('alcohols')" :category="'alcohols'" />
-        <CustomDrink_Button class="leftButton" @click.stop="showLeftPopup('softDrinks')" :category="'softDrinks'" />
-      </div>
+	<Notification />
 
-      <div class="ingredientPopup" :class="{ visible: leftPopup.visible }">
-        <CustomDrink_Ingredient :visible="leftPopup.visible" :category="leftPopup.category" />
-      </div>
+	<div class="content">
+		<div class="ingredient_progress">
 
-      <div id="image">
-        <CustomDrink_Glass />
-      </div>
+			<ProgressBar />
+			<IngredientChoose />
 
-      <div class="ingredientPopup" :class="{ visible: rightPopup.visible }">
-        <CustomDrink_Ingredient :visible="rightPopup.visible" :category="rightPopup.category" />
-      </div>
+			<div class="buttons">
+				<ProgressButton :next="false" />
+				<ProgressButton :next="true" />
+			</div>
+		</div>
 
-      <!-- Right-side buttons -->
-      <div class="ingredientButton">
-        <CustomDrink_Button class="rightButton" @click.stop="showRightPopup('bitters')" :category="'bitters'" />
-        <CustomDrink_Button class="rightButton" @click.stop="showRightPopup('others')" :category="'others'" />
-      </div>
-    </div>
-
-    <!-- Floating Recipe button -->
-    <button id="recipeButton" @click="toggleShowRecipe">
-      RECIPE
-    </button>
-  </div>
-
-  <div class="recipeListOverlay"
-  v-if="showRecipe"
-  @click.self="toggleShowRecipe"
-  >
-    <RecipeMenu :ingredient-list="recipe.ingredients"/>
-  </div>
+		<div class="recipe">
+			<DrinkDetail />
+			<div class="glass_box">
+				<Glass />
+			</div>
+			<div class="recipe_list">
+				<h3>Summary</h3>
+				<RecipeIngredientList />
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-
-import CustomDrink_Button from '@/components/CustomDrink_Button.vue';
-import CustomDrink_Glass from '@/components/CustomDrink_Glass.vue';
-import CustomDrink_Ingredient from '@/components/CustomDrink_Ingredient.vue';
-import RecipeMenu from '@/components/RecipeMenu.vue';
-import { activeUser } from "@/stores/Login";
-import { useDrinkRecipe } from '@/stores/drinkRecipe';
-import Header from '@/components/Header.vue';
-import Profile from '@/assets/user.png';
-
-const recipe = useDrinkRecipe();
-
-const showRecipe = ref(false);
-
-function toggleShowRecipe() {
-  leftPopup.visible &&= false
-  rightPopup.visible &&= false
-  showRecipe.value = !showRecipe.value
-}
-
-const leftPopup = reactive({
-  visible: false,
-  category: 'alcohols'
-})
-
-function toggleShow() {
-  leftPopup.visible &&= false
-  rightPopup.visible &&= false
-}
-
-const rightPopup = reactive({
-  visible: false,
-  category: 'bitters'
-})
-
-function showLeftPopup(category) {
-  console.log('Left Menu: ' + leftPopup.visible)
-  if (leftPopup.visible && leftPopup.category === category) {
-    leftPopup.visible = false
-  }
-  else {
-    rightPopup.visible &&= false
-    leftPopup.visible = true
-    leftPopup.category = category
-    console.log('Switched to: ' + leftPopup.visible)
-  }
-}
-
-function showRightPopup(category) {
-  if (rightPopup.visible && rightPopup.category === category) {
-    rightPopup.visible = false
-  }
-  else {
-    leftPopup.visible &&= false
-    rightPopup.visible = true
-    rightPopup.category = category
-  }
-}
+	import IngredientChoose from '@/components/customdrink/IngredientChoose.vue';
+	import ProgressBar from '@/components/customdrink/ProgressBar.vue';
+	import Header from '@/components/Header.vue';
+	import Profile from '@/assets/user.png';
+	import ProgressButton from '@/components/customdrink/ProgressButton.vue';
+	import Glass from '@/components/customdrink/Glass.vue';
+	import RecipeIngredientList from '@/components/customdrink/RecipeIngredientList.vue';
+	import DrinkDetail from '@/components/customdrink/DrinkDetail.vue';
+	import Notification from '@/components/customdrink/Notification.vue';
 </script>
 
 <style scoped>
-  #tied {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    padding-top: 25px;
-    padding-bottom: 120px;
+	.content {
+		display: flex;
+		padding: 5px 50px;
+		justify-content: center;
+		align-items: flex-start;
+		gap: 34px;
+		height: 100%;
+		box-sizing: border-box;
+		overflow: auto;
+		padding-bottom: 75px;
+	}
 
-    background: #0D564B;
-  }
+	.ingredient_progress {
+		display: flex;
+		width: 50%;
+		padding: 25px 76px;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
 
-  #middlePanel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    align-self: stretch;
-  }
+		border-radius: 50px;
+		background: #D4AF37;
+	}
 
-  .ingredientButton {
-    display: flex;
-    width: 100px;
-    height: 312px;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-  }
+	.buttons {
+		display: flex;
+		padding: 30px;
+		align-items: center;
+		align-self: stretch;
+		gap: 40px;
+	}
 
-  #recipeButton {
-    position: absolute;
-    bottom: 5%;
-    width: 512px;
-    height: 78px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+	.recipe {
+		display: flex;
+		width: 30%;
+		padding: 25px 30px;
+		flex-direction: column;
+		justify-content: center;
+		gap: 10px;
+		position: sticky;
 
-    border-radius: 50px;
-    background: #552808;
-  }
+		border-radius: 50px;
+		background: #D4AF37;
+	}
 
-  .recipeListOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
+	h2 {
+		margin: 5px;
 
-  .ingredientPopup {
-    visibility: hidden;
-    transition: all 0.3s ease;
-    pointer-events: none;
-  }
+		color: #552808;
+		font-family: "Josefin Slab", sans-serif;
+		font-size: 36px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
 
-  .ingredientPopup.visible {
-    visibility: visible;
-    pointer-events: auto;
-  }
+	h3 {
+		margin: 2px;
+
+		color: #552808;
+		font-family: "Josefin Slab", sans-serif;
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 700;
+		line-height: normal;
+	}
+
+	.glass_box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.recipe_list {
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+	}
 </style>

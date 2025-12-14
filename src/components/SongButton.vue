@@ -1,3 +1,8 @@
+<!-------------ITU-PROJECT------------->
+<!---author:-Jozef-Matus-(xmatusj00)--->
+<!---file-name:-SongButton.vue--------->
+<!------------------------------------->
+
 <template>
     <div class="song">
         <button 
@@ -18,7 +23,7 @@
                 class="promoteButton" 
                 @click="$emit('promote',song)"
             >
-            <h4 class="Promote">Promote </h4>
+            <img :src="iconPromote" alt="promote" class="promote"/>
             </button>
 
             <button 
@@ -26,17 +31,17 @@
                 class="addButton" 
                 @click="$emit('add',song)"
             >
-            <h4 class="Add">add </h4>
+            <img :src="iconAdd" alt="add" class="add"/>
             </button>
 
 
             <div class="secondariActions">
                 <button 
-                    v-if="showCut"
-                    class="cutButton"
-                    @click="$emit('cut', song)"
+                    v-if="showLike"
+                    class="likeButton"
+                    @click="$emit('like', song)"
                 >
-                <h4 class="Cut">cut </h4>
+                <img :src="heartIcon" alt="like" class="like"/>
                 </button>
             </div>        
         </div>
@@ -44,6 +49,13 @@
 </template>
 
 <script setup>
+import iconPromote from "@/assets/Crown.svg"
+import iconFavourite from "@/assets/Heart.svg"
+import iconAdd from "@/assets/Plus.svg"
+import iconFavouriteFill from "@/assets/Favorite.svg"
+import { computed } from "vue"
+
+
 const props = defineProps({
     imageSrc: String,
     title: String,
@@ -52,9 +64,13 @@ const props = defineProps({
 
     showPromote: { type: Boolean, default: true },
     showAdd:     { type: Boolean, default: true },
-    showCut:     { type: Boolean, default: true },
+    showLike:     { type: Boolean, default: true },
 })
-defineEmits(['click', 'promote', 'add', 'cut'])
+defineEmits(['click', 'promote', 'add', 'like'])
+
+const heartIcon = computed(() =>
+  props.song?.liked ? iconFavourite : iconFavouriteFill
+)
 </script>
 
 <style scoped>
@@ -70,6 +86,7 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     border-radius: 999px;
     background: var(--headerv2);
     display: inline-flex;
+    min-height: 100px;
 }
 .SongButton {
     display: flex;
@@ -83,8 +100,16 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     border: none;
     justify-content: center;
     line-height: 1;
+    overflow: hidden;
 }
-.songInfo{
+.song-cover{
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  object-fit: cover;          
+  display: block;
+}
+.Song_info{
     display: flex;
     flex-direction: column;
     align-items:flex-start;
@@ -101,7 +126,7 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     appearance: none;
     display: flex;
     align-items: center;
-    color: #0D564B;
+    background: transparent;
     cursor: pointer;
     font-family: var(--button-font-family);
     gap: 6px;
@@ -113,5 +138,27 @@ defineEmits(['click', 'promote', 'add', 'cut'])
     color: #0D564B;
     font-family: var(--button-font-family);
     gap: 8px;
+}
+.promoteButton,
+.likeButton,
+.addButton{
+    background: transparent;
+    cursor: pointer;
+    outline: none; 
+    border: none;
+    justify-content: center;
+}
+.promote,
+.like,
+.add{
+  width: 45px;
+  height: 45px;
+  display: block;      
+  object-fit: contain; 
+}
+.promoteButton:hover .promote,
+.likeButton:hover .like,
+.addButton:hover .add{
+    transform: scale(1.1);
 }
 </style>

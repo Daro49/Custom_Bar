@@ -42,13 +42,13 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right">
+          <div class="item-right" v-if="item.class === 'drink'">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
-          <span class="item-name">Order price: {{ orderItems.reduce((total, item) => total + (item.quantity * item.price), 0).toFixed(2) }}€</span>
+          <span class="item-name">Order price: {{ orderPrice }} €</span>
         </div>
       </div>
     </div>
@@ -180,7 +180,7 @@ export default { ...PastOrderOptions };
 }
 
 .item-name {
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: var(--button-family-font);
   font-size: 16px;
   color: black;
   line-height: 1.3;

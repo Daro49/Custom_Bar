@@ -11,6 +11,8 @@ if (savedUser) {
   const u = JSON.parse(savedUser);
   activeUser.value = new User(u.username, u.points, u.email, u.table);
 }
+// Import Josefin Slab Font
+import './main.css';
 
 const app = createApp(App)
 

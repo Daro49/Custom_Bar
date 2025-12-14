@@ -117,7 +117,7 @@ const ingredientsLine = computed(() => {
   object-fit: cover;
   margin-bottom: 8px;
 }
-
+q
 .drink-info-name {
   font-size: 20px;
   font-weight: bold;
@@ -140,6 +140,8 @@ const ingredientsLine = computed(() => {
   border-radius: 10px;
   margin-top: 10px;
   font-size: 14px;
+  max-width: 80%;
+  overflow-wrap: break-word;
 }
 
 .drink-ingredients {
@@ -150,6 +152,8 @@ const ingredientsLine = computed(() => {
   border-radius: 10px;
   margin-top: 10px;
   line-height: 1.4;
+  max-width: 80%;
+  overflow-wrap: break-word;
 }
 
 .drink-actions {

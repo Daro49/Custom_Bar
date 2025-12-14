@@ -6,6 +6,7 @@ import { addToast } from '@/stores/ToastStore.js';
 
 const orderItems = ref([])
 const orderDate = ref('')
+const orderPrice = ref(0)
 const isLoading = ref(true)
 const error = ref(null)
 const orderIndex = ref(0)
@@ -28,6 +29,7 @@ const fetchOrder = async () => {
       throw new Error('No past orders')
     }
     const data = await response.json()
+    orderPrice.value = data.price ?? 0
     orderItems.value = data.items ?? data
     orderDate.value = data.date ? formatDate(data.date) : ''
     orderCount.value = data.totalOrders ?? orderCount.value

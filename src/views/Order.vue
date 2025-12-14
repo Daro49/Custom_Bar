@@ -11,25 +11,35 @@
         <div v-if="isLoading" class="loading">Loading order...</div>
         <div v-else-if="error" class="error">Error: {{ error }}</div>
         <div v-else-if="orderItems.length === 0" class="empty">You are dry</div>
-        <div v-for="item in orderItems" :key="item.id" class="order-item">
-          <div class="item-left">
-            <span class="item-name">{{ item.name }}</span>
-          </div>
-          <div class="item-right" v-if="item.quantity">
-            <span class="price">{{ item.quantity }} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2)
-              }}€</span>
-            <button class="remove-button" @click="removeFromOrder(item)">-</button>
-            <button class="add-button" @click="addToOrder(item)">+</button>
-          </div>
-          <div v-else class="item-right">
-            <span class="price">{{ item.price }} pts</span>
-            <button class="remove-button" @click="removePackage(item)">-</button>
+        <div v-for="item in orderItems" :key="item.id">
+          <div v-if="!item.isCoupon" class="order-item">
+            <div class="item-left">
+              <span class="item-name">{{ item.name }}</span>
+            </div>
+            <div class="item-right" v-if="item.quantity">
+              <span class="price">{{ item.quantity }} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2)
+                }}€</span>
+              <button class="remove-button" @click="removeFromOrder(item)">-</button>
+              <button class="add-button" @click="addToOrder(item)">+</button>
+            </div>
+            <div v-else class="item-right">
+              <span class="price">{{ item.price }} pts</span>
+              <button class="remove-button" @click="removePackage(item)">-</button>
+            </div>
           </div>
         </div>
-      </div>
+        <div v-for="coupon in userCoupons" class="order-item">
+          <div class="item-left">
+            <span class="item-name">{{ coupon.code }}</span>
+          </div>
+          <div class="item-right">
+            <span class="price discount-text">- {{ coupon.discount }}</span>
+          </div>
+        </div>
+        </div>
 
-      <div class="apply-coupons">
-        <a href="#" @click.prevent="$router.push('/coupons')">apply coupons</a>
+      <div class="apply-coupons" @click="$router.push('/coupons')">
+        <span class="coupon-text">Apply coupons</span>
       </div>
 
       <button class="pay-button" @click="handleButtonClick">
@@ -53,7 +63,34 @@ export default options
   box-sizing: border-box;
   bottom: 0;
 }
+.apply-coupons {
+  align-items: center;
+  justify-content: space-between;
+  
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  
+  padding: 12px 18px;
+  margin: 15px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
+}
+
+.apply-coupons:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: black;
+}
+
+.coupon-text {
+  font-family: "Georgia", serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1a3a3a;
+}
 .content {
   flex: 1;
   background: linear-gradient(to bottom, #d39e30, #e9c15b, #d39e30);

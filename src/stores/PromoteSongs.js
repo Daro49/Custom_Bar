@@ -1,4 +1,8 @@
-//TODO complite this
+////////////////////////////////////////
+//             ITU-PROJECT            //
+//   author: Jozef Matus (xmatusj00)  //
+//   file-name: PromoteSongs.js       //
+////////////////////////////////////////
 
 export async function promoteSong(song) {
     try {
@@ -16,9 +20,5 @@ export async function promoteSong(song) {
       console.log('Song added successfully', data)
     } catch(e) {
       console.log('Song add failed', e)
-    }
-    fetchPlaylist();
-    showDetailSearch.value = false;
-    showSearchPanel.value = false;
-    showDetailQueue.value = false;
+    } 
 }

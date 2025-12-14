@@ -1,10 +1,18 @@
+////////////////////////////////////////
+//             ITU-PROJECT            //
+//   author: Jozef Matus (xmatusj00)  //
+//   file-name: Playlist.js           //
+////////////////////////////////////////
+
 import { ref } from "vue";
+import { activeUser } from "./Login";
 
 const playlist = ref([]) 
 
 async function fetchPlaylist() {
+  const username = activeUser.value.username
     try {
-      const response = await fetch('https://itu-wb12.onrender.com/playlist')
+      const response = await fetch(`https://itu-wb12.onrender.com/playlist?username=${encodeURIComponent(username)}`)
       if(!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }

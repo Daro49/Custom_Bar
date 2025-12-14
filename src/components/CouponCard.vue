@@ -25,6 +25,7 @@ import Close from '@/assets/cancel-x.svg?raw'
 import ActivateButton from './ActivateButton.vue'
 import { activateCoupon, deactivateCoupon, getUserCoupons } from '@/stores/CSModels/Coupons';
 import { activeUser } from '@/stores/Login';
+import { addPoints } from '@/stores/AddPoints';
 
 export default {
   name: 'CouponCard',
@@ -58,31 +59,36 @@ export default {
   },
 
   methods: {
-    async handleToggle(newStatus) { 
-      this.isActive = newStatus;
-
-      const user = activeUser.value.username;
-      const couponObject = this.couponData; 
-      const couponId = this.couponData.id;
-      let success = false;
-
-      if (this.isActive) {
-        success = await activateCoupon(user, couponObject)
-      } else {
-        success = await deactivateCoupon(user, couponId)
-      }
-
-      if (success) {
-          await getUserCoupons(user); 
-      } else {
-          this.isActive = !newStatus; 
-      }
-    },
-    
     showDetails() {
-      this.detailsEnabled = !this.detailsEnabled
+      this.detailsEnabled = !this.detailsEnabled;
     },
-  },
+    async handleToggle(requestedStatus) {
+      const user = activeUser.value.username;
+      const couponObject = this.couponData;
+      const points = this.couponData.price;
+
+      if (requestedStatus === true) {
+        const success = await activateCoupon(user, couponObject);
+
+        if (success) {
+          // if activation succesfull, remove price points
+          await addPoints(-points);
+          this.isActive = true;
+          await getUserCoupons(user);
+        } else {
+          this.isActive = false; 
+        }
+      } else {
+        const success = await deactivateCoupon(user, this.couponData.id);
+        if (success) {
+          // if activation succesfull, revert price points removal
+          await addPoints(points);
+          this.isActive = false;
+          await getUserCoupons(user);
+        }
+      }
+    },
+  }
 }
 </script>
 
@@ -195,5 +201,7 @@ export default {
     color: var(--background-green);
     word-break: break-word; 
     padding-right: 15px; 
+    overflow-y: auto; 
+    max-height: 100%;
 }
 </style>
