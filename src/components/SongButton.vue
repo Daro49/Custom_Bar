@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import iconPromote from "@/assets/CrownGreen.svg"
+import iconPromote from "@/assets/Facebook_Like.svg"
 import iconFavourite from "@/assets/Heart.svg"
 import iconAdd from "@/assets/Plus.svg"
 import iconFavouriteFill from "@/assets/Favorite.svg"
