@@ -4,7 +4,7 @@
 
     <div class="middle">
       <div class="side-seats left">
-        <div v-for="i in 3" :key="`l-${i}`" class="seat" @click.stop="handleTableClick"></div>
+        <div v-for="i in 2" :key="`l-${i}`" class="seat" @click.stop="handleTableClick"></div>
         <div class="seat" @click.stop="handleTableClick"></div>
       </div>
 
@@ -16,7 +16,7 @@
       </div>
 
       <div class="side-seats right">
-        <div v-for="i in 3" :key="`r-${i}`" class="seat" @click.stop="handleTableClick"></div>
+        <div v-for="i in 2" :key="`r-${i}`" class="seat" @click.stop="handleTableClick"></div>
         <div class="seat" @click.stop="handleTableClick"></div>
       </div>
     </div>

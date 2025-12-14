@@ -5,9 +5,6 @@
         <span class="table-label">{{ label }}</span>
         <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
       </div>
-      <div class="seats-mobile">
-        <div v-for="n in 5" :key="`seat-mobile-${n}`" class="seat" @click.stop="handleTableClick"></div>
-      </div>
     </div>
 
     <div class="seats">
