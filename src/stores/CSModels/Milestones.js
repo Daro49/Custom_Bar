@@ -1,3 +1,9 @@
+/**
+ * File: Milestones.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Functions for milestones API communication
+ */
+
 import { activeUser } from "../Login";
 import { ref } from "vue";
 import { addToast } from "../ToastStore";
@@ -5,6 +11,10 @@ import { addPoints } from "../AddPoints";
 
 export const milestones = ref([])
 
+/**
+ * @brief Function getting all milestones and user progress in them.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getMilestonesOfUser() {
     try {
         const response = await fetch(`https://itu-wb12.onrender.com/milestones/${activeUser.value.username}`, {
@@ -27,6 +37,10 @@ export async function getMilestonesOfUser() {
     }
 }
 
+/**
+ * @brief Function setting user progress in milestones.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function setMilestonesOfUser(updates) {
     try {
         const response = await fetch(`https://itu-wb12.onrender.com/milestones/${activeUser.value.username}`, {
@@ -48,6 +62,11 @@ export async function setMilestonesOfUser(updates) {
     }
 }
 
+/**
+ * @brief Function setting milestone price as claimed for activeUser.
+ * @param {Object} milestone 
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function claimReward(milestone) {
     if (!milestone || !milestone.id) {
         console.error("Invalid milestone data provided to claimReward");

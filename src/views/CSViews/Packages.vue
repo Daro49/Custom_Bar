@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file Packages.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief View of packages
+ */
+-->
+
 <script setup>
 import Profile from '@/assets/user.png'
 import { packages } from '@/stores/CSModels/Packages'
@@ -14,19 +22,27 @@ onMounted(async () => {
 </script>
 
 <template>
+  <!-- Packages view root container -->
   <div class="packages">
+    <!-- Header with avatar and back navigation -->
     <Header :avatar="Profile" :previous="true" />
+
+    <!-- Points presenter component (shows current points) -->
     <PointsPresenter/>
+
+    <!-- Render package cards when data is loaded -->
     <div class="package-list" v-if="loaded">
       <PackageCard
         v-for="packageItem in packages"
         :pkg = "packageItem"
       />
     </div>
+
+    <!-- Loading fallback while packages are being fetched -->
     <div class = "loading" v-else>
       Loading packages...
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -45,6 +61,8 @@ export default {
 </script>
 
 <style>
+/* Styles for the Packages view. Uses theme variables and sets
+  layout for the package list and loading state. */
 .packages {
   background: var(--background-green);
   display: flex;

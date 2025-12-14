@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file MilestoneCard.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief MilestoneCard component
+ */
+-->
+
 <template>
   <div class="milestone-container" :class="{ 'completed-glow': progress >= goal }">
     <div class="inner-border">

@@ -1,3 +1,9 @@
+/**
+ * File: Packages.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Functions for packages API
+ */
+
 import { ref } from 'vue';
 import { addToast } from '../ToastStore';
 import { addPoints } from '../AddPoints';
@@ -5,6 +11,10 @@ import { activeUser } from '../Login';
 export const packages = ref([]);
 export const pkg = ref([]);
 
+/**
+ * @brief Function fetching all packages
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getPackages() {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages`, {
@@ -28,6 +38,11 @@ export async function getPackages() {
   }
 }
 
+/**
+ * @brief Function getting one package via id
+ * @param {Number} id
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getPackageById(id) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages/${id}`, {
@@ -50,6 +65,12 @@ export async function getPackageById(id) {
   }
 }
 
+/**
+ * @brief Function adding package to order
+ * @param {string} username
+ * @param {Object} pkg Package object to be added to order
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function orderPackage(username, pkg) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/order`, {
@@ -77,6 +98,12 @@ export async function orderPackage(username, pkg) {
   }
 }
 
+/**
+ * @brief Function removing package from order via id
+ * @param {string} username
+ * @param {Number} pkgId Id of package to be removed from order
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function removePackageFromOrder(username, pkgId) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/remove/${pkgId}`, {

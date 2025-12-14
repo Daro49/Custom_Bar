@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file PackageCard.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief PackageCard component
+ */
+-->
+
 <script setup>
 import SectionDivider from '@/components/SectionDivider.vue'
 import { useRouter } from 'vue-router'

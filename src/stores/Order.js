@@ -23,6 +23,10 @@ export default {
             router.push('/orders')
         }
 
+        /**
+         * Fetches the current active order items for the logged-in user.
+         * Updates orderItems state or handles fetch errors.
+         */
         const fetchOrder = async () => {
             try {
                 isLoading.value = true
@@ -40,10 +44,15 @@ export default {
             }
         }
 
+        /**
+         * Handles the complete order confirmation flow.
+         * Processes milestones, calculates final price with coupons, sends POST request,
+         * updates local user storage, and awards points based on the final total.
+         */
         const confirmOrder = async () => {
             try {
                 const username = activeUser.value.username
-
+                // get milestones to keep track of progress
                 await getMilestonesOfUser();
 
                 const { euroTotal, usedCouponIds } = calculateOrderTotals(orderItems.value);
@@ -52,7 +61,7 @@ export default {
                 if (updates.length > 0) {
                     await setMilestonesOfUser(updates);
                 }
-
+                // confirm order 
                 const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -100,6 +109,10 @@ export default {
             }
         }
 
+        /**
+         * Main action handler for the primary order button.
+         * Redirects to menu if empty, otherwise triggers confirmOrder.
+         */
         const handleButtonClick = () => {
             if (orderItems.value.length === 0) {
                 router.push('/menu')
@@ -116,10 +129,14 @@ export default {
             }
         })
 
-        async function removeFromOrder(drink) {
+        /**
+         * Removes a specific item from the order based on its ID and class.
+         * @param {Object} item - The item object to remove.
+         */
+        async function removeFromOrder(item) {
             const username = activeUser.value.username;
 
-            if (!drink.id || !drink.class) {
+            if (!item.id || !item.class) {
                 console.error("Error: invalid order object.");
                 return;
             }
@@ -130,7 +147,7 @@ export default {
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ drinkId: drink.id, drinkClass: drink.class }),
+                        body: JSON.stringify({ itemId: item.id, itemClass: item.class }),
                     }
                 );
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -155,13 +172,13 @@ export default {
             fetchOrder();
         }
 
-        async function addToOrder(drink) {
+        async function addToOrder(item) {
             if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
                 throw new Error("User not logged in or table not set");
             }
             const username = activeUser.value.username;
             const payload = {
-                drink,
+                item,
                 tableCode: activeUser.value.table
             };
             try {
@@ -217,15 +234,10 @@ export default {
 
                     //Most expensive drink free 
                     if (coupon.code === "FREEDRINK") {
-                        let maxPrice = 0;
-                        // find the most expensive item 
-                        for (const item of items) {
-                            if (item.price > maxPrice) {
-                                maxPrice = item.price;
-                            }
-                        }
-                        if (maxPrice > 0) {
-                            discountAmount += maxPrice;
+                        availableForDiscount.sort((a, b) => b.price - a.price);
+                        if (availableForDiscount.length > 0) {
+                            const freeItem = availableForDiscount.shift();
+                            discountAmount += freeItem.price;
                             applied = true;
                         }
                     }
@@ -266,7 +278,7 @@ export default {
                     // check for type of milestone                     
                     if (m.class === "orderCount") {
                         const countInOrder = orderItems.value
-                            .filter(item => item.name.toLowerCase().includes(m.drink.toLowerCase()))
+                            .filter(item => item.name.includes(m.drink))
                             .reduce((sum, item) => sum + (item.quantity || 1), 0);
                         // nothing to check 
                         if (countInOrder <= 0) continue;

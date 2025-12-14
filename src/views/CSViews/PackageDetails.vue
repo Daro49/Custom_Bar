@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file PackageDetails.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief View of package detail
+ */
+-->
+
 <script setup>
 import Header from '@/components/Header.vue';
 import { useRoute } from 'vue-router';
@@ -19,42 +27,42 @@ const order = async () => {
 };
 
 onMounted(async () => {
-    const success = await getPackageById(packageId);
-    loaded.value = success;
+  const success = await getPackageById(packageId);
+  loaded.value = success;
 });
 </script>
 
 <template>
-    <div class="package-details-root">
-        <Header :previous="true" :avatar="Profile"/>
-        <PointsPresenter/>
-        <div class="package-details" >
-          <div class="card" v-if="loaded">
-            <div class="details-content">
-              <div class="package-name">{{ pkg.name }}</div>
-              <div class="package-image">
-                  <img :src="pkg.imgurl" alt="Package Image" />
-              </div>
-                  <span class="price-label">Price: </span>
-                  <span class="price-value">{{ pkg.price }}</span>
-              <div class="package-description" >{{ pkg.description }}</div>  
-              <button class="order-package" @click.stop = "order">
-                  Click here to order
-                </button>
-              </div>
-            </div>
-          <div v-else class = "package-loading">
-              <div>Loading...</div>
+  <div class="package-details-root">
+    <Header :previous="true" :avatar="Profile" />
+    <PointsPresenter />
+    <div class="package-details">
+      <div class="card" v-if="loaded">
+        <div class="details-content">
+          <div class="package-name">{{ pkg.name }}</div>
+          <div class="package-image">
+            <img :src="pkg.imgurl" alt="Package Image" />
           </div>
-        </div> 
-    </div> 
+          <span class="price-label">Price: </span>
+          <span class="price-value">{{ pkg.price }}</span>
+          <div class="package-description">{{ pkg.description }}</div>
+          <button class="order-package" @click.stop="order">
+            Click here to order
+          </button>
+        </div>
+      </div>
+      <div v-else class="package-loading">
+        <div>Loading...</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
 * {
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
-
+/* Main wrapper */
 .package-details-root {
   display: flex;
   flex-direction: column;
@@ -63,6 +71,7 @@ onMounted(async () => {
   overflow: hidden;
 }
 
+/* Order button */
 .order-package {
   font-family: var(--button-font-family);
   font-size: 24px;
@@ -72,30 +81,31 @@ onMounted(async () => {
   border-radius: 6px;
   margin-top: auto;
   border: solid 2px black;
-  box-shadow: 
+  box-shadow:
     2px 2px 0px 0px black;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .order-package:hover {
-  box-shadow: 
+  box-shadow:
     4px 4px 0px 0px black;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-
+/* Wrapper for details */
 .package-details {
   flex: 1;
   background: var(--background-green);
   display: flex;
   flex-direction: column;
-  height: 100%; 
+  height: 100%;
   overflow-y: auto;
   padding: 20px;
   align-items: center;
   width: 100%;
 }
 
+/* Loading text */
 .package-loading {
   justify-content: center;
   font-size: 24px;
@@ -103,6 +113,7 @@ onMounted(async () => {
   display: flex;
 }
 
+/* Card style */
 .package-details .card {
   width: 100%;
   height: 100%;
@@ -113,18 +124,18 @@ onMounted(async () => {
   background: var(--wood);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 
-    0 10px 20px rgba(0, 0, 0, 0.5), 
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.5),
     inset 0 0 20px rgba(0, 0, 0, 0.3);
   border: 2px solid #5a3200;
   align-items: center;
-  width: 80%; 
+  width: 80%;
   height: 100%;
   margin: 0 auto;
   font-family: var(--button-font-family);
   font-size: 50px;
   color: white;
-  outline: 1px solid #c9c3b8; 
+  outline: 1px solid #c9c3b8;
   outline-offset: -5px;
   text-align: center;
 }
@@ -141,7 +152,7 @@ onMounted(async () => {
   align-self: center;
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  padding: 10px 0; 
+  padding: 10px 0;
 }
 
 .package-image {
@@ -150,20 +161,21 @@ onMounted(async () => {
   align-items: center;
   margin-bottom: 15px;
   width: 100%;
-  
+
   height: 50%;
-  aspect-ratio: 4 / 3; 
-  
+  aspect-ratio: 4 / 3;
+
   overflow: hidden;
   border-radius: 10px;
-  position: relative; 
+  position: relative;
 }
+
 .package-image img {
   width: 100%;
   height: 100%;
-  
-  object-fit: cover; 
-  
+
+  object-fit: cover;
+
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
@@ -179,8 +191,8 @@ onMounted(async () => {
 
 .details-content .package-description {
   font-size: 24px;
-  line-height: 1.6; 
-  color: #f0f0f0; 
+  line-height: 1.6;
+  color: #f0f0f0;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
   text-align: center;
 }

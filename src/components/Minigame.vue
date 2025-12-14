@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file ActivateButton.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief Slot minigame component
+ */
+-->
+
 <script setup>
 import { addPoints } from '@/stores/AddPoints';
 import { activeUser } from '@/stores/Login';
@@ -66,7 +74,7 @@ async function checkResult() {
             <div class="slot">{{ slot2 }}</div>
             <div class="slot">{{ slot3 }}</div>
         </div>
-        
+
         <button class="spin-btn" @click="play" :disabled="isSpinning">
             {{ isSpinning ? 'SPINNING...' : 'SPIN (5 PTS)' }}
         </button>
@@ -127,8 +135,10 @@ async function checkResult() {
     filter: grayscale(1);
     cursor: not-allowed;
 }
+
 .text-frame {
-    background-color: rgba(212, 175, 55, 0.1); /* Jemný zlatý nádych v základe */
+    background-color: rgba(212, 175, 55, 0.1);
+    /* Jemný zlatý nádych v základe */
     width: 80%;
     max-width: 400px;
     height: 60px;
@@ -153,7 +163,7 @@ async function checkResult() {
     color: white;
     font-weight: bold;
     font-size: 20px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .text-hint {
@@ -163,8 +173,12 @@ async function checkResult() {
 
 /* effect for win border */
 @keyframes pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.05); }
-}
+    from {
+        transform: scale(1);
+    }
 
+    to {
+        transform: scale(1.05);
+    }
+}
 </style>
