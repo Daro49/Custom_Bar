@@ -45,7 +45,15 @@ export default {
         let intervalId = null;
 
         const updateTimer = () => {
-            const expiration = activeUser.value.tableExpiration;
+            const user = activeUser.value;
+            
+            if (!user) { 
+                timeRemainingMs.value = 0;
+                if (intervalId) { clearInterval(intervalId); intervalId = null; }
+                return;
+            }
+
+            const expiration = user.tableExpiration;
 
             if (expiration) {
                 const expiryTime = new Date(expiration).getTime();
@@ -54,11 +62,11 @@ export default {
 
                 timeRemainingMs.value = remaining > 0 ? remaining : 0;
 
-                if (remaining <= 0 && activeUser.value.table !== 'N/A') {
+                if (remaining <= 0 && user.table !== 'N/A') {
 
                     timeRemainingMs.value = 0;
 
-                    const tableCodeToClear = activeUser.value.table;
+                    const tableCodeToClear = user.table;
 
                     clearTable(tableCodeToClear);
 
@@ -82,7 +90,8 @@ export default {
             if (intervalId) clearInterval(intervalId);
             intervalId = setInterval(updateTimer, duration);
         };
-        watch(() => activeUser.value.tableExpiration, (newExpiration) => {
+        
+        watch(() => activeUser.value?.tableExpiration, (newExpiration) => {
             updateTimer();
             if (newExpiration) {
                 const expiryTime = new Date(newExpiration).getTime();

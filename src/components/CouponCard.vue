@@ -3,7 +3,6 @@
     <div v-if="!detailsEnabled" class="coupon-header">
       <img :src="couponData.imgurl" alt="Coupon image" class="coupon-image" />
       <div class="coupon-info">
-        <div class="valid-date">Valid until {{ validUntil }}</div>
         <ActivateButton 
           :activation_points="couponData.price" 
           :is-active-prop="isActive"  @toggle="handleToggle"/>
@@ -26,6 +25,7 @@ import Close from '@/assets/cancel-x.svg?raw'
 import ActivateButton from './ActivateButton.vue'
 import { activateCoupon, deactivateCoupon, getUserCoupons } from '@/stores/CSModels/Coupons';
 import { activeUser } from '@/stores/Login';
+import { addPoints } from '@/stores/AddPoints';
 
 export default {
   name: 'CouponCard',
@@ -33,7 +33,6 @@ export default {
     ActivateButton,
   },
   props: {
-    validUntil: String,
     couponData: { type: Object, required: true },
     activated: { type: Boolean, default: false, required: true },
   },
@@ -60,31 +59,36 @@ export default {
   },
 
   methods: {
-    async handleToggle(newStatus) { 
-      this.isActive = newStatus;
-
-      const user = activeUser.value.username;
-      const couponObject = this.couponData; 
-      const couponId = this.couponData.id;
-      let success = false;
-
-      if (this.isActive) {
-        success = await activateCoupon(user, couponObject)
-      } else {
-        success = await deactivateCoupon(user, couponId)
-      }
-
-      if (success) {
-          await getUserCoupons(user); 
-      } else {
-          this.isActive = !newStatus; 
-      }
-    },
-    
     showDetails() {
-      this.detailsEnabled = !this.detailsEnabled
+      this.detailsEnabled = !this.detailsEnabled;
     },
-  },
+    async handleToggle(requestedStatus) {
+      const user = activeUser.value.username;
+      const couponObject = this.couponData;
+      const points = this.couponData.price;
+
+      if (requestedStatus === true) {
+        const success = await activateCoupon(user, couponObject);
+
+        if (success) {
+          // if activation succesfull, remove price points
+          await addPoints(-points);
+          this.isActive = true;
+          await getUserCoupons(user);
+        } else {
+          this.isActive = false; 
+        }
+      } else {
+        const success = await deactivateCoupon(user, this.couponData.id);
+        if (success) {
+          // if activation succesfull, revert price points removal
+          await addPoints(points);
+          this.isActive = false;
+          await getUserCoupons(user);
+        }
+      }
+    },
+  }
 }
 </script>
 
@@ -139,7 +143,7 @@ export default {
   margin-top: 0;
   width: 25%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 6px 0 0 6px;
   object-fit: cover;
   
 }
@@ -197,5 +201,7 @@ export default {
     color: var(--background-green);
     word-break: break-word; 
     padding-right: 15px; 
+    overflow-y: auto; 
+    max-height: 100%;
 }
 </style>

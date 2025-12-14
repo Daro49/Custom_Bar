@@ -1,4 +1,5 @@
 import { activeUser } from "./Login.js";
+import { addToast } from "./ToastStore.js";
 
 export async function addPoints(points) {
   const username = activeUser.value.username;
@@ -21,7 +22,7 @@ export async function addPoints(points) {
     return true;
   } catch (error) {
     console.error('Profile update error:', error);
-    alert('Profile update error: ' + error.message);
+    addToast('Profile update error: ' + error.message);
     return false;
   }
 }

@@ -12,41 +12,44 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { addPoints } from '@/stores/AddPoints.js'
+import { computed } from 'vue'
 import { activeUser } from '@/stores/Login';
+import { addToast } from '@/stores/ToastStore';
 
 export default {
   name: 'ActivateButton',
   props: {
-    activation_points: { type: [String, Number], default: null },
+    activation_points: { type: Number, default: null },
     isActiveProp: { type: Boolean, default: false }
   },
   emits: ['toggle'],
 
-  setup(props, {emit}) {
-    const isActive = ref(props.isActiveProp)
+  setup(props, { emit }) {
+    const isActive = computed(() => props.isActiveProp);
+
     const txt = computed(() =>
-      isActive.value ? 'Activated' : `Activate for ${props.activation_points}`,
-    )
+      isActive.value ? 'Activated' : `Activate for ${props.activation_points}`
+    );
+
     async function toggle() {
-      if (!isActive.value) {
+      const currentStatus = isActive.value; 
+      
+      if (!currentStatus) {
         if (props.activation_points <= activeUser.value.points) {
-          const success = await addPoints(-props.activation_points)
-          if (!success) return
-          isActive.value = true
-          emit('toggle', isActive.value)
+          emit('toggle', true);
         } else {
-          return
+          addToast("Nemáte dostatok bodov!");
         }
       } else {
-        const success = await addPoints(props.activation_points)
-        if (!success) return
-        isActive.value = false
-        emit('toggle', isActive.value)
+        emit('toggle', false);
       }
     }
-    return { isActive, txt, toggle }
+
+    return { 
+      isActive, 
+      txt, 
+      toggle 
+    };
   },
 }
 </script>

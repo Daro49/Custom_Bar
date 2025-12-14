@@ -7,6 +7,7 @@ import SectionDivider from '@/components/SectionDivider.vue'
 import router from '@/router'
 import { getUser, saveProfileChanges } from '@/stores/CSModels/Profile'
 import edit from '@/assets/edit.svg?raw'
+import { addToast } from '@/stores/ToastStore'
 
 const isEditingUsername = ref(false);
 const newUsername = ref(activeUser.value.username);
@@ -21,6 +22,12 @@ let isError = ref(false);
 const vFocus = {
   mounted: (el) => el.focus()
 }
+
+// if invalid img url set default
+const handleImageError = (event) => {
+  addToast("Invalid image url inputed.", 5000)
+  event.target.src = ProfileImg;
+};
 
 // function setting username to 
 async function syncChangesWithServer(oldUsername) {
@@ -92,19 +99,24 @@ async function saveImg() {
   isEditingImage.value = false;
 }
 
+const startEditing = () => {
+  newImage.value = activeUser.value.imgurl || '';
+  isEditingImage.value = true;
+};
 
 </script>
 
 <template>
-  <Header />
+  <Header :previous="true" />
   <div class="profile" v-if="activeUser">
     <div class="picture-wrapper">
       <img 
         :src="activeUser.imgurl || ProfileImg" 
         alt="Profile Picture" 
         class="picture" 
+        @error="handleImageError"
       />
-      <div class="edit-icon" @click="isEditingImage = true" v-html="edit"></div>
+      <div class="edit-icon" @click="startEditing" v-html="edit"></div>
     </div>
 
     <div v-if="isEditingImage" class="image-edit-container-static">
@@ -113,7 +125,7 @@ async function saveImg() {
         @blur="saveImg" 
         @keyup.enter="saveImg"
         v-focus
-        :placeholder="activeUser.imgurl ? activeUser.imgurl : 'Paste url of image here.'"
+        :placeholder="!newImage && activeUser.imgurl ? 'Paste url of image here.' : 'Paste url of image here.'"
         class="edit-input-inline"
       />
     </div>
@@ -164,7 +176,7 @@ async function saveImg() {
 
     <div class="actions">
        <button class="profile-button" @click="drinks">My Drinks</button>
-       <button class="profile-button" @click="orders">My Orders</button>
+       <button class="profile-button" @click="orders">Order History</button>
        <button class="profile-button logout" @click="logout">Logout</button>
     </div>
   </div>
@@ -192,7 +204,7 @@ export default {
       router.push({ name: 'my_drinks' })
     },
     orders() {
-      router.push({ name: 'my_orders' })
+      router.push({ name: 'orders' })
     },
   }
 }
@@ -409,6 +421,7 @@ margin-top: 5px;
   margin: 20px 0 10px 0; 
   width: 180px; 
   height: 180px;
+  margin-bottom: 80px;
 }
 
 .edit-input-inline {

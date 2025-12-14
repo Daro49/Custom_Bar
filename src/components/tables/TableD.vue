@@ -1,14 +1,17 @@
 <template>
-  <div class="table-d-component" :class="{ active: selected }" @click.stop="$emit('select', label)">
+  <div class="table-d-component" :class="{ active: selected }" @click.stop="handleTableClick">
     <div class="layout">
       <div class="couch-wrapper left">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
-      
+
       <div class="main-table">
-        <span class="table-label">{{ label }}</span>
+        <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
+          <span class="table-label">{{ label }}</span>
+          <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
+        </div>
       </div>
-      
+
       <div class="couch-wrapper right">
         <img :src="selected ? couchActiveSvg : couchSvg" alt="couch" class="couch" />
       </div>
@@ -17,18 +20,39 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 import couchSvg from '../../assets/couch.svg'
 import couchActiveSvg from '../../assets/couchActive.svg'
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
   label: { type: String, default: 'T1' },
+  capacityLabel: {
+    type: String,
+    default: '0/4'
+  },
   tableColor: { type: String, default: '#552808' },
   seatColor: { type: String, default: '#552808' },
-  selected: { type: Boolean, default: false }
+  selected: { type: Boolean, default: false },
+  textRotation: { type: Number, default: 0 }
 })
+
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>
@@ -44,7 +68,7 @@ const props = defineProps({
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 2px;
+  gap: 0px;
 }
 
 .couch-wrapper {
@@ -82,11 +106,28 @@ const props = defineProps({
   justify-content: center;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
 .table-label {
-  font-family: "Georgia","Times New Roman", serif;
-  font-size: 0.95rem;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.85rem;
   font-weight: 700;
   color: black;
+  text-transform: uppercase;
+}
+
+.table-label-capacity {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.65rem;
+  font-weight: normal;
+  color: black;
+  margin-top: 1px;
 }
 
 .table-d-component.active .main-table {

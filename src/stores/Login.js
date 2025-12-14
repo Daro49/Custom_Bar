@@ -16,6 +16,7 @@ function getLocalUsername() {
     }
     return null;
 }
+
 async function fetchAndInitializeUser() {
     const username = getLocalUsername();
 
@@ -54,11 +55,11 @@ async function fetchAndInitializeUser() {
     }
     return new User('').toJSON();
 }
+
 export var activeUser = ref(new User('').toJSON());
 
 async function initializeStore() {
     const initialUserObject = await fetchAndInitializeUser();
-
     activeUser.value = initialUserObject;
 }
 
@@ -81,7 +82,8 @@ export async function login(username) {
             data.user.points,
             data.user.email,
             data.user.table,
-            data.user.tableExpiration
+            data.user.tableExpiration,
+            data.user.imgurl
         );
 
         activeUser.value = newUser.toJSON();

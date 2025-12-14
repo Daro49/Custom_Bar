@@ -48,37 +48,36 @@ export async function getPackageById(id) {
     alert('Error occured while fetching package:' + error.message);
     return false;
   }
-} 
- 
+}
+
 export async function orderPackage(username, pkg) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pkg: pkg }) 
+      body: JSON.stringify({ pkg: pkg })
     });
 
-    const data = await response.json(); 
+    const data = await response.json();
     if (!response.ok) {
-      return { 
-        success: false, 
-        status: response.status, 
-        message: data.error || 'Unkown error' 
+      return {
+        success: false,
+        status: response.status,
+        message: data.error || 'Unkown error'
       };
     }
 
     return { success: true };
   }
   catch (error) {
-    return { 
-      success: false, 
-      message: 'Network error: ' + error.message 
+    return {
+      success: false,
+      message: 'Network error: ' + error.message
     };
   }
 }
 
-export async function removePackageFromOrder(username, pkgId)
-{
+export async function removePackageFromOrder(username, pkgId) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/packages/${username}/remove/${pkgId}`, {
       method: 'POST',
@@ -89,11 +88,11 @@ export async function removePackageFromOrder(username, pkgId)
       throw new Error('Removing package failed.');
     }
     return true;
-    } catch (error) {
-      console.error('Pakcage removal error:', error);
-      alert('Error occured while removing package from order: ' + error.message);
-      return false;
-    }  
+  } catch (error) {
+    console.error('Pakcage removal error:', error);
+    alert('Error occured while removing package from order: ' + error.message);
+    return false;
+  }
 }
 
 /**
@@ -133,8 +132,5 @@ export async function processPackageOrder(currentPkg) {
   }
 
   addToast("Package successfully added to order!");
-  
-  setTimeout(() => { errorMsg.value = ''; }, 3000);
-  
   return true;
 }

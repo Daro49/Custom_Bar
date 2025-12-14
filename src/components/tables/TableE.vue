@@ -1,22 +1,27 @@
 <template>
   <div class="table-e" :class="{ active: selected }">
-    <div class="seat horizontal top" @click.stop="$emit('select', label)"></div>
+    <div class="seat horizontal top" @click.stop="handleTableClick"></div>
 
     <div class="side-seats left">
-      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`" @click.stop="$emit('select', label)"></div>
+      <div class="seat vertical" v-for="i in 5" :key="`left-seat-${i}`" @click.stop="handleTableClick"></div>
     </div>
 
-    <div class="main-table" @click.stop="$emit('select', label)">
-      <span class="table-label">{{ label }}</span>
+    <div class="main-table" @click.stop="handleTableClick">
+      <div class="label" :style="{ transform: 'rotate(' + textRotation + 'deg)' }">
+        <span class="table-label">{{ label }}</span>
+        <span class="table-label-capacity">{{ currentCapacityLabel }}</span>
+      </div>
     </div>
 
-    <div class="seat horizontal bottom" @click.stop="$emit('select', label)"></div>
+    <div class="seat horizontal bottom" @click.stop="handleTableClick"></div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
+import { useTableStore } from '@/stores/tableStore';
 
+const tableStore = useTableStore();
 const emit = defineEmits(['select'])
 
 const props = defineProps({
@@ -24,21 +29,42 @@ const props = defineProps({
     type: String,
     default: 'T1'
   },
+  capacityLabel: {
+    type: String,
+    default: '0/7'
+  },
   tableColor: {
     type: String,
-   default: '#552808'
+    default: '#552808'
   },
   seatColor: {
     type: String,
-   default: '#552808'
+    default: '#552808'
   }
   ,
   selected: {
     type: Boolean,
     default: false
+  },
+  textRotation: {
+    type: Number,
+    default: 0
   }
 })
 
+const tableData = computed(() => tableStore.getTableById(props.label));
+
+const currentCapacityLabel = computed(() => {
+  const data = tableData.value;
+  if (data) {
+    return `${data.occupied}/${data.capacity}`;
+  }
+  return props.capacityLabel;
+});
+
+const handleTableClick = () => {
+  emit('select', props.label);
+};
 </script>
 
 <style scoped>
@@ -62,10 +88,12 @@ const props = defineProps({
   grid-column: 2;
   grid-row: 1;
 }
+
 .seat.horizontal.bottom {
   grid-column: 2;
   grid-row: 3;
 }
+
 .main-table {
   grid-column: 2;
   grid-row: 2;
@@ -89,12 +117,28 @@ const props = defineProps({
   height: 100%;
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
 .table-label {
   font-family: "Georgia", "Times New Roman", serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: black;
   text-transform: uppercase;
+}
+
+.table-label-capacity {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: black;
+  margin-top: 2px;
 }
 
 .seat {
@@ -104,10 +148,12 @@ const props = defineProps({
   flex-shrink: 0;
   transition: background-color 0.2s ease;
 }
+
 .seat.horizontal {
   width: 30px;
   height: 10.5px;
 }
+
 .seat.vertical {
   width: 10.5px;
   height: 30px;
@@ -117,6 +163,7 @@ const props = defineProps({
 .table-e.active .seat {
   background-color: #513C2C;
 }
+
 .main-table:hover,
 .seat:hover {
   filter: brightness(1.1);

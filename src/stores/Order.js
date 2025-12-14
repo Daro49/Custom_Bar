@@ -6,6 +6,9 @@ import Header from '@/components/Header.vue'
 import pastOrders from "@/assets/OrderHistory.svg?raw";
 import { addPoints } from './AddPoints'
 import { removePackageFromOrder } from './CSModels/Packages'
+import { getMilestonesOfUser, milestones, setMilestonesOfUser } from './CSModels/Milestones'
+import { addToast } from './ToastStore'
+import { userCoupons, getUserCoupons } from './CSModels/Coupons'
 
 export default {
     name: 'OrderView',
@@ -40,9 +43,20 @@ export default {
         const confirmOrder = async () => {
             try {
                 const username = activeUser.value.username
+
+                await getMilestonesOfUser();
+
+                const { euroTotal, usedCouponIds } = calculateOrderTotals(orderItems.value);
+                const { updates, milestoneReached } = await getMilestoneUpdates(euroTotal);
+
+                if (updates.length > 0) {
+                    await setMilestonesOfUser(updates);
+                }
+
                 const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ price: euroTotal })
                 })
                 if (!response.ok) throw new Error('Failed to confirm order')
                 const data = await response.json()
@@ -63,7 +77,22 @@ export default {
                 activeUser.value = newUser.toJSON();
                 localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
                 orderItems.value = []
+                // if user had activated coupons 
+                console.log(euroTotal);
+                userCoupons.value = userCoupons.value.filter(c => !usedCouponIds.includes(c.id));
+                if (usedCouponIds.length > 0) {
+                    for (const id of usedCouponIds) {
+                        await fetch(`https://itu-wb12.onrender.com/coupons/${username}/remove/${id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    }
+                    await getUserCoupons(username);
+                }
+
                 alert('Order confirmed! Thank you for your purchase.')
+                if (milestoneReached) addToast("Milestone reached, check it in milestones!");
+                if (euroTotal) await addPoints(Math.floor(euroTotal));
                 router.push('/')
             } catch (err) {
                 console.error('Error confirming order:', err)
@@ -79,20 +108,23 @@ export default {
             }
         }
 
-        onMounted(() => {
+        onMounted(async () => {
             fetchOrder()
+            //check just in case 
+            if (activeUser.value?.username) {
+                await getUserCoupons(activeUser.value.username);
+            }
         })
 
         async function removeFromOrder(drink) {
             const username = activeUser.value.username;
 
             if (!drink.id || !drink.class) {
-                console.error("Chyba: Objekty drinku chýba ID alebo CLASS. Server nemôže položku jednoznačne odstrániť.");
+                console.error("Error: invalid order object.");
                 return;
             }
 
             try {
-                console.log("Removing from order:", drink.name, "with ID:", drink.id, "and Class:", drink.class);
                 const res = await fetch(
                     `https://itu-wb12.onrender.com/users/${username}/order/remove`,
                     {
@@ -113,12 +145,12 @@ export default {
         async function removePackage(pkg) {
             const result = await removePackageFromOrder(activeUser.value.username, pkg.id);
             if (!result) {
-                alert("Cannot remove package");
+                addToast("Cannot remove package");
                 return;
             }
             const result2 = await addPoints(pkg.price);
             if (!result2) {
-                alert("Error occured while removing package");
+                addToast("Error occured while removing package");
             }
             fetchOrder();
         }
@@ -151,26 +183,114 @@ export default {
             }
         }
 
-        /**
-         * Calculates totals for drinks and packages
-         * @param {Array} items - The array of items in the order
-         * @returns {Object} - Object containing euroTotal and pointsTotal
+        /** * Calculates totals for drinks and packages. 
+         * Functions calculates price with activated coupons included. 
+         * @param {Array} items - The array of items in the order 
+         * @returns {Object} - Object containing euroTotal and pointsTotal 
          */
         function calculateOrderTotals(items) {
-            if (!items || items.length === 0) {
-                return { euroTotal: 0 };
+            if (!items || items.length === 0) return { euroTotal: 0, usedCouponIds: [] };
+            // Count basic price 
+            let subtotal = items
+                .filter(item => !item.isCoupon && item?.class !== "pkg") // do not count coupon price 
+                .reduce((acc, item) => acc + ((item.quantity || 0) * (item.price || 0)), 0);
+            let discountAmount = 0;
+            let usedCouponIds = [];
+
+            // Go through coupons 
+            for (const coupon of userCoupons.value) {
+                let applied = false;
+                // Percentage discount 
+                if (coupon.discount.includes('%')) {
+                    const percentage = parseInt(coupon.discount) / 100;
+                    discountAmount += subtotal * percentage;
+                    applied = true;
+                }
+                // Eur discount 
+                else if (coupon.discount.includes('€')) {
+                    const eurosOff = parseFloat(coupon.discount);
+                    discountAmount += eurosOff;
+                    applied = true;
+                }
+
+                else if (coupon.discount === 'free') {
+
+                    //Most expensive drink free 
+                    if (coupon.code === "FREEDRINK") {
+                        let maxPrice = 0;
+                        // find the most expensive item 
+                        for (const item of items) {
+                            if (item.price > maxPrice) {
+                                maxPrice = item.price;
+                            }
+                        }
+                        if (maxPrice > 0) {
+                            discountAmount += maxPrice;
+                            applied = true;
+                        }
+                    }
+
+                    //N for M 
+                    else if (coupon.code.includes("FOR")) {
+                        const parts = coupon.code.split("FOR");
+                        const N = parseInt(parts[0]);
+                        const M = parseInt(parts[1]);
+
+                        for (const item of items) {
+                            if (item.quantity >= N) {
+                                const setsOfN = Math.floor(item.quantity / N); // how much discounts available 
+                                const freeItemsCount = setsOfN * M;
+                                discountAmount += freeItemsCount * item.price;
+                                applied = true;
+                            }
+                        }
+                    }
+                }
+                if (applied) {
+                    usedCouponIds.push(coupon.id);
+                }
             }
 
-            return items.reduce((acc, item) => {
-                // If item has quantity, count drink value
-                if (item.quantity !== undefined && item.quantity !== null) {
-                    acc.euroTotal += item.quantity * item.price;
-                } 
-                return acc ? acc : 0;
-            }, { euroTotal: 0 });
+            return {
+                euroTotal: Math.max(0, subtotal - discountAmount),
+                usedCouponIds
+            };
         }
 
-        // reactive var for order button
+        async function getMilestoneUpdates(currentEuroTotal) {
+            const updates = [];
+            let milestoneReached = false;
+            for (const m of milestones.value) {
+                if (m.progress < m.goal) {
+                    let newProgress = m.progress;
+                    // check for type of milestone                     
+                    if (m.class === "orderCount") {
+                        const countInOrder = orderItems.value
+                            .filter(item => item.name.toLowerCase().includes(m.drink.toLowerCase()))
+                            .reduce((sum, item) => sum + (item.quantity || 1), 0);
+                        // nothing to check 
+                        if (countInOrder <= 0) continue;
+
+                        newProgress = m.type === "total" ? m.progress + countInOrder : Math.max(m.progress, countInOrder);
+                    } else {
+                        newProgress = m.type === "total" ? m.progress + currentEuroTotal : Math.max(m.progress, currentEuroTotal);
+                    }
+
+                    const cappedProgress = Math.min(newProgress, m.goal);
+
+                    if (cappedProgress > m.progress) {
+                        updates.push({ id: m.id, progress: cappedProgress });
+
+                        if (cappedProgress === m.goal) {
+                            milestoneReached = true;
+                        }
+                    }
+                }
+            }
+            return { updates, milestoneReached };
+        }
+
+        // reactive var for order button 
         const buttonText = computed(() => {
             if (!orderItems.value || orderItems.value.length === 0) {
                 return 'ORDER SOMETHING';
@@ -191,7 +311,8 @@ export default {
             addToOrder,
             pastOrders,
             removePackage,
-            buttonText
+            buttonText,
+            userCoupons,
         }
         expose(exposed)
         return exposed

@@ -48,7 +48,7 @@ defineEmits(["info",  "addToOrder"]);
   background-color: #2e4c43;
   border-radius: 12px;
   padding: 10px 16px;
-  width: 362px;
+  width: 80%;
   height: 121px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 16px;
