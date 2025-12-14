@@ -50,7 +50,7 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right" v-if="item.class === 'drink' || item.class === 'custom'">
+          <div class="item-right" v-if="item.class === 'drink' || item.class === 'custom' || item.class === 'alcohol' || item.class === 'soft'">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
