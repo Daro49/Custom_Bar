@@ -1,7 +1,7 @@
 <!--
 *
 * File:     PastOrder.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * This component displays the user's past orders, including navigation between orders and order details.
 * It integrates with the PastOrder store logic and provides UI for reviewing previous purchases.
 *
@@ -50,13 +50,13 @@
           <div class="item-left">
             <span class="item-name">{{ item.name }}</span>
           </div>
-          <div class="item-right" v-if="item.class === 'drink'">
+          <div class="item-right" v-if="item.class === 'drink' || item.class === 'custom'">
             <span class="price">{{item.quantity}} x {{ item.price }} = {{ (item.quantity * item.price).toFixed(2) }}€</span>
             <button class="add-button" @click="handleOrder(item)">+</button>
           </div>
         </div>
         <div v-if="orderItems.length > 0" class="order-item2">
-          <span class="item-name">Order price: {{ orderPrice }} €</span>
+          <span class="item-name">Order price: {{ (orderPrice).toFixed(2)}} €</span>
         </div>
       </div>
     </div>

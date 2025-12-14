@@ -1,7 +1,7 @@
 <!--
 *
 * File:     MainMenuView.vue
-* Author:   Jozef Matus (xmatusj00@stud.fit.vut.cz), Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Jozef Matus (xmatusj00@stud.fit.vut.cz), Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * MainMenuView component represents the main menu view of the application.
 *
 -->

@@ -1,3 +1,9 @@
+/**
+ * File: User.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Defines User class. Used during login and represents activeUser.
+ */
+
 export default class User {
   constructor(username, points = 0, email = '', table = 'N/A', tableExpiration = null, imgurl = '') {
     this.username = username

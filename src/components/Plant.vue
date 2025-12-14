@@ -1,7 +1,7 @@
 <!--
 *
 * File:     Plant.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * Plant component renders a decorative SVG plant with optional flower.
 * Used for visual enhancement in map layouts.
 *

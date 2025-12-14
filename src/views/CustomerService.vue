@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file CustomerService.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief View of Loyalty Hub
+ */
+-->
+
 <script setup>
 import Profile from '@/assets/user.png'
 </script>
@@ -38,6 +46,7 @@ export default {
 </script>
 
 <style scoped>
+/* Main container for the Loyalty Hub */
 .customer-service {
   background: var(--background-green);
   display: flex;
@@ -46,6 +55,8 @@ export default {
   overflow-y: auto;
   width: 100%;
 }
+
+/* Centered layout frame for content */
 .customer-service .frame {
   align-items: center;
   align-self: center;
@@ -58,6 +69,7 @@ export default {
   background: var(--background-green);
 }
 
+/* Wrapper for minigame and buttons */
 .customer-service .frame-2 {
   align-items: center;
   align-self: stretch;
@@ -69,16 +81,7 @@ export default {
   width: 100%;
 }
 
-.customer-service .text-wrapper-2 {
-  align-items: center;
-  align-self: stretch;
-  color: #ffffff;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  text-align: center;
-}
-
+/* Vertical navigation list for loyalty subsections */
 .customer-service .frame-3 {
   align-items: flex-start;
   align-self: stretch;

@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file MyDrinks.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief View of custom drinks created by user
+ */
+-->
+
 <script setup>
 import Header from '@/components/Header.vue'
 import Profile from '@/assets/user.png'
@@ -13,7 +21,7 @@ let loaded = ref(false);
 onMounted(async () => {
   loaded.value = false;
   await getUserDrinks();
-  loaded.value = true; 
+  loaded.value = true;
 });
 
 function goToDrink(name) {
@@ -23,12 +31,14 @@ function goToDrink(name) {
     query: { from: "/custommenu" }
   });
 }
-
+/**
+ * @brief Funciton adding drink to order.
+ * @param {Object} drink Drink object to be added to order.
+ */
 async function handleOrder(drink) {
   try {
     await addToOrder(drink);
     addToast(`${drink.name} added to cart!`);
-    console.log("Added to order:", drink.name);
   } catch (err) {
     addToast(`Failed to add to cart. Please select table first.`, 5000);
     console.error("Order failed:", err);
@@ -39,18 +49,13 @@ async function handleOrder(drink) {
 
 <template>
   <div class="my-drinks">
-    <Header :avatar="Profile" :previous="true"/>
+    <Header :avatar="Profile" :previous="true" />
     <div class="my-drinks-banner">
       <span class="banner-text">My Drinks</span>
     </div>
-    <div class = "drinks-list" v-if="loaded">
-      <MenuDrinkCard
-        v-for="drink in mydrinks"  
-        :key="drink.id"
-        :drink="drink"
-        @info="goToDrink"
-        @addToOrder="handleOrder"
-      />
+    <div class="drinks-list" v-if="loaded">
+      <MenuDrinkCard v-for="drink in mydrinks" :key="drink.id" :drink="drink" @info="goToDrink"
+        @addToOrder="handleOrder" />
     </div>
     <div v-else class="loading">
       Loading...
@@ -71,19 +76,20 @@ async function handleOrder(drink) {
 .my-drinks .drinks-list {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   align-self: center;
   gap: 14px;
   margin-top: 21px;
   width: 80%;
-  padding: 0 10px; 
+  padding: 0 10px;
 }
 
 @media (max-width: 768px) {
-.drink-card,
-.drinkCard {
-  width: 90%;
-}}
+  .drink-card,
+  .drinkCard {
+    width: 90%;
+  }
+}
 
 .drinkCard:hover {
   transform: scale(1.05);
@@ -91,19 +97,19 @@ async function handleOrder(drink) {
 }
 
 .my-drinks-banner {
-  background-color: #7a1f1f; 
-  
+  background-color: #7a1f1f;
+
   width: 80%;
   margin: 20px auto;
   padding: 25px 10px;
-  
+
   border-radius: 12px;
   border: 2px solid #d4a74a;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-  
+
   outline: 1px solid #d4a74a;
   outline-offset: -8px;
-  
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,7 +117,7 @@ async function handleOrder(drink) {
 }
 
 .banner-text {
-  color: #d4a74a; 
+  color: #d4a74a;
   font-family: 'Serif', 'Times New Roman', serif;
   font-size: 2.5rem;
   font-weight: 400;

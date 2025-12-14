@@ -1,7 +1,7 @@
 <!--
 *
 * File:     SlideDownTable.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * SlideDownTable component displays navigation buttons for switching between maps.
 * Emits navigation and close events when a button is clicked.
 *

@@ -1,7 +1,7 @@
 <!--
 *
 * File:     MapTerrace.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * This component renders the Terrace map layout with tables, plants, and navigation buttons.
 * It emits events for table selection and map navigation.
 *

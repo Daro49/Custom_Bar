@@ -1,7 +1,7 @@
 <!--
 *
 * File:     TableB.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableB component represents a table with multiple seats on each side.
 * Displays the table label and current occupancy/capacity.
 * Emits a select event when the table or seat is clicked.

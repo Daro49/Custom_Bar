@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file Header.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief Header component
+ */
+-->
+
 <template>
   <header class="header">
     <div class="back-btn-wrapper">

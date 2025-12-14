@@ -1,7 +1,7 @@
 /**
  * @file Login.js
  * @brief User authentication and state management.
- * @authors ..., Matej Marušinec (xmarusm00@stud.fit.vut.cz) (clearTable function)
+ * @authors Samuel Kudla (xkudlas00@stud.fit.vutbr.cz), Matej Marušinec (xmarusm00@stud.fit.vutbr.cz) (clearTable function)
  *
  * Handles user authentication, user state, and local storage for the active user.
  * Provides functions to fetch and initialize user data from the backend API.
@@ -16,8 +16,8 @@ import User from '@/stores/User.js';
 const API_BASE_URL = 'https://itu-wb12.onrender.com';
 
 /**
- * Retrieves the username of the active user from localStorage, if available.
- * @returns {string|null} Username or null if not found/invalid
+ * Retrieves the username from the locally stored user object in localStorage.
+ * @returns {string|null} The username if found and valid, otherwise null.
  */
 function getLocalUsername() {
     const storedUserString = localStorage.getItem('activeUser');
@@ -34,8 +34,9 @@ function getLocalUsername() {
 }
 
 /**
- * Fetches user data from the backend and initializes the user in localStorage.
- * @returns {Object} User object
+ * Synchronizes the local session with the server. Fetches user data 
+ * from the API and updates the local activeUser and state.
+ * @returns {Promise<Object>} A plain object representing the user (empty user if failed).
  */
 async function fetchAndInitializeUser() {
     const username = getLocalUsername();
@@ -77,6 +78,10 @@ async function fetchAndInitializeUser() {
     return new User('').toJSON();
 }
 
+/**
+ * Reactive var represenitng currently logged-in user.
+ * Initialized with data from localStorage or an empty user.
+ */
 export var activeUser = ref(new User('').toJSON());
 
 /**
@@ -90,9 +95,9 @@ async function initializeStore() {
 initializeStore();
 
 /**
- * Logs in a user by username, updates local state and localStorage.
- * @param {string} username - Username to log in
- * @returns {boolean} True if login successful, false otherwise
+ * Performs a login request to the server and updates the local activeUser.
+ * @param {string} username - The username to log in with.
+ * @returns {Promise<boolean>} True if login was successful, false otherwise.
  */
 export async function login(username) {
     try {
@@ -129,8 +134,8 @@ export async function login(username) {
 }
 
 /**
- * Clears the user's table reservation both locally and on the server.
- * @param {string|null} tableCodeToRelease - Table code to release (optional)
+ * Clears the assigned table from the activeUser both locally and on the server.
+ * @param {string|null} - The specific table code to be released.
  */
 export async function clearTable(tableCodeToRelease = null) {
     activeUser.value.table = 'N/A';

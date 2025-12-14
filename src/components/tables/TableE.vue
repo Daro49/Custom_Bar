@@ -1,7 +1,7 @@
 <!--
 *
 * File:     TableE.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableE component represents a table with a main table and multiple seats on the sides.
 * Displays the table label and current occupancy/capacity.
 * Emits a select event when the table or seat is clicked.

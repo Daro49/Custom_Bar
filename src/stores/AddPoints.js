@@ -1,6 +1,17 @@
+/**
+ * File: AddPoints.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Function adding points to user.
+ */
+
 import { activeUser } from "./Login.js";
 import { addToast } from "./ToastStore.js";
 
+/**
+ * Function adding points to user. To remove points, input negative value. 
+ * @param {Number} points - The username to log in with.
+ * @returns {Promise<boolean>} True if adding was successful, false otherwise 
+ */
 export async function addPoints(points) {
   const username = activeUser.value.username;
   const newPoints = activeUser.value.points + points;

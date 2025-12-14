@@ -1,7 +1,7 @@
 /**
  * @file tableStore.js
  * @brief Pinia store for managing tables, their occupancy, and selection state.
- * @author Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
  *
  * Pinia store for managing tables, their occupancy, and selection state.
  * Handles fetching tables, updating occupancy, and synchronizing with server via WebSockets.

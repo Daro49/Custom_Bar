@@ -1,7 +1,7 @@
 /**
  * @file BarMap.js
  * @brief Vue component logic for the bar table map view.
- * @author Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
  *
  * Handles table selection, expiration, and navigation between map areas.
  * Integrates with Pinia table store and user state.

@@ -1,9 +1,13 @@
+<!--
+/**
+ * @file ActivateButton.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief ActivateButton component
+ */
+-->
+
 <template>
-  <button
-    :class="['button', isActive ? 'activated' : 'deactivated']"
-    @click="toggle"
-    :aria-pressed="isActive"
-  >
+  <button :class="['button', isActive ? 'activated' : 'deactivated']" @click="toggle" :aria-pressed="isActive">
     <div class="img-wrap">
       <div class="btn-image" aria-hidden="true"></div>
       <span class="btn-text">{{ txt }}</span>
@@ -32,8 +36,8 @@ export default {
     );
 
     async function toggle() {
-      const currentStatus = isActive.value; 
-      
+      const currentStatus = isActive.value;
+
       if (!currentStatus) {
         if (props.activation_points <= activeUser.value.points) {
           emit('toggle', true);
@@ -45,10 +49,10 @@ export default {
       }
     }
 
-    return { 
-      isActive, 
-      txt, 
-      toggle 
+    return {
+      isActive,
+      txt,
+      toggle
     };
   },
 }

@@ -1,7 +1,7 @@
 <!--
 *
 * File:     SlidePanel.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableD component represents a table with two couches and a main table.
 * SlidePanel component combines SlideUpTable and SlideDownTable to create a sliding panel UI.
 * Handles expand/collapse state and emits navigation events.

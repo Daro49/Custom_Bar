@@ -1,7 +1,7 @@
 <!--
 *
 * File:     TableD.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableD component represents a table with two couches and a main table.
 * Displays the table label and current occupancy/capacity.
 * Emits a select event when the table is clicked.

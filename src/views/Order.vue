@@ -1,7 +1,7 @@
 <!--
 *
 * File:     Order.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * This component renders the order view, displaying the user's current order, coupons, and payment actions.
 * It integrates with the Order store logic and provides UI for modifying and confirming orders.
 *

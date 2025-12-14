@@ -1,7 +1,17 @@
+/**
+ * File: Profile.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Function providing API funcitons for user
+ */
 import { ref } from "vue";
 import { activeUser } from "../Login";
 export const fetchedUser = ref(null)
 
+/**
+ * @brief Function getting user from server by username
+ * @param {string} username 
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getUser(username) {
   fetchedUser.value = null;
   try {
@@ -20,6 +30,11 @@ export async function getUser(username) {
   }
 }
 
+/**
+ * @brief Function saving profile changes of local stored user
+ * @param {string} username - 
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function saveProfileChanges(loggedIn) {
   try {
     const response = await fetch(

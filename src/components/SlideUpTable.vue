@@ -1,7 +1,7 @@
 <!--
 *
 * File:     SlideUpTable.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
  * SlideUpTable component displays a handle for expanding or collapsing a panel.
  * Emits a toggle event when the handle is clicked.
  *

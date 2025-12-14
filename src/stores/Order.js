@@ -1,7 +1,7 @@
 /**
  * @file Order.js
  * @brief 
- * @author Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
  *
  * Logic for the Order view and order management.
  * Handles fetching, confirming, and modifying user orders, as well as milestone and coupon logic.
@@ -28,10 +28,17 @@ export default {
         const isLoading = ref(true)
         const error = ref(null)
 
+        /**
+         * Navigates the user to the past orders history page.
+         */
         const goOrderHistory = () => {
             router.push('/orders')
         }
 
+        /**
+         * Fetches the current active order items for the logged-in user.
+         * Updates orderItems state or handles fetch errors.
+         */
         const fetchOrder = async () => {
             try {
                 isLoading.value = true
@@ -40,7 +47,6 @@ export default {
                 if (!response.ok) throw new Error('Failed to fetch order')
                 const data = await response.json()
                 orderItems.value = data
-                console.log('Order items fetched:', data)
             } catch (err) {
                 console.error('Error fetching order:', err)
                 error.value = err.message
@@ -49,37 +55,42 @@ export default {
             }
         }
 
+        /**
+         * Handles the complete order confirmation flow.
+         * Processes milestones, calculates final price with coupons, sends POST request,
+         * updates local user storage, and awards points based on the final total.
+         */
         const confirmOrder = async () => {
             try {
                 const username = activeUser.value.username
-
+                // Fetch milestones to keep track of current progress
                 await getMilestonesOfUser();
 
                 const { euroTotal, usedCouponIds } = calculateOrderTotals(orderItems.value);
                 const { updates, milestoneReached } = await getMilestoneUpdates(euroTotal);
 
+                // Update milestone progress if any changes occurred
                 if (updates.length > 0) {
                     await setMilestonesOfUser(updates);
                 }
 
+                // Final order confirmation request to the backend
                 const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/confirm`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ price: euroTotal })
                 })
                 if (!response.ok) throw new Error('Failed to confirm order')
-                const data = await response.json()
-                console.log('Order confirmed:', data)
+
+                // Update table selection expiration
                 const newExpirationTime = new Date(Date.now() + 60 * 60 * 1000).toISOString();
                 await fetch(`https://itu-wb12.onrender.com/users/${username}/table/select`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tableCode: activeUser.value.table, expirationTime: newExpirationTime })
-                /**
-                 * Fetches the current order for the active user from the server.
-                 * Updates the orderItems ref with the result.
-                 */
                 });
+
+                // Update global user state
                 const newUser = new User(
                     activeUser.value.username,
                     activeUser.value.points,
@@ -90,16 +101,11 @@ export default {
                 activeUser.value = newUser.toJSON();
                 localStorage.setItem('activeUser', JSON.stringify(activeUser.value));
                 orderItems.value = []
-                // if user had activated coupons 
-                console.log(euroTotal);
+
+                // Cleanup used coupons locally and on server
                 userCoupons.value = userCoupons.value.filter(c => !usedCouponIds.includes(c.id));
                 if (usedCouponIds.length > 0) {
                     for (const id of usedCouponIds) {
-
-                /**
-                 * Confirms the current order, updates milestones, coupons, and user state.
-                 * Handles all server communication for order confirmation and milestone logic.
-                 */
                         await fetch(`https://itu-wb12.onrender.com/coupons/${username}/remove/${id}`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' }
@@ -110,7 +116,7 @@ export default {
 
                 alert('Order confirmed! Thank you for your purchase.')
                 if (milestoneReached) addToast("Milestone reached, check it in milestones!");
-                if (euroTotal) await addPoints(Math.floor(euroTotal));
+                if (euroTotal > 0) await addPoints(Math.floor(euroTotal));
                 router.push('/')
             } catch (err) {
                 console.error('Error confirming order:', err)
@@ -118,57 +124,91 @@ export default {
             }
         }
 
+        /**
+         * Main action handler for the primary order button.
+         * Redirects to menu if empty, otherwise triggers confirmOrder.
+         */
         const handleButtonClick = () => {
-            if (orderItems.value.length === 0) {
-                router.push('/menu')
+            // only purchasable items
+            const realItems = orderItems.value.filter(item => item.class !== "coupon");
+            if (realItems.length === 0) {
+                router.push('/menu');
             } else {
-                confirmOrder()
+                confirmOrder();
             }
         }
 
         onMounted(async () => {
             fetchOrder()
-            //check just in case 
             if (activeUser.value?.username) {
                 await getUserCoupons(activeUser.value.username);
             }
         })
 
+        /**
+         * Removes a specific drink or item from the order based on its ID and class.
+         * @param {Object} drink - The drink object to remove.
+         */
         async function removeFromOrder(drink) {
             if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
                 throw new Error("User not logged in or table not set");
             }
-
             if (!drink.id || !drink.class) {
-                throw new Error("Error: Drink object is missing ID or CLASS. Server cannot uniquely remove the item.");
+                throw new Error("Error: Drink object is missing ID or CLASS.");
             }
+            const username = activeUser.value.username;
+            try {
+                const response = await fetch(`https://itu-wb12.onrender.com/users/${username}/order/remove`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ drinkId: drink.id, drinkClass: drink.class, tableCode: activeUser.value.table }),
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    orderItems.value = result.order || result.items;
+                    return result;
+                }
+            } catch (err) { console.error(err); throw err; }
+        }
 
+        /**
+         * Removes an experience package from the current order.
+         * Returns points back to the user since packages are pre-paid.
+         * @param {Object} pkg - The package object to remove.
+         */
+        async function removePackage(pkg) {
+            const result = await removePackageFromOrder(activeUser.value.username, pkg.id);
+            if (!result) return;
+            await addPoints(pkg.price);
+            fetchOrder();
+        }
+
+        /**
+         * Adds a drink to the current order on the server and updates local state.
+         * Throws if user or table is not set.
+         * @param {Object} drink - Drink object to add
+         */
+        async function addToOrder(drink) {
+            if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
+                throw new Error("User not logged in or table not set");
+            }
             const username = activeUser.value.username;
             const payload = {
-                drinkId: drink.id,
-                drinkClass: drink.class,
+                drink,
                 tableCode: activeUser.value.table
             };
-
             try {
                 const response = await fetch(
-                    `https://itu-wb12.onrender.com/users/${username}/order/remove`,
+                    `https://itu-wb12.onrender.com/users/${username}/order/add`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(payload),
+                        body: JSON.stringify(payload)
                     }
                 );
-
-                /**
-                 * Removes a drink from the current order on the server and updates local state.
-                 * Throws if user or drink info is missing.
-                 * @param {Object} drink - Drink object to remove
-                 */
-
                 const result = await response.json();
-
                 if (response.ok) {
+                    console.log("Added to server order:", result);
                     if (result.order) {
                         orderItems.value = result.order;
                     } else if (result.items) {
@@ -176,10 +216,13 @@ export default {
                     }
                     if (typeof result.orderLength === 'number') {
                         activeUser.value.orderLength = result.orderLength;
+                        console.log(`Order length updated from server: ${result.orderLength}`);
+                    } else {
+                        console.warn("Server response did not contain orderLength.");
                     }
-
                     return result;
                 } else {
+                    console.error("Server responded with error:", response.statusText);
                     const errorMessage = result.message || response.statusText;
                     throw new Error(`HTTP ${response.status}: ${errorMessage}`);
                 }
@@ -189,219 +232,107 @@ export default {
             }
         }
 
-        async function removePackage(pkg) {
-            const result = await removePackageFromOrder(activeUser.value.username, pkg.id);
-            if (!result) {
-                addToast("Cannot remove package");
-                return;
-            }
-            const result2 = await addPoints(pkg.price);
-            if (!result2) {
-                addToast("Error occured while removing package");
-            }
-            fetchOrder();
-        }
-
-async function addToOrder(drink) {
-    if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
-        throw new Error("User not logged in or table not set");
-    }
-    const username = activeUser.value.username;
-    const payload = {
-        drink,
-        tableCode: activeUser.value.table
-    };
-    try {
-        const response = await fetch(
-
-                /**
-                 * Removes a package from the order and adds points back to the user.
-                 * @param {Object} pkg - Package object to remove
-                 */
-            `https://itu-wb12.onrender.com/users/${username}/order/add`,
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            }
-        );
-
-        const result = await response.json();
-        
-        if (response.ok) {
-            console.log("Added to server order:", result);
-
-                /**
-                 * Adds a drink to the current order on the server and updates local state.
-                 * Throws if user or table is not set.
-                 * @param {Object} drink - Drink object to add
-                 */
-            if (result.order) {
-                orderItems.value = result.order;
-            } else if (result.items) {
-                orderItems.value = result.items;
-            }
-            if (typeof result.orderLength === 'number') {
-                activeUser.value.orderLength = result.orderLength;
-                console.log(`Order length updated from server: ${result.orderLength}`);
-            } else {
-                console.warn("Server response did not contain orderLength.");
-            }
-            
-            return result;
-        } else {
-            console.error("Server responded with error:", response.statusText);
-            const errorMessage = result.message || response.statusText;
-            throw new Error(`HTTP ${response.status}: ${errorMessage}`);
-        }
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
-}
-
-        /** * Calculates totals for drinks and packages. 
-         * Functions calculates price with activated coupons included. 
-         * @param {Array} items - The array of items in the order 
-         * @returns {Object} - Object containing euroTotal and pointsTotal 
+        /**
+         * Logic to calculate the final price after applying activated coupons.
+         * Handles percentage, fixed EUR discounts, and special coupons like 1+1 or Free Drink.
+         * @param {Array} items - List of items in the order.
+         * @returns {Object} - euroTotal and usedCouponIds.
          */
         function calculateOrderTotals(items) {
             if (!items || items.length === 0) return { euroTotal: 0, usedCouponIds: [] };
-            // Count basic price 
             let subtotal = items
-                .filter(item => !item.isCoupon && item?.class !== "pkg") // do not count coupon price 
+                .filter(item => item?.class !== "coupon" && item?.class !== "pkg")
                 .reduce((acc, item) => acc + ((item.quantity || 0) * (item.price || 0)), 0);
             let discountAmount = 0;
             let usedCouponIds = [];
-
-            // Go through coupons 
+            // Prepare pool of items for free-item allocation
+            let availableForDiscount = items
+                .filter(item => item?.class !== "coupon" && item?.class !== "pkg")
+                .flatMap(item => Array(item.quantity || 1).fill({ ...item, quantity: 1 }));
             for (const coupon of userCoupons.value) {
                 let applied = false;
-                // Percentage discount 
                 if (coupon.discount.includes('%')) {
-                    const percentage = parseInt(coupon.discount) / 100;
-                    discountAmount += subtotal * percentage;
+                    discountAmount += subtotal * (parseInt(coupon.discount) / 100);
                     applied = true;
-
-                /**
-                 * Calculates totals for drinks and packages, including coupon discounts.
-                 * @param {Array} items - The array of items in the order
-                 * @returns {Object} - Object containing euroTotal and usedCouponIds
-                 */
-                }
-                // Eur discount 
-                else if (coupon.discount.includes('€')) {
-                    const eurosOff = parseFloat(coupon.discount);
-                    discountAmount += eurosOff;
+                } else if (coupon.discount.includes('€')) {
+                    discountAmount += parseFloat(coupon.discount);
                     applied = true;
-                }
-
-                else if (coupon.discount === 'free') {
-
-                    //Most expensive drink free 
+                } else if (coupon.discount === 'free') {
                     if (coupon.code === "FREEDRINK") {
-                        let maxPrice = 0;
-                        // find the most expensive item 
-                        for (const item of items) {
-                            if (item.price > maxPrice) {
-                                maxPrice = item.price;
-                            }
-                        }
-                        if (maxPrice > 0) {
-                            discountAmount += maxPrice;
+                        // get the most expensive for discount
+                        availableForDiscount.sort((a, b) => (b.price || 0) - (a.price || 0));
+                        if (availableForDiscount.length > 0) {
+                            discountAmount += (availableForDiscount.shift().price || 0);
                             applied = true;
                         }
-                    }
-
-                    //N for M 
-                    else if (coupon.code.includes("FOR")) {
-                        const parts = coupon.code.split("FOR");
-                        const N = parseInt(parts[0]);
-                        const M = parseInt(parts[1]);
-
+                    } else if (coupon.code.includes("FOR")) {
+                        const [required, free] = coupon.code.split("FOR").map(num => parseInt(num));
                         for (const item of items) {
-                            if (item.quantity >= N) {
-                                const setsOfN = Math.floor(item.quantity / N); // how much discounts available 
-                                const freeItemsCount = setsOfN * M;
-                                discountAmount += freeItemsCount * item.price;
+                            // if count of items in order is equal or more than required, apply discount
+                            if (item?.class !== "coupon" && item?.class !== "pkg" && (item.quantity || 0) >= required) {
+                                // How many groups to apply
+                                discountAmount += free * (item.price || 0);
                                 applied = true;
+                                break; // apply only once
                             }
                         }
                     }
                 }
-                if (applied) {
-                    usedCouponIds.push(coupon.id);
-                }
+                if (applied) usedCouponIds.push(coupon.id);
             }
-
             return {
                 euroTotal: Math.max(0, subtotal - discountAmount),
                 usedCouponIds
             };
         }
 
+        /**
+         * Checks if the current order pushes the user over any milestone goals.
+         * @param {Number} currentEuroTotal - The total price of the order.
+         * @returns {Object} - updates (milestone progress) and milestoneReached (boolean).
+         */
         async function getMilestoneUpdates(currentEuroTotal) {
             const updates = [];
             let milestoneReached = false;
             for (const m of milestones.value) {
                 if (m.progress < m.goal) {
                     let newProgress = m.progress;
-                    // check for type of milestone                     
                     if (m.class === "orderCount") {
                         const countInOrder = orderItems.value
-                            .filter(item => item.name.toLowerCase().includes(m.drink.toLowerCase()))
+                            .filter(item => item?.class !== "coupon" && item.name.includes(m.drink))
                             .reduce((sum, item) => sum + (item.quantity || 1), 0);
-                        // nothing to check 
                         if (countInOrder <= 0) continue;
-
                         newProgress = m.type === "total" ? m.progress + countInOrder : Math.max(m.progress, countInOrder);
                     } else {
-
-                /**
-                 * Determines which milestones should be updated based on the current order total.
-                 * @param {number} currentEuroTotal - The current order total in euros
-                 * @returns {Object} - Object with updates array and milestoneReached boolean
-                 */
                         newProgress = m.type === "total" ? m.progress + currentEuroTotal : Math.max(m.progress, currentEuroTotal);
                     }
-
                     const cappedProgress = Math.min(newProgress, m.goal);
-
                     if (cappedProgress > m.progress) {
                         updates.push({ id: m.id, progress: cappedProgress });
-
-                        if (cappedProgress === m.goal) {
-                            milestoneReached = true;
-                        }
+                        if (cappedProgress === m.goal) milestoneReached = true;
                     }
                 }
             }
             return { updates, milestoneReached };
         }
 
-        // reactive var for order button 
+        /**
+         * Reactive computation for the bottom payment button text.
+         */
         const buttonText = computed(() => {
-            if (!orderItems.value || orderItems.value.length === 0) {
+            // only real items that can be ordered
+            const realItems = orderItems.value.filter(item => item.class !== "coupon");
+            // if no real order something
+            if (!orderItems.value || realItems.length === 0) {
                 return 'ORDER SOMETHING';
             }
-
-            const { euroTotal, } = calculateOrderTotals(orderItems.value);
-
+            const { euroTotal } = calculateOrderTotals(orderItems.value);
             return 'PAY ' + `${euroTotal.toFixed(2)}€`;
         });
 
         const exposed = {
-            orderItems,
-            isLoading,
-            error,
-            goOrderHistory,
-            handleButtonClick,
-            removeFromOrder,
-            addToOrder,
-            pastOrders,
-            removePackage,
-            buttonText,
-            userCoupons,
+            orderItems, isLoading, error, goOrderHistory, handleButtonClick,
+            removeFromOrder, addToOrder, pastOrders, removePackage, buttonText, userCoupons,
         }
         expose(exposed)
         return exposed

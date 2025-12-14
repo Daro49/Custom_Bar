@@ -1,7 +1,7 @@
 /**
  * @file Header.js
  * @brief Global store logic for the Header component.
- * @authors Matej Marušinec (xmarusm00@stud.fit.vut.cz), Samuel Kudla (xkudlas00@stud.fit.vut.cz)
+ * @authors Matej Marušinec (xmarusm00@stud.fit.vutbr.cz), Samuel Kudla (xkudlas00@stud.fit.vut.cz)
  *
  * Logic for the Header component, including timer for table expiration, navigation, and user state.
  * Provides computed properties and methods for header UI and user actions.

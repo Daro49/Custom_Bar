@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file PointsPresenter.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief PointPresenter component
+ */
+-->
+
 <script setup>
   import { activeUser } from "@/stores/Login"
 </script>
@@ -71,9 +79,7 @@ export default defineComponent({
 }
 
 .points .text-wrapper-2 {
-  background: var(--headerv2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--gold);
   font-family: 'Century Schoolbook', Helvetica;
   font-size: 38px;
   text-align: center;

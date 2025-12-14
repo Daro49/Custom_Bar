@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file SectionDivider.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief SectionDivider component
+ */
+-->
+
 <template>
   <div class="section-divider">
     <span class="line left" :style="{ backgroundColor: color }"></span>

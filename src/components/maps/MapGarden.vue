@@ -1,7 +1,7 @@
 <!--
 *
 * File:     MapGarden.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * This component renders the Garden map layout with tables and navigation buttons.
 * It emits events for table selection and map navigation.
 *

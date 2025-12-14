@@ -27,12 +27,12 @@ import { computed } from 'vue';
 
 <style scoped>
     .linebox {
-        width: 120px;
+        width: 100%;
         height: 30px;
     }
 
     .line {
-        width: 120px;
+        width: 100%;
         height: 5px;
 
         border-radius: 5px;

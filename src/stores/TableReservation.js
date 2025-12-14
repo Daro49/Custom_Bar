@@ -1,7 +1,7 @@
 /**
  * @file TableReservation.js
  * @brief Logic for extending a user's table reservation.
- * @author Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+ * @author Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
  *
  * Provides logic for extending a user's table reservation.
  * Integrates with user state and backend API.

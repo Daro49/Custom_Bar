@@ -1,3 +1,9 @@
+/**
+ * File: Coupons.js
+ * Author: Samuel Kudla <xkudlas00@stud.fit.vutbr.cz>
+ * Brief: Model functions for coupons data management.
+ */
+
 import { ref } from 'vue';
 import { addToast } from '../ToastStore';
 import { activeUser } from '../Login';
@@ -6,6 +12,10 @@ import { orderItems } from '../DrinkInfo';
 export const coupons = ref([]);
 export const userCoupons = ref([]);
 
+/**
+ * @brief Function fetching all coupons from server.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getCoupons() {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/coupons`, {
@@ -29,6 +39,11 @@ export async function getCoupons() {
   }
 }
 
+/**
+ * @brief Function getting activated coupons by user.
+ * @param {string} username - Username that activated coupons.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function getUserCoupons(username) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/coupons/${username}`, {
@@ -52,7 +67,14 @@ export async function getUserCoupons(username) {
   }
 }
 
+/**
+ * @brief Function activating coupon for user. Coupon is added to order.
+ * @param {string} username - Username.
+ * @param {Object} coupon - Coupon object to be activated.
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function activateCoupon(username, coupon) {
+  // need table to add to order
   if (!activeUser.value?.username || !activeUser.value?.table || activeUser.value?.table === 'N/A') {
     addToast("Failed to add to cart. Please select table.");
     return false;
@@ -79,6 +101,7 @@ export async function activateCoupon(username, coupon) {
       tableCode: activeUser.value.table
     };
     
+    // add to order 
     const res = await fetch(
       `https://itu-wb12.onrender.com/users/${username}/order/add`,
       {
@@ -99,6 +122,12 @@ export async function activateCoupon(username, coupon) {
   }
 }
 
+/**
+ * @brief Function deactivating coupon of activeUser. 
+ * @param {string} username 
+ * @param {Number} couponId Id of coupon to be removed
+ * @returns {Promise<boolean>} True if successful, false otherwise.
+ */
 export async function deactivateCoupon(username, couponId) {
   try {
     const response = await fetch(`https://itu-wb12.onrender.com/coupons/${username}/remove/${couponId}`, {

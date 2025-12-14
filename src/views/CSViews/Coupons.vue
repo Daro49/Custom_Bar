@@ -1,3 +1,11 @@
+<!--
+/**
+ * @file Coupons.vue
+ * @author Samuel Kudla - xkudlas00@stud.fit.vutbr.cz
+ * @brief View of bar coupons
+ */
+-->
+
 <script setup>
 import Profile from '@/assets/user.png'
 import { coupons, userCoupons } from '@/stores/CSModels/Coupons'
@@ -9,6 +17,7 @@ let isLoading = ref(false);
 
 onMounted(async () => {
   try {
+    // start both getUserCoupons and getCoupons, need both
     await Promise.all([
       getUserCoupons(activeUser.value.username),
       getCoupons()
@@ -27,16 +36,12 @@ const isActivated = (couponId) => {
 <template>
   <div class="coupons">
     <Header :avatar="Profile" :previous="true" />
-    <PointsPresenter/>
+    <PointsPresenter />
     <div v-if="isLoading" class="loading-state">
 
     </div>
     <div v-else class="coupon-list">
-      <CouponCard
-        v-for="coupon in coupons"
-        :couponData ="coupon"
-        :activated="isActivated(coupon.id)"
-      />
+      <CouponCard v-for="coupon in coupons" :couponData="coupon" :activated="isActivated(coupon.id)" />
     </div>
   </div>
 </template>
@@ -72,6 +77,7 @@ export default {
   font-size: 24px;
   color: white;
 }
+
 .coupons .coupon-list {
   align-items: center;
   align-self: center;

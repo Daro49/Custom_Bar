@@ -1,7 +1,7 @@
 <!--
 *
 * File:     TableC.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableC component represents a table with a main table and five seats.
 * Displays the table label and current occupancy/capacity.
 * Emits a select event when the table or seat is clicked.

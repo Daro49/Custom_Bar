@@ -1,7 +1,7 @@
 <!--
 *
 * File:     TableA.vue
-* Author:   Matej Marušinec (xmarusm00@stud.fit.vut.cz)
+* Author:   Matej Marušinec (xmarusm00@stud.fit.vutbr.cz)
 * TableA component represents a rectangular table with four seats.
 * Displays the table label and current occupancy/capacity.
 * Emits a select event when the table or seat is clicked.
