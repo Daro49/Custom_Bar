@@ -138,7 +138,6 @@ async function checkResult() {
 
 .text-frame {
     background-color: rgba(212, 175, 55, 0.1);
-    /* Jemný zlatý nádych v základe */
     width: 80%;
     max-width: 400px;
     height: 60px;

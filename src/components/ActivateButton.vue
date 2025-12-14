@@ -42,7 +42,7 @@ export default {
         if (props.activation_points <= activeUser.value.points) {
           emit('toggle', true);
         } else {
-          addToast("Nemáte dostatok bodov!");
+          addToast("Not enough points!");
         }
       } else {
         emit('toggle', false);

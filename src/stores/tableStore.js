@@ -43,7 +43,7 @@ export const useTableStore = defineStore('tables', {
                     }
                 });
                 if (!response.ok) {
-                    throw new Error(`Server vrátil chybu so statusom ${response.status}`);
+                    throw new Error(`Server returned status: ${response.status}`);
                 }
 
                 if (response.headers.get('content-length') === '0') {
@@ -55,7 +55,7 @@ export const useTableStore = defineStore('tables', {
                     id: String(table.id)
                 }));
             } catch (error) {
-                console.error("Chyba načítania stolov:", error);
+                console.error("Error while loading tables:", error);
             }
         },
         /**
@@ -84,7 +84,7 @@ export const useTableStore = defineStore('tables', {
                 });
 
                 if (!response.ok) {
-                    console.error('Server odmietol aktualizovať obsadenosť:', await response.text());
+                    console.error('Server err:', await response.text());
                     return;
                 }
 
@@ -93,7 +93,7 @@ export const useTableStore = defineStore('tables', {
                     table.occupied = updatedData.occupied; 
                 }
             } catch (error) {
-                console.error(`Chyba pri aktualizácii obsadenosti stola ${tableId}:`, error);
+                console.error(`Error while updating table occupancy ${tableId}:`, error);
             }
         },
         
