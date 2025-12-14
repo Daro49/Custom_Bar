@@ -172,12 +172,12 @@ async function fetchSongHandler() {
 
   if(progressState.isPlaying && progressState.currentSong)
   {
-    console.log('už sa hrá:', progressState.currentSong.title)
+    console.log('Currently playing:', progressState.currentSong.title)
     return
   }
 
   else if (playlist.value.length === 0){
-    console.log('current song sa nenacital')
+    console.log('current song didnt load')
     stopProgress()
     return
   }
